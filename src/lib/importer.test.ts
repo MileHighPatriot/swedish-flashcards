@@ -177,3 +177,40 @@ describe('pasted lessons', () => {
     expect(se2.action).toBe('skip');
   });
 });
+
+describe('reorder cards carry their English meaning', () => {
+  it('every built-in reorder card has one, and the words exclude it', async () => {
+    const { splitChunks, splitHint } = await import('./parser');
+    await loadStarterLessons([MAIN, EXTRAS]);
+    const reorder = (await listNotes()).filter((n) => n.kind === 'reorder');
+    expect(reorder).toHaveLength(10);
+    for (const n of reorder) {
+      const { hint } = splitHint(n.grammar!.prompt);
+      expect(hint, n.grammar!.prompt).toMatch(/^[A-Z].*[.?]$/);
+      expect(splitChunks(n.grammar!.prompt).join(' ')).not.toMatch(/[()]/);
+    }
+    const q = reorder.find((n) => n.grammar!.answer === 'Läste du boken?')!;
+    expect(splitHint(q.grammar!.prompt).hint).toBe('Did you read the book?');
+    expect(splitChunks(q.grammar!.prompt)).toEqual(['du', 'boken', 'läste']);
+  });
+
+  it('existing devices get the English added without duplicates or lost edits', async () => {
+    const { refreshStarterCards } = await import('./importer');
+    const strip = (t: string) => t.replace(/^(reorder \|[^|]*?) \([^)]*\) \|/gm, '$1 |');
+    await loadStarterLessons([strip(MAIN), strip(EXTRAS)]); // a device seeded before the change
+    const before = await listNotes();
+    const mine = before.find((n) => n.kind === 'reorder' && n.grammar!.answer === 'Vad köpte du?')!;
+    expect(mine.grammar!.prompt).toBe('köpte / vad / du');
+    const edited = before.find((n) => n.kind === 'reorder' && n.grammar!.answer === 'Var bodde du?')!;
+    const { updateNote } = await import('../db/repo');
+    await updateNote(edited.id, { grammar: { ...edited.grammar!, prompt: 'bodde / var / du (my own wording)' } });
+
+    expect(await refreshStarterCards([MAIN, EXTRAS])).toBe(9);
+    const after = await listNotes();
+    expect(after).toHaveLength(before.length);
+    expect(after.find((n) => n.id === mine.id)!.grammar!.prompt).toBe('köpte / vad / du (What did you buy?)');
+    expect(after.find((n) => n.id === edited.id)!.grammar!.prompt).toBe('bodde / var / du (my own wording)');
+    expect(await refreshStarterCards([MAIN, EXTRAS])).toBe(0); // settles
+    expect((await loadStarterLessons([MAIN, EXTRAS])).added).toBe(0); // and the loader still sees them as the same cards
+  });
+});

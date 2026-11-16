@@ -494,8 +494,10 @@ function Fix({ note, revealed, answer, onReveal, rate, slowRate }: FaceProps) {
 
 function Reorder({ card, note, revealed, answer, onReveal, rate, slowRate }: FaceProps) {
   const g = note.grammar!;
+  const { hint } = splitHint(g.prompt);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const chips = useMemo(() => shuffled(splitChunks(g.prompt)), [card.id, g.prompt]);
+  const meaning = hint && <p className="face-question">{hint}</p>;
   const [picked, setPicked] = useState<number[]>([]);
   const [typing, setTyping] = useState(false);
   const built = picked.map((i) => chips[i]).join(' ');
@@ -504,6 +506,7 @@ function Reorder({ card, note, revealed, answer, onReveal, rate, slowRate }: Fac
     return (
       <>
         <p className="muted small">Put the words in order</p>
+        {meaning}
         <GrammarBack note={note} rate={rate} slowRate={slowRate}>
           <VerdictBox answer={answer} />
         </GrammarBack>
@@ -511,7 +514,8 @@ function Reorder({ card, note, revealed, answer, onReveal, rate, slowRate }: Fac
     );
   return (
     <>
-      <p className="muted small">Put the words in order</p>
+      <p className="muted small">Put the words in order{hint ? ' to say' : ''}</p>
+      {meaning}
       {typing ? (
         <>
           <p className="face-sentence" lang="sv">

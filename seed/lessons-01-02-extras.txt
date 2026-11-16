@@ -70,10 +70,10 @@ translate | She called yesterday. | Hon ringde igår. // Igår ringde hon. | -de
 translate | We lived in Denver. | Vi bodde i Denver. | bo → bodde. | translate, -de, lesson-02
 translate | Last week they traveled to Sweden. | Förra veckan reste de till Sverige. // De reste till Sverige förra veckan. | -te verb + verb second. | translate, -te, lesson-02
 translate | I bought a book and read it. | Jag köpte en bok och läste den. | Two -te verbs. | translate, -te, lesson-02
-reorder | lagade / vi / middag / i förrgår | I förrgår lagade vi middag. // Vi lagade middag i förrgår. | Verb second. | word-order, lesson-01
-reorder | köpte / jag / en bok / i lördags | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order, lesson-02
-reorder | reste / vi / till Sverige / förra året | Förra året reste vi till Sverige. // Vi reste till Sverige förra året. | Verb second. | word-order, lesson-02
-reorder | åkte / ni / till bergen | Åkte ni till bergen? // Ni åkte till bergen. | Question: verb first. Statement: verb second. | questions, lesson-02
+reorder | lagade / vi / middag / i förrgår (The day before yesterday we cooked dinner.) | I förrgår lagade vi middag. // Vi lagade middag i förrgår. | Verb second. | word-order, lesson-01
+reorder | köpte / jag / en bok / i lördags (Last Saturday I bought a book.) | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order, lesson-02
+reorder | reste / vi / till Sverige / förra året (Last year we traveled to Sweden.) | Förra året reste vi till Sverige. // Vi reste till Sverige förra året. | Verb second. | word-order, lesson-02
+reorder | åkte / ni / till bergen (Did you go to the mountains?) | Åkte ni till bergen? | Yes/no question: verb first. | questions, lesson-02
 
 ### Grammar – My mistakes
 fix | gåt | gick | Irregular past of gå. Comes in Lesson 3. | my-mistake, irregular, lesson-03

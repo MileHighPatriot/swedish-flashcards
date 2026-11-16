@@ -6,7 +6,7 @@ import extrasText from '../../seed/lessons-01-02-extras.txt?raw';
 import { db } from '../db/db';
 import { SEED_TIME, alive, createDeck, createNotes, emptyNoteInput, findDeckByName, updateNote, type NoteInput } from '../db/repo';
 import type { Deck, DeckCategory, Draft, ID, Note, VocabCardType } from '../db/types';
-import { parseLesson, type ParseResult, type ParsedItem } from './parser';
+import { parseLesson, splitHint, type ParseResult, type ParsedItem } from './parser';
 
 export interface DeckSpec {
   name: string;
@@ -61,7 +61,10 @@ const norm = (s: string) => s.normalize('NFC').toLowerCase().replace(/\s+/g, ' '
 
 /** Two cards with the same key are the same card. */
 export function dupKey(d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): string {
-  return d.kind === 'vocab' ? `vocab:${norm(d.swedish)}` : `${d.kind}:${norm(d.grammar?.prompt ?? '')}`;
+  if (d.kind === 'vocab') return `vocab:${norm(d.swedish)}`;
+  // The English hint on a reorder prompt is not part of the card's identity.
+  const prompt = d.grammar?.prompt ?? '';
+  return `${d.kind}:${norm(d.kind === 'reorder' ? splitHint(prompt).text : prompt)}`;
 }
 
 export const pad2 = (n: number) => String(n).padStart(2, '0');
@@ -290,6 +293,33 @@ export interface StarterResult extends ImportResult {
  * their deck are left alone (your scheduling and edits are kept).
  */
 export const STARTER_TEXTS: string[] = [starterText, extrasText];
+
+/** Built-in rows are stamped inside this window; anything later was edited by me. */
+const SEED_WINDOW = 1_000_000;
+
+/**
+ * Bring built-in grammar cards up to date when the starter files change (for
+ * example, when the English meaning was added to reorder cards). Only cards I
+ * have never edited are touched, their review history is kept, and the new
+ * timestamp is fixed, so every device ends up with identical rows.
+ */
+export async function refreshStarterCards(texts: string[] = STARTER_TEXTS): Promise<number> {
+  let changed = 0;
+  for (const text of texts) {
+    for (const group of groupStarter(parseLesson(text))) {
+      for (const { draft } of group.items) {
+        if (!draft.grammar) continue;
+        const note = await db.notes.get(`seed:${norm(group.deck.name)}:${dupKey(draft)}`);
+        if (!note?.grammar || note.deletedAt != null || note.updatedAt >= SEED_TIME + SEED_WINDOW) continue;
+        const { prompt, answer, explanation } = draft.grammar;
+        if (note.grammar.prompt === prompt && note.grammar.answer === answer && note.grammar.explanation === explanation) continue;
+        await db.notes.update(note.id, { grammar: { ...note.grammar, prompt, answer, explanation }, updatedAt: SEED_TIME + SEED_WINDOW - 1 });
+        changed++;
+      }
+    }
+  }
+  return changed;
+}
 
 export async function loadStarterLessons(texts: string[] = STARTER_TEXTS): Promise<StarterResult> {
   // Parse the files as one document; line numbers in errors are per file.

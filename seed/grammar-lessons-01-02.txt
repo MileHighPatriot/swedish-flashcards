@@ -1,6 +1,7 @@
 # Starter lessons 01-02. Loaded by the "Load starter lessons" button.
 # Grammar lines:  type | prompt | answer | explanation | tags
 # Vocab lines:    Swedish | English | forms | example = translation | tags
+# Reorder prompts end with the English meaning in brackets, so it is clear which sentence to build.
 # A "### Heading" line starts a section. Lines starting with # are comments.
 
 ### Grammar – Past tense & word order (rule cards)
@@ -45,12 +46,12 @@ fix | Jag Lagade middag och Vi åt. | Jag lagade middag och vi åt. | No capital
 fix | Jag alskar min svarmor. | Jag älskar min svärmor. | Always type å, ä, ö. | my-mistake, spelling
 
 ### Reorder cards
-reorder | arbetade / jag / igår / i butiken | Igår arbetade jag i butiken. // Jag arbetade i butiken igår. | Verb second after the time word. | word-order, lesson-01
-reorder | städade / hon / förra veckan | Förra veckan städade hon. // Hon städade förra veckan. | Verb second. | word-order, lesson-01
-reorder | lagade / vi / middag / i lördags | I lördags lagade vi middag. // Vi lagade middag i lördags. | Verb second. | word-order, lesson-01
-reorder | du / boken / läste | Läste du boken? | Yes/no question: verb first. | questions, lesson-02
-reorder | köpte / vad / du | Vad köpte du? | Question word + verb. | questions, lesson-02
-reorder | bodde / var / du | Var bodde du? | Question word + verb. | questions, lesson-02
+reorder | arbetade / jag / igår / i butiken (Yesterday I worked at the store.) | Igår arbetade jag i butiken. // Jag arbetade i butiken igår. | Verb second after the time word. | word-order, lesson-01
+reorder | städade / hon / förra veckan (Last week she cleaned.) | Förra veckan städade hon. // Hon städade förra veckan. | Verb second. | word-order, lesson-01
+reorder | lagade / vi / middag / i lördags (Last Saturday we cooked dinner.) | I lördags lagade vi middag. // Vi lagade middag i lördags. | Verb second. | word-order, lesson-01
+reorder | du / boken / läste (Did you read the book?) | Läste du boken? | Yes/no question: verb first. | questions, lesson-02
+reorder | köpte / vad / du (What did you buy?) | Vad köpte du? | Question word + verb. | questions, lesson-02
+reorder | bodde / var / du (Where did you live?) | Var bodde du? | Question word + verb. | questions, lesson-02
 
 ### Translate cards
 translate | Yesterday I worked at the store. | Igår arbetade jag i butiken. // Jag arbetade i butiken igår. | Past tense + verb second. | translate, lesson-01

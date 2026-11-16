@@ -2,7 +2,9 @@
 // with a gentle warning, capital-letter warnings, and a diff of what was wrong.
 
 import type { Note } from '../db/types';
-import { splitAlternatives } from './parser';
+import { splitAlternatives, splitHint } from './parser';
+
+export { splitHint };
 
 export type Verdict = 'correct' | 'close' | 'wrong';
 
@@ -197,12 +199,6 @@ export function checkMeaning(typed: string, english: string): CheckResult {
   const hit = alts.find((a) => strip(a) === t) ?? (strip(english) === t ? english : undefined);
   if (t && hit) return { verdict: 'correct', expected: english, message: null, typedDiff: [{ text: typed.trim(), ok: true }], expectedDiff: [{ text: english, ok: true }] };
   return { verdict: 'wrong', expected: english, message: null, typedDiff: [{ text: typed.trim(), ok: false }], expectedDiff: [{ text: english, ok: false }] };
-}
-
-/** Split "Igår arbetar jag. (yesterday)" into the sentence and its hint. */
-export function splitHint(prompt: string): { text: string; hint: string | null } {
-  const m = /^(.*\S)\s*\(([^()]*)\)\s*$/.exec(prompt.trim());
-  return m ? { text: m[1], hint: m[2] } : { text: prompt.trim(), hint: null };
 }
 
 /** Rating to pre-select after a checked answer: Good, Hard or Again. */

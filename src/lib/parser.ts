@@ -283,9 +283,16 @@ export function splitAlternatives(answer: string): string[] {
     .filter(Boolean);
 }
 
-/** "arbetade / jag / igår" → ["arbetade", "jag", "igår"] */
+/** Split "Igår arbetar jag. (yesterday)" into the sentence and its bracketed hint. */
+export function splitHint(prompt: string): { text: string; hint: string | null } {
+  const m = /^(.*\S)\s*\(([^()]*)\)\s*$/.exec(prompt.trim());
+  return m ? { text: m[1], hint: m[2] } : { text: prompt.trim(), hint: null };
+}
+
+/** "arbetade / jag / igår (Yesterday I worked.)" → ["arbetade", "jag", "igår"] */
 export function splitChunks(prompt: string): string[] {
-  return prompt
+  return splitHint(prompt)
+    .text
     .split(/\s*\/\s*/)
     .map((c) => c.trim())
     .filter(Boolean);

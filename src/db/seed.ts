@@ -1,7 +1,7 @@
 import { db } from './db';
 import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, setKV, type NoteInput } from './repo';
 import type { PartOfSpeech } from './types';
-import { loadStarterLessons } from '../lib/importer';
+import { loadStarterLessons, refreshStarterCards } from '../lib/importer';
 
 type Seed = {
   sv: string;
@@ -76,6 +76,12 @@ export function ensureSeeded(): Promise<void> {
     if (!(await getKV<boolean>('starterLoaded'))) {
       await loadStarterLessons();
       await setKV('starterLoaded', true);
+    }
+    // Raise this number whenever the files in seed/ change.
+    const STARTER_REVISION = 2;
+    if (((await getKV<number>('starterRevision')) ?? 1) < STARTER_REVISION) {
+      await refreshStarterCards();
+      await setKV('starterRevision', STARTER_REVISION);
     }
   })();
   return seeding;

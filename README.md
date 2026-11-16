@@ -49,7 +49,7 @@ rule | question about the rule | answer with an example | short explanation | ta
 fix | sentence with one mistake | corrected sentence | why | tags
 
 ### Reorder
-reorder | word / word / word | Correct sentence. // Another valid order. | why | tags
+reorder | word / word / word (English meaning) | Correct sentence. // Another valid order. | why | tags
 
 ### Translate
 translate | English sentence | Swedish sentence. // Another valid answer. | why | tags
@@ -60,6 +60,8 @@ Rules for the forms field:
 - adjectives: stor, stort, stora   (en form, ett form, plural)
 Tags are lowercase, comma separated, for example: verbs, food, verb-second, -te.
 Use my-mistake on fix cards that come from my own writing.
+End every reorder prompt with the English meaning in brackets, and only list
+Swedish answers that mean exactly that.
 ```
 
 A finished line looks like this:
@@ -68,7 +70,7 @@ A finished line looks like this:
 hund | dog | en hund, hunden, hundar | Hunden springer i parken. = The dog runs in the park. | animals
 äta | eat | äter, åt, ätit | Vi äter middag klockan sex. = We eat dinner at six. | verbs, food
 fix | Igår jag arbetade. | Igår arbetade jag. | Verb in seat 2 after a time word. | my-mistake, verb-second
-reorder | köpte / jag / en bok / i lördags | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order
+reorder | köpte / jag / en bok / i lördags (Last Saturday I bought a book.) | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order
 ```
 
 What happens when you save:
