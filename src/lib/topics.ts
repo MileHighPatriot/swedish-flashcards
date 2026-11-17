@@ -10,6 +10,7 @@ export interface Topic {
 export const TOPICS: Topic[] = [
   { slug: 'past-ade', title: 'Past tense: -ade' },
   { slug: 'past-te-de', title: 'Past tense: -te / -de' },
+  { slug: 'irregular', title: 'Irregular verbs' },
   { slug: 'verb-second', title: 'Verb second' },
   { slug: 'questions', title: 'Questions' },
   { slug: 'modals', title: 'Modals + infinitive' },
@@ -29,6 +30,7 @@ const TAG_RULES: [tags: string[], slug: string][] = [
   [['pronunciation'], 'pronunciation'],
   [['questions'], 'questions'],
   [['verb-second', 'word-order'], 'verb-second'],
+  [['irregular'], 'irregular'],
   [['-te', '-de'], 'past-te-de'],
   [['-ade'], 'past-ade'],
   [['spelling', 'watch-spelling'], 'spelling'],

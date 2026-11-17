@@ -214,3 +214,75 @@ describe('reorder cards carry their English meaning', () => {
     expect((await loadStarterLessons([MAIN, EXTRAS])).added).toBe(0); // and the loader still sees them as the same cards
   });
 });
+
+describe('built-in Lesson 3', () => {
+  const load = async () => {
+    const { loadBuiltInLesson, toBuiltInLesson } = await import('./importer');
+    return loadBuiltInLesson(toBuiltInLesson('lesson-03-irregular-verbs.txt', seed('lesson-03-irregular-verbs.txt')));
+  };
+  const COMING = 'Coming soon – irregular & modal verbs';
+
+  it('is picked up from seed/ with its number and name', async () => {
+    const { BUILT_IN_LESSONS } = await import('./importer');
+    expect(BUILT_IN_LESSONS.map((l) => [l.key, l.number, l.name])).toContainEqual(['lesson-03-irregular-verbs.txt', 3, 'Irregular verbs']);
+  });
+
+  it('lands in its own decks, on top of lessons 1 and 2, with nothing doubled', async () => {
+    await loadStarterLessons([MAIN, EXTRAS]);
+    const before = await deckCounts();
+    const r = await load();
+    expect(r.errors).toEqual([]);
+    expect(r).toMatchObject({ added: 89, moved: 9, merged: 5 });
+
+    const counts = await deckCounts();
+    expect(counts['Lesson 03 – Irregular verbs']).toEqual({ notes: 28, cards: 56 });
+    expect(counts['Phrases – Lesson 03 – Irregular verbs']).toEqual({ notes: 13, cards: 26 });
+    expect(counts['Grammar – Lesson 03 – Irregular verbs']).toEqual({ notes: 35, cards: 35 });
+    expect(counts['Grammar – My mistakes'].notes).toBe(before['Grammar – My mistakes'].notes + 22);
+    // The nine verbs that were waiting in the locked deck moved out of it.
+    expect(counts[COMING].notes).toBe(before[COMING].notes - 9);
+    expect(counts['Grammar – Past tense & word order']).toEqual(before['Grammar – Past tense & word order']);
+
+    const notes = await listNotes();
+    const cards = await listCards();
+    const lesson = (await listDecks()).find((d) => d.name === 'Lesson 03 – Irregular verbs')!;
+    const inLesson = notes.filter((n) => n.deckId === lesson.id);
+    expect(inLesson.every((n) => n.tags.includes('lesson-03'))).toBe(true);
+    expect(cards.filter((c) => c.deckId === lesson.id).every((c) => !c.suspended)).toBe(true);
+
+    const fa = notes.filter((n) => n.kind === 'vocab' && n.swedish === 'få');
+    expect(fa).toHaveLength(1);
+    expect(fa[0]).toMatchObject({ deckId: lesson.id, english: 'get, receive', exampleSv: 'Jag fick en present.' });
+    expect(fa[0].verb).toEqual({ infinitive: 'få', present: 'får', past: 'fick', supine: 'fått' });
+
+    // Same prompt as a Lesson 2 card: one card, now with the Lesson 3 wording and tags.
+    const did = notes.filter((n) => n.kind === 'translate' && n.grammar!.prompt === 'What did you do yesterday?');
+    expect(did).toHaveLength(1);
+    expect(did[0].grammar!.explanation).toBe('göra is gjorde; verb second after the question word.');
+    expect(did[0].tags).toEqual(expect.arrayContaining(['irregular', 'questions', 'lesson-03']));
+  });
+
+  it('is safe to load twice, and the starter loader does not bring the moved verbs back', async () => {
+    await loadStarterLessons([MAIN, EXTRAS]);
+    await load();
+    const before = await deckCounts();
+    expect(await load()).toMatchObject({ added: 0, moved: 0, merged: 0 });
+    expect((await loadStarterLessons([MAIN, EXTRAS])).added).toBe(0);
+    expect(await deckCounts()).toEqual(before);
+  });
+
+  it('keeps review history and my own edits', async () => {
+    await loadStarterLessons([MAIN, EXTRAS]);
+    const { updateNote } = await import('../db/repo');
+    const mine = (await listNotes()).find((n) => n.kind === 'translate' && n.grammar!.prompt === 'We lived in Denver.')!;
+    await updateNote(mine.id, { grammar: { ...mine.grammar!, explanation: 'my own note' } });
+    const ga = (await listNotes()).find((n) => n.kind === 'vocab' && n.swedish === 'gå')!;
+    const gaCards = (await listCards()).filter((c) => c.noteId === ga.id).map((c) => c.id).sort();
+
+    await load();
+    const notes = await listNotes();
+    expect(notes.find((n) => n.id === mine.id)!.grammar!.explanation).toBe('my own note');
+    expect(notes.filter((n) => n.kind === 'translate' && n.grammar!.prompt === 'We lived in Denver.')).toHaveLength(1);
+    expect((await listCards()).filter((c) => c.noteId === ga.id).map((c) => c.id).sort()).toEqual(gaCards);
+  });
+});

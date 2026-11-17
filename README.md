@@ -84,7 +84,7 @@ What happens when you save:
 
 The parser also copes with tabs, dashes, commas, bullets, numbering and markdown tables. Lines it cannot read are listed with their line number and left out.
 
-Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `verb-second`, `word-order`, `questions`, `modals`, `connectors`, `negation`, `hem-hemma`, `spelling`, `watch-spelling`, `pronunciation`.
+Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `verb-second`, `word-order`, `questions`, `irregular`, `modals`, `connectors`, `negation`, `hem-hemma`, `spelling`, `watch-spelling`, `pronunciation`.
 
 ## What is in it
 
@@ -97,6 +97,8 @@ Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `ve
 - **Data:** stored on the device, one-click full backup, CSV import and export.
 
 The starter content lives in `seed/` and loads itself the first time the app opens: your Lesson 1 and 2 grammar file, plus extras taken from the two printables.
+
+From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irregular-verbs.txt`, with the title on the first line (`# Lesson 03 – Irregular verbs`) and the same `###` sections as a pasted lesson. Every device loads a new file once, the next time the app opens. Words that were waiting in the locked "Coming soon" deck move into the lesson, and a grammar card with the same prompt as an older one is updated instead of doubled.
 
 ## Sync between devices (optional)
 

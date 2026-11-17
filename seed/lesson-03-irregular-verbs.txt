@@ -1,0 +1,118 @@
+# Lesson 03 – Irregular verbs
+# My Lesson 3 file, as pasted. Same formats as grammar-lessons-01-02.txt.
+# Loaded as a built-in lesson: the title line above names the decks.
+
+### Vocab
+gå | go, walk | går, gick, gått | Igår gick jag hem. = Yesterday I went home. | verbs, irregular
+äta | eat | äter, åt, ätit | Vi åt lunch tillsammans. = We ate lunch together. | verbs, irregular, food
+se | see | ser, såg, sett | Hon såg en film. = She saw a movie. | verbs, irregular
+vara | be | är, var, varit | Hon var hemma. = She was at home. | verbs, irregular, hem-hemma
+ha | have | har, hade, haft | Jag hade mycket att göra. = I had a lot to do. | verbs, irregular
+göra | do, make | gör, gjorde, gjort | Vad gjorde du igår? = What did you do yesterday? | verbs, irregular
+komma | come | kommer, kom, kommit | Jag kom hem klockan sex. = I got home at six. | verbs, irregular
+få | get, receive | får, fick, fått | Jag fick en present. = I got a present. | verbs, irregular
+ta | take | tar, tog, tagit | Tog du bussen? = Did you take the bus? | verbs, irregular, questions
+ge | give | ger, gav, gett | Min vän gav mig en present. = My friend gave me a present. | verbs, irregular
+dag | day | en dag, dagen, dagar | Hur var din dag? = How was your day? | conversation
+vän | friend | en vän, vännen, vänner | Jag såg en gammal vän. = I saw an old friend. | friends
+kollega | colleague | en kollega, kollegan, kollegor | Jag åt lunch med en kollega. = I ate lunch with a colleague. | work
+present | present, gift | en present, presenten, presenter | Jag fick en present. = I got a present. | gifts
+lunch | lunch | en lunch, lunchen, luncher | Vi åt lunch tillsammans. = We ate lunch together. | food
+frukost | breakfast | en frukost, frukosten, frukostar | I morse åt jag frukost. = This morning I ate breakfast. | food
+film | movie | en film, filmen, filmer | Vi såg en film. = We saw a movie. | movies
+dusch | shower | en dusch, duschen, duschar | Jag tog en dusch. = I took a shower. | home
+stund | a while | en stund, stunden, stunder | Vi pratade en stund. = We talked for a while. | time-words
+gammal | old | gammal, gammalt, gamla | Jag såg en gammal vän. = I saw an old friend. | adjectives
+trött | tired | trött, trött, trötta | Jag var trött. = I was tired. | adjectives
+tillsammans | together | | Vi åt lunch tillsammans. = We ate lunch together. | conversation
+sent | late | | Kom du hem sent? = Did you get home late? | time-words
+mycket | a lot, much | | Jag hade mycket att göra. = I had a lot to do. | conversation
+mig | me | | Min vän gav mig en present. = My friend gave me a present. | pronouns
+dig | you (object) | | Jag tänkte på dig. = I thought of you. | pronouns
+hem | (to) home | | Jag gick hem. = I went home. | hem-hemma
+hemma | at home | | Hon var hemma. = She was at home. | hem-hemma
+
+### Phrases
+Hur var din dag? | How was your day? | | | phrases, conversation, questions
+Den var bra! | It was good! | | | phrases, conversation
+Jag gick till jobbet och jag såg en gammal vän. | I went to work and I saw an old friend. | | | phrases, conversation
+Vad kul! | How fun! | | | phrases, conversation
+Vad gjorde ni? | What did you do? | | | phrases, conversation, questions
+Vi åt lunch tillsammans och pratade en stund. | We ate lunch together and talked for a while. | | | phrases, conversation
+Min vän gav mig en present. Jag fick en bok! | My friend gave me a present. I got a book! | | | phrases, conversation
+Tog du den med hem? | Did you take it home? | | | phrases, conversation, questions
+Ja, jag tog den med hem. | Yes, I took it home. | | | phrases, conversation
+Kom du hem sent? | Did you get home late? | | | phrases, conversation, questions
+Nej, jag kom hem klockan sex. | No, I got home at six. | | | phrases, conversation
+Hade du mycket att göra? | Did you have a lot to do? | | | phrases, conversation, questions
+Ja, jag hade mycket att göra. | Yes, I had a lot to do. | | | phrases, conversation
+
+### Grammar rules
+rule | Does the irregular past form change with the person? | No: jag gick, du gick, hon gick, vi gick. | Each verb has one past form for every person. | irregular, verbs
+rule | Can you add -ade to an irregular verb? | No: gick, not gåde; åt, not ätade; gjorde, not gördade. | Irregular verbs have their own past forms. | irregular
+rule | What are the past forms of gå and få? | gå gives gick and få gives fick. | Both end in -ick, which makes them easy to pair. | irregular
+rule | Which irregular past forms sound like English? | åt = ate, såg = saw, tog = took, gav = gave, kom = came. | A memory hook for five of the ten verbs. | irregular
+rule | Which two irregular pasts end in -de? | ha gives hade and göra gives gjorde. | They are almost regular. | irregular, -de
+rule | What is the past tense of vara? | var for every person: jag var, vi var. | var also means where, so context decides. | irregular
+rule | What is the third form (gått, sett) used for? | After har: Jag har sett filmen. | It is not the plain past; Jag gått hem is wrong. | irregular, verbs
+rule | What is the difference between var and vart? | var means was: Igår kväll var jag hemma. | vart means where to. | irregular
+rule | What is the difference between hem and hemma? | hem is movement toward home: Jag gick hem. hemma is being at home: Jag var hemma. | Movement takes hem; no movement takes hemma. | hem-hemma
+rule | When do you use gå and when åka? | gå is on foot: Jag gick till affären. åka is by vehicle: Vi åkte till bergen. | Use åka or resa for cars, buses and planes. | verbs
+rule | How is the g in gick pronounced? | gick sounds like YICK. | g before i, e, ä, ö, y sounds like y; gj also sounds like y. | pronunciation
+rule | How do you ask a yes/no question with an irregular verb? | Put the verb first: Tog du bussen? | Same rule as Day 2. | questions, irregular
+rule | Where does the verb go after a time word? | Seat 2: Igår gick jag hem. | The subject moves to seat 3. | verb-second, time-words, word-order
+rule | What is the past tense of bo? | bodde: Vi bodde i Denver. | bo doubles the d; borde means should. | -de
+rule | Does läsa take -te or -de? | -te: Igår läste jag en bok. | The stem läs ends in s, and s takes -te. | -te
+rule | Can ringa or tycka take -adde? | No: ringde and tyckte. | Check the last letter of the stem: ring ends in g (-de), tyck ends in k (-te). | -de, -te
+rule | Is köpt the past tense of köpa? | No: Jag köpte en bok. | köpt is the third form, used after har. | -te
+rule | Which pronoun replaces an en-word like bok? | den: Jag köpte en bok och läste den. | det is for ett-words. | pronouns
+rule | When do you use till and when att? | till for a place: Vi reste till Sverige. | att comes before a verb. | prepositions
+rule | Are weekdays capitalized in Swedish? | No: i lördags, i söndags. | Capitalize only the first word of a sentence and names. | spelling, time-words
+rule | What is the difference between på söndag and i söndags? | på söndag means next Sunday; i söndags means last Sunday. | For the past, use i + the day + s. | time-words
+rule | What is the difference between förra veckan and i förrgår? | förra veckan means last week; i förrgår means the day before yesterday. | Do not mix them up. | time-words
+rule | How do you say play with someone? | leka med: Jag lekte med mina barn. | leka takes med before the person. | -te, prepositions
+
+### Fix the error
+fix | Igår gåde jag hem. | Igår gick jag hem. | gå is irregular: gick, not gåde. | irregular
+fix | Vi ätade lunch. | Vi åt lunch. | äta is irregular: åt. | irregular
+fix | Jag gått hem igår. | Jag gick hem igår. | gått is the third form; the past is gick. | irregular, verbs
+fix | Hon gördade middag. | Hon gjorde middag. | göra is irregular: gjorde, not gördade. | my-mistake, irregular
+fix | Igår kväll vart jag hemma. | Igår kväll var jag hemma. | var means was; vart means where to. | my-mistake, irregular
+fix | Jag ringadde min mamma. | Jag ringde min mamma. | The stem ring ends in g, so -de, not -adde. | my-mistake, -de
+fix | Vi borde i Denver. | Vi bodde i Denver. | bo takes -dde; borde means should. | my-mistake, -de
+fix | Hon tyckadde om pizza. | Hon tyckte om pizza. | The stem tyck ends in ck, which counts as k, so -te. | my-mistake, -te
+fix | Igår läsde jag en bok. | Igår läste jag en bok. | The stem läs ends in s, so -te. | my-mistake, -te
+fix | Jag köpt en bok. | Jag köpte en bok. | köpt is the third form, used after har; the past is köpte. | my-mistake, -te
+fix | Jag köpte en bok och läste det. | Jag köpte en bok och läste den. | bok is an en-word, so it is den. | my-mistake
+fix | Förra veckan reste de att Sverige. | Förra veckan reste de till Sverige. | Use till for to a place; att goes before a verb. | my-mistake
+fix | I förrgår igår vi handlade. | I förrgår handlade vi. | One time word only, and the verb takes seat 2. | my-mistake, verb-second, word-order, time-words
+fix | Jag handlarde mat. | Jag handlade mat. | handla takes -ade: handlade. | my-mistake, -ade, spelling
+fix | Förrgår veckan lyssnade han på musik. | Förra veckan lyssnade han på musik. | förra veckan is last week; förrgår is the day before yesterday. | my-mistake, time-words, spelling
+fix | Hon lagade midag. | Hon lagade middag. | middag has a double d. | my-mistake, spelling, watch-spelling
+fix | I morse dushade jag. | I morse duschade jag. | The sound is spelled sch: duschade. | my-mistake, spelling, watch-spelling
+fix | I Lördags åkte jag hem. | I lördags åkte jag hem. | Weekday names are lowercase in Swedish. | my-mistake
+fix | På söndag lekte jag. (Last Sunday I played.) | I söndags lekte jag. | På söndag means next Sunday; last Sunday is i söndags. | my-mistake, time-words
+fix | I sondags lekte jag. | I söndags lekte jag. | Spelled söndag, with ö. | my-mistake, spelling, watch-spelling
+fix | I söndags lekte jag mina barn. | I söndags lekte jag med mina barn. | leka med means play with. | my-mistake
+fix | Det är en bra bok. (It was a good book.) | Det var en bra bok. | Talking about last Saturday needs the past: var. | my-mistake
+
+### Reorder
+reorder | jag / hem / gick / igår (Yesterday I went home.) | Igår gick jag hem. // Jag gick hem igår. | Verb second. | word-order, verb-second, irregular
+reorder | såg / vi / en film / i lördags (Last Saturday we saw a movie.) | I lördags såg vi en film. // Vi såg en film i lördags. | Verb second. | word-order, verb-second, irregular
+reorder | du / tog / bussen (Did you take the bus?) | Tog du bussen? | Yes/no question: verb first. | questions, word-order
+reorder | gjorde / du / vad / igår (What did you do yesterday?) | Vad gjorde du igår? | Verb second after the question word. | questions, word-order
+reorder | jag / kom / hem / klockan sex (I got home at six.) | Jag kom hem klockan sex. // Klockan sex kom jag hem. | Verb second. | word-order, verb-second
+reorder | hade / jag / mycket / att göra / förra veckan (Last week I had a lot to do.) | Förra veckan hade jag mycket att göra. // Jag hade mycket att göra förra veckan. | Verb second. | word-order, verb-second, time-words
+
+### Translate
+translate | Yesterday I went home. | Igår gick jag hem. // Jag gick hem igår. | gå is irregular: gick; verb second after igår. | irregular, verb-second, hem-hemma
+translate | We saw a movie. | Vi såg en film. | se is irregular: såg. | irregular
+translate | She was at home. | Hon var hemma. | vara is var; hemma means at home. | irregular, hem-hemma
+translate | Last week I got a present. | Förra veckan fick jag en present. // Jag fick en present förra veckan. | få is fick; verb second after the time word. | irregular, verb-second, time-words
+translate | Did you take the bus? | Tog du bussen? | ta is tog; the question starts with the verb. | irregular, questions
+translate | What did you do yesterday? | Vad gjorde du igår? | göra is gjorde; verb second after the question word. | irregular, questions
+translate | We lived in Denver. | Vi bodde i Denver. | bo takes -dde. | -de
+translate | Yesterday I read a book. | Igår läste jag en bok. // Jag läste en bok igår. | läsa takes -te; verb second after igår. | -te, verb-second
+translate | I bought a book and read it. | Jag köpte en bok och läste den. | Both take -te; den replaces the en-word bok. | -te, connectors
+translate | Last week they went to Sweden. | Förra veckan åkte de till Sverige. // Förra veckan reste de till Sverige. | åka or resa for travel; till for a place. | -te, time-words, verb-second
+translate | Last Sunday I played with my children. | I söndags lekte jag med mina barn. // Jag lekte med mina barn i söndags. | leka med means play with; i söndags means last Sunday. | -te, time-words

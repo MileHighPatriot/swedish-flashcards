@@ -1,7 +1,7 @@
 import { db } from './db';
 import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, setKV, type NoteInput } from './repo';
 import type { PartOfSpeech } from './types';
-import { loadStarterLessons, refreshStarterCards } from '../lib/importer';
+import { BUILT_IN_LESSONS, loadBuiltInLesson, loadStarterLessons, refreshStarterCards } from '../lib/importer';
 
 type Seed = {
   sv: string;
@@ -82,6 +82,14 @@ export function ensureSeeded(): Promise<void> {
     if (((await getKV<number>('starterRevision')) ?? 1) < STARTER_REVISION) {
       await refreshStarterCards();
       await setKV('starterRevision', STARTER_REVISION);
+    }
+    // Lesson 3 onwards: each seed/lesson-NN-*.txt file is loaded once per device.
+    const loaded = (await getKV<string[]>('builtInLessons')) ?? [];
+    for (const lesson of BUILT_IN_LESSONS) {
+      if (loaded.includes(lesson.key)) continue;
+      await loadBuiltInLesson(lesson);
+      loaded.push(lesson.key);
+      await setKV('builtInLessons', [...loaded]);
     }
   })();
   return seeding;

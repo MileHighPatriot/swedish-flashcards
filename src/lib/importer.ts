@@ -4,7 +4,7 @@
 import starterText from '../../seed/grammar-lessons-01-02.txt?raw';
 import extrasText from '../../seed/lessons-01-02-extras.txt?raw';
 import { db } from '../db/db';
-import { SEED_TIME, alive, createDeck, createNotes, emptyNoteInput, findDeckByName, updateNote, type NoteInput } from '../db/repo';
+import { SEED_TIME, alive, createDeck, createNotes, emptyNoteInput, findDeckByName, setNoteSuspended, updateNote, type NoteInput } from '../db/repo';
 import type { Deck, DeckCategory, Draft, ID, Note, VocabCardType } from '../db/types';
 import { parseLesson, splitHint, type ParseResult, type ParsedItem } from './parser';
 
@@ -238,9 +238,9 @@ export async function applyPlan(groups: PlanGroup[], opts: ImportOptions): Promi
         });
       }
     }
+    // Built-in rows that already exist under their fixed id are left alone, so count what was really made.
     if (toAdd.length)
-      await createNotes(toAdd, opts.seed ? { idFor: (n) => `seed:${norm(deck.name)}:${dupKey(n)}`, at: SEED_TIME } : {});
-    result.added += toAdd.length;
+      result.added += (await createNotes(toAdd, opts.seed ? { idFor: (n) => `seed:${norm(deck.name)}:${dupKey(n)}`, at: SEED_TIME } : {})).length;
     result.perDeck[deck.name] = (result.perDeck[deck.name] ?? 0) + active.length;
   }
   return result;
@@ -338,4 +338,96 @@ export async function loadStarterLessons(texts: string[] = STARTER_TEXTS): Promi
     seed: true,
   });
   return { ...result, errors: parsed.errors };
+}
+
+// ---------- built-in lessons (Lesson 3 onwards) ----------
+
+export interface BuiltInLesson {
+  /** File name in seed/. Remembered once loaded, so a lesson is only ever loaded once. */
+  key: string;
+  number: number | null;
+  name: string;
+  text: string;
+}
+
+/** Reads "# Lesson 03 – Irregular verbs" from the top of a lesson file. */
+export function readLessonTitle(text: string): { number: number | null; name: string } {
+  const m = /^#\s*Lesson\s+(\d+)\s*(?:[-–—:]\s*(.*?))?\s*$/im.exec(text);
+  return m ? { number: Number(m[1]), name: (m[2] ?? '').trim() } : { number: null, name: '' };
+}
+
+export const toBuiltInLesson = (key: string, text: string): BuiltInLesson => ({ key, text, ...readLessonTitle(text) });
+
+// Every seed/lesson-NN-*.txt file is a built-in lesson. To add one, drop the file in.
+const lessonFiles = import.meta.glob<string>('../../seed/lesson-*.txt', { query: '?raw', import: 'default', eager: true });
+
+export const BUILT_IN_LESSONS: BuiltInLesson[] = Object.keys(lessonFiles)
+  .sort()
+  .map((path) => toBuiltInLesson(path.split('/').pop()!, lessonFiles[path]));
+
+export interface LessonResult extends ImportResult {
+  /** Words brought over from a locked "coming soon" deck. */
+  moved: number;
+  errors: ParsedItem[];
+}
+
+/**
+ * Load a lesson file the way "Paste lesson" would, as built-in content (fixed
+ * ids, so every device makes the same rows). Cards that already exist:
+ *   - in the lesson's own decks: left alone;
+ *   - a word waiting in a locked "coming soon" deck: moved into the lesson and
+ *     unlocked, with the lesson's forms, example and tags;
+ *   - a grammar card with the same prompt in another deck: updated in place
+ *     with the lesson's wording and tags (unless I have edited it), not doubled;
+ *   - a word in another open deck: added to the lesson as well.
+ */
+export async function loadBuiltInLesson(lesson: BuiltInLesson): Promise<LessonResult> {
+  const parsed = parseLesson(lesson.text);
+  const tag = lessonTag(lesson.number);
+  const opts: ImportOptions = {
+    lessonNumber: lesson.number,
+    lessonName: lesson.name,
+    extraTags: tag ? [tag] : [],
+    cardTypes: ['basic', 'reverse'],
+    seed: true,
+  };
+  const plan = await buildPlan(groupLesson(parsed, lesson.number, lesson.name), { sameDeck: 'skip', otherDeck: 'add' });
+
+  const decks = new Map(alive(await db.decks.toArray()).map((d) => [d.id, d]));
+  const byKey = new Map<string, Note[]>();
+  for (const n of alive(await db.notes.toArray())) {
+    const k = dupKey(n);
+    byKey.set(k, [...(byKey.get(k) ?? []), n]);
+  }
+
+  let moved = 0;
+  let merged = 0;
+  for (const group of plan) {
+    for (const row of group.rows) {
+      if (row.action !== 'add' || !row.duplicate || row.duplicate.sameDeck) continue;
+      const twins = byKey.get(dupKey(row.draft)) ?? [];
+      if (row.draft.kind === 'vocab') {
+        const waiting = twins.find((n) => decks.get(n.deckId)?.locked);
+        if (!waiting) continue;
+        const deck = await ensureDeck(group.deck, opts);
+        await updateNote(waiting.id, {
+          ...mergeDraft(waiting, row.draft, opts.extraTags),
+          deckId: deck.id,
+          lessonNumber: lesson.number,
+          lessonName: lesson.name,
+        });
+        await setNoteSuspended(waiting.id, false);
+        moved++;
+      } else if (twins[0]) {
+        if (twins[0].updatedAt < SEED_TIME + SEED_WINDOW) {
+          await updateNote(twins[0].id, mergeDraft(twins[0], row.draft, opts.extraTags));
+          merged++;
+        }
+      } else continue;
+      row.action = 'skip';
+    }
+  }
+
+  const result = await applyPlan(plan, opts);
+  return { ...result, merged: result.merged + merged, skipped: result.skipped - moved - merged, moved, errors: parsed.errors };
 }

@@ -423,14 +423,20 @@ export async function deleteGrammarPage(id: ID): Promise<void> {
   await db.grammarPages.update(id, { deletedAt: now, updatedAt: now });
 }
 
-/** Add the built-in pages the first time the app runs. Edited pages are never overwritten. */
+/**
+ * Add any built-in page this device does not have yet. Edited pages are never
+ * overwritten, and a deleted page keeps its (tombstoned) row, so it stays deleted.
+ */
 export async function ensureGrammarPages(): Promise<void> {
-  if (await getKV<boolean>('grammarSeeded')) return;
   const have = new Set((await db.grammarPages.toArray()).map((p) => p.slug));
-  await db.grammarPages.bulkAdd(
-    DEFAULT_PAGES.map((p, i) => ({ ...meta(SEED_TIME, `page:${p.slug}`), slug: p.slug, title: p.title, markdown: p.markdown, order: i + 1 })).filter((p) => !have.has(p.slug)),
-  );
-  await setKV('grammarSeeded', true);
+  const missing = DEFAULT_PAGES.map((p, i) => ({
+    ...meta(SEED_TIME, `page:${p.slug}`),
+    slug: p.slug,
+    title: p.title,
+    markdown: p.markdown,
+    order: p.order ?? i + 1,
+  })).filter((p) => !have.has(p.slug));
+  if (missing.length) await db.grammarPages.bulkAdd(missing);
 }
 
 // ---------- media (recordings, images) ----------

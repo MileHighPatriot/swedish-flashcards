@@ -61,6 +61,21 @@ export function spokenTexts(notes: Pick<Note, 'swedish' | 'exampleSv' | 'kind' |
   return [...out];
 }
 
+/**
+ * Read what was pasted into the Key box. Accepts the bare key, or the lines
+ * from a settings file ("AZURE_SPEECH_KEY=…" and "AZURE_SPEECH_REGION=…").
+ */
+export function parseKeyInput(input: string, region: string): { key: string; region: string } {
+  const unquote = (v: string) => v.trim().replace(/^["']|["']$/g, '');
+  // A one-line box drops the line break, so the key may run straight into the next name.
+  const k = /KEY\s*[=:]\s*(\S+?)(?=AZURE_|\s|$)/i.exec(input);
+  const r = /REGION\s*[=:]\s*(\S+)/i.exec(input);
+  return {
+    key: unquote(k ? k[1] : input).replace(/\s+/g, ''),
+    region: unquote(r ? r[1] : region).toLowerCase().replace(/\s+/g, ''),
+  };
+}
+
 // ---------- configuration ----------
 
 let config: NeuralConfig | null = null;

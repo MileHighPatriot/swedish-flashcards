@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '../db/db';
 import { exportBackup, restoreBackup } from './backup';
-import { MAX_PER_MINUTE, NEURAL_KV, clipKey, getClip, loadNeural, missingClips, prefetch, resetSlots, saveNeural, spokenTexts, ssml, takeSlot } from './neural';
+import { MAX_PER_MINUTE, NEURAL_KV, clipKey, getClip, loadNeural, missingClips, parseKeyInput, prefetch, resetSlots, saveNeural, spokenTexts, ssml, takeSlot } from './neural';
 
 const cfg = { key: 'secret-key', region: 'westus2', voice: 'sv-SE-SofieNeural' };
 const audio = () => new Response(new Uint8Array([1, 2, 3]), { status: 200 });
@@ -40,6 +40,15 @@ describe('what gets a clip', () => {
     expect(ssml('sv-SE-SofieNeural', 'Tom & <Anna> åäö')).toBe(
       "<speak version='1.0' xml:lang='sv-SE'><voice name='sv-SE-SofieNeural'>Tom &amp; &lt;Anna&gt; åäö</voice></speak>",
     );
+  });
+});
+
+describe('pasting the key', () => {
+  it('takes a bare key, or the lines copied from the settings file', () => {
+    expect(parseKeyInput('  abc123 \n', 'WestUS2 ')).toEqual({ key: 'abc123', region: 'westus2' });
+    expect(parseKeyInput('AZURE_SPEECH_KEY=abc123\nAZURE_SPEECH_REGION=eastus\n', 'westus2')).toEqual({ key: 'abc123', region: 'eastus' });
+    expect(parseKeyInput('AZURE_SPEECH_KEY=abc123AZURE_SPEECH_REGION=eastus', 'westus2')).toEqual({ key: 'abc123', region: 'eastus' });
+    expect(parseKeyInput('AZURE_SPEECH_KEY="abc123"', 'westus2')).toEqual({ key: 'abc123', region: 'westus2' });
   });
 });
 

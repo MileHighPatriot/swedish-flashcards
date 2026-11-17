@@ -9,7 +9,7 @@ import type { Settings, ThemeSetting } from '../db/types';
 import { useSettings } from '../lib/hooks';
 import { MAX_RETENTION, MIN_RETENTION, clampRetention } from '../lib/scheduler';
 import { say, setPreferredVoice, speechSupported, useSwedishVoices } from '../lib/speech';
-import { DEFAULT_NEURAL_REGION, DEFAULT_NEURAL_VOICE, NEURAL_VOICES, clearClips, neuralConfig, requestClip, saveNeural, useNeuralStatus } from '../lib/neural';
+import { DEFAULT_NEURAL_REGION, DEFAULT_NEURAL_VOICE, NEURAL_VOICES, clearClips, neuralConfig, parseKeyInput, requestClip, saveNeural, useNeuralStatus } from '../lib/neural';
 
 function clampInt(value: string, min: number, max: number, fallback: number): number {
   const n = Math.round(Number(value));
@@ -113,7 +113,7 @@ function NaturalVoice() {
   const turnOn = async (k = key, r = region) => {
     setBusy(true);
     setMessage(null);
-    const cfg = { key: k.trim(), region: r.trim().toLowerCase().replace(/\s+/g, ''), voice: DEFAULT_NEURAL_VOICE };
+    const cfg = { ...parseKeyInput(k, r), voice: DEFAULT_NEURAL_VOICE };
     try {
       // One short clip proves the key and region before anything is saved.
       await requestClip(cfg, 'Hej!');

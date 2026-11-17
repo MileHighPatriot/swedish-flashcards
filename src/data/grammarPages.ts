@@ -6,6 +6,8 @@ export interface DefaultPage {
   slug: string;
   title: string;
   markdown: string;
+  /** Where the page sits in the list. Defaults to its place in this file. */
+  order?: number;
 }
 
 export const DEFAULT_PAGES: DefaultPage[] = [
@@ -78,6 +80,87 @@ Verbs whose present tense ends in **-er** (or just -r) take **-te** or **-de** i
 - -de when you need -te: ~~läsde~~ → läste. The stem läs ends in s.
 - -te when you need -de: ~~ringte~~ → ringde. The stem ring ends in g.
 - Forgetting bo and tro: ~~boade~~ → bodde.
+`,
+  },
+  {
+    slug: 'irregular',
+    title: 'Irregular verbs',
+    // Added with Lesson 3. Sits after the two regular past-tense pages on every device.
+    order: 2.5,
+    markdown: `# Irregular verbs
+
+The ten most common verbs break the -ade, -te and -de patterns, just like English go / went, eat / ate, see / saw. You cannot work them out, so you learn each past form once.
+
+Still one form for every person: jag gick, du gick, hon gick, vi gick.
+
+| Infinitive | Present | Past | English | Third form |
+|---|---|---|---|---|
+| gå | går | **gick** | go, walk | gått |
+| äta | äter | **åt** | eat | ätit |
+| se | ser | **såg** | see | sett |
+| vara | är | **var** | be | varit |
+| ha | har | **hade** | have | haft |
+| göra | gör | **gjorde** | do, make | gjort |
+| komma | kommer | **kom** | come | kommit |
+| få | får | **fick** | get, receive | fått |
+| ta | tar | **tog** | take | tagit |
+| ge | ger | **gav** | give | gett |
+
+The third form is for later. You only need it after har: Jag har sett filmen.
+
+## Memory hooks
+| Pattern | Verbs |
+|---|---|
+| Sounds like the English past | åt = ate, såg = saw, tog = took, gav = gave, kom = came |
+| A rhyming pair | gå → gick and få → fick (both end in -ick) |
+| Almost regular | hade (ha + de) and gjorde (göra + de, with gj). Both end in -de. |
+| The odd one | var means was for every person: jag var, du var, vi var. Var also means where: Var var du? *(Where were you?)* |
+
+## How to say it
+The letter g before i, e, ä, ö, y sounds like English y. The letters gj also sound like y.
+
+| Word | Sounds like |
+|---|---|
+| gick | YICK |
+| gjorde | YOOR-deh |
+| såg | SOHG (like "saw" with a g) |
+| tog | TOOG |
+| gav | GAHV |
+| åt | AWT |
+
+These are approximations. Use the play button on a card, or search the word on forvo.com, to hear it.
+
+## Do not use the third form as the past
+The third form (gått, sett, köpt) is not the plain past. After a time word like igår you need the past form.
+
+- ~~Jag gått hem igår.~~ → Jag gick hem igår.
+- ~~Jag köpt en bok.~~ → Jag köpte en bok.
+- ~~Jag sett en film.~~ → Jag såg en film.
+
+## Walk or ride?
+| Word | Meaning | Example |
+|---|---|---|
+| gå | go on foot | Jag gick till affären. |
+| åka | go by vehicle | Vi åkte till bergen. |
+
+For a car, bus or plane use åka or resa.
+
+## Questions and the seat rule still apply
+| Statement | Question |
+|---|---|
+| Du tog bussen. | Tog du bussen? |
+| Ni såg filmen. | Såg ni filmen? |
+| Du hade mycket att göra. | Hade du mycket att göra? |
+
+After a time word the verb stays in seat 2: Igår gick jag hem. I lördags såg vi en film. Förra veckan hade jag mycket att göra.
+
+## Watch out
+- Adding -ade to an irregular verb: ~~gåde, ätade, gördade~~ → gick, åt, gjorde.
+- Mixing up var and vart: var = was, vart = where to. Igår kväll var jag hemma.
+- Forgetting the flip after a time word: ~~Igår jag gick.~~ → Igår gick jag.
+
+## Coming next
+skriva (skrev), sitta (satt), stå (stod), bli (blev) and dricka (drack).
 `,
   },
   {
