@@ -220,6 +220,14 @@ export interface ReviewLog extends SyncMeta {
   cram: boolean;
 }
 
+/** One saved clip of the natural voice, keyed by "voice|text". */
+export interface TtsClip {
+  key: string;
+  data: ArrayBuffer;
+  mime: string;
+  at: number;
+}
+
 export interface Media extends SyncMeta {
   kind: 'audio' | 'image';
   mime: string;

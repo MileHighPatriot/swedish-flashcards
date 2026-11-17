@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { getKV, updateSettings } from '../db/repo';
 import { downloadBackup } from '../lib/backup';
 import { askForNotifications, notificationPermission, sendTestNotification } from '../lib/reminder';
@@ -8,7 +8,8 @@ import { signInAndSync, signOutOfSync, syncNow, useSyncStatus } from '../sync/au
 import type { Settings, ThemeSetting } from '../db/types';
 import { useSettings } from '../lib/hooks';
 import { MAX_RETENTION, MIN_RETENTION, clampRetention } from '../lib/scheduler';
-import { setPreferredVoice, speak, speechSupported, useSwedishVoices } from '../lib/speech';
+import { say, setPreferredVoice, speechSupported, useSwedishVoices } from '../lib/speech';
+import { DEFAULT_NEURAL_REGION, DEFAULT_NEURAL_VOICE, NEURAL_VOICES, clearClips, neuralConfig, requestClip, saveNeural, useNeuralStatus } from '../lib/neural';
 
 function clampInt(value: string, min: number, max: number, fallback: number): number {
   const n = Math.round(Number(value));
@@ -101,6 +102,113 @@ function SyncCard() {
   );
 }
 
+function NaturalVoice() {
+  const st = useNeuralStatus();
+  const saved = st.enabled ? neuralConfig() : null;
+  const [key, setKey] = useState('');
+  const [region, setRegion] = useState(DEFAULT_NEURAL_REGION);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const turnOn = async (k = key, r = region) => {
+    setBusy(true);
+    setMessage(null);
+    const cfg = { key: k.trim(), region: r.trim().toLowerCase().replace(/\s+/g, ''), voice: DEFAULT_NEURAL_VOICE };
+    try {
+      // One short clip proves the key and region before anything is saved.
+      await requestClip(cfg, 'Hej!');
+      await saveNeural(cfg);
+      setKey('');
+      say('Hej! Jag lär mig svenska.', 1);
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : 'That did not work.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // A setup link (…#/settings?voicekey=…&region=…) fills this in without typing.
+  // The key is taken out of the address straight away.
+  const [params, setParams] = useSearchParams();
+  const linkKey = params.get('voicekey');
+  const linkRegion = params.get('region');
+  useEffect(() => {
+    if (!linkKey) return;
+    setParams({}, { replace: true });
+    void turnOn(linkKey, linkRegion || DEFAULT_NEURAL_REGION);
+    // Runs once, when the link is opened.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkKey]);
+
+  if (busy && !key) return <p className="subcard muted">Setting up the natural voice…</p>;
+
+  if (saved)
+    return (
+      <div className="subcard">
+        <h3>Natural voice</h3>
+        <label className="field">
+          <span className="field-label">Voice</span>
+          <select value={saved.voice} onChange={(e) => void saveNeural({ ...saved, voice: e.target.value })}>
+            {NEURAL_VOICES.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p className="muted small" role="status">
+          {st.total === 0
+            ? 'Checking your cards…'
+            : st.ready >= st.total
+              ? `All ${st.total} clips are saved on this device and play offline.`
+              : `${st.ready} of ${st.total} clips saved on this device.${st.running ? ' Downloading the rest, about 12 a minute, while the app is open.' : ''}`}
+          {st.error && ` ${st.error}`}
+        </p>
+        <p className="muted small">New cards get their clips the same way after you add a lesson. Until a clip is saved, the card uses the device voice below.</p>
+        <div className="actions">
+          <button type="button" className="btn btn-small" onClick={() => void clearClips()}>
+            Download clips again
+          </button>
+          <button type="button" className="btn btn-small" onClick={() => void saveNeural(null)}>
+            Turn off
+          </button>
+        </div>
+      </div>
+    );
+
+  return (
+    <details className="subcard">
+      <summary>
+        <strong>Natural voice</strong> <span className="muted small">a real-sounding Swedish voice, using your own Azure Speech key</span>
+      </summary>
+      <p className="muted small">
+        Paste the key and region of your Azure Speech resource. The key stays on this device; it is not synced or put in backup files, so enter it once on
+        each device.
+      </p>
+      <div className="field-grid">
+        <label className="field">
+          <span className="field-label">Key</span>
+          <input type="password" autoComplete="off" value={key} onChange={(e) => setKey(e.target.value)} />
+        </label>
+        <label className="field">
+          <span className="field-label">Region</span>
+          <input type="text" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={region} onChange={(e) => setRegion(e.target.value)} />
+        </label>
+      </div>
+      {message && (
+        <p className="notice" role="alert">
+          {message}
+        </p>
+      )}
+      <div className="actions">
+        <button type="button" className="btn btn-primary btn-small" disabled={busy || !key.trim() || !region.trim()} onClick={() => void turnOn()}>
+          {busy ? 'Checking…' : 'Turn on'}
+        </button>
+      </div>
+    </details>
+  );
+}
+
 export function SettingsPage() {
   const s = useSettings();
   const voices = useSwedishVoices();
@@ -182,6 +290,7 @@ export function SettingsPage() {
 
       <div className="card">
         <h2>Swedish audio</h2>
+        <NaturalVoice />
         {!speechSupported() ? (
           <p className="notice">This browser cannot speak. Cards with their own recording still play.</p>
         ) : voices.length === 0 ? (
@@ -199,7 +308,7 @@ export function SettingsPage() {
           </div>
         ) : (
           <label className="field">
-            <span className="field-label">Voice</span>
+            <span className="field-label">Device voice</span>
             <select
               value={voices.some((v) => v.voiceURI === s.ttsVoice) ? s.ttsVoice : ''}
               onChange={(e) => {
@@ -237,10 +346,10 @@ export function SettingsPage() {
           </label>
         </div>
         <div className="actions">
-          <button type="button" className="btn btn-small" onClick={() => speak('Hej! Jag lär mig svenska.', s.ttsRate)}>
+          <button type="button" className="btn btn-small" onClick={() => say('Hej! Jag lär mig svenska.', s.ttsRate)}>
             Test
           </button>
-          <button type="button" className="btn btn-small" onClick={() => speak('Hej! Jag lär mig svenska.', s.ttsSlowRate)}>
+          <button type="button" className="btn btn-small" onClick={() => say('Hej! Jag lär mig svenska.', s.ttsSlowRate)}>
             Test slow
           </button>
         </div>

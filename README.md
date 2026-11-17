@@ -111,6 +111,16 @@ Sync uses a free Supabase project:
 
 The key is public by design: row-level security means each account can only read and write its own rows. Recordings attached to cards are not synced; other devices read those cards with the Swedish voice instead.
 
+## Natural voice (optional)
+
+By default the app reads Swedish with the device's own voice. For a natural-sounding one (Sofie, a native Swedish voice from Azure Speech):
+
+1. Create an Azure Speech resource on the Free (F0) tier, which includes 0.5 million characters a month.
+2. In the app, open Settings → Swedish audio → Natural voice, paste the resource's key and region, and press Turn on.
+3. Do the same once on each device. The key stays on the device: it is not built into the app, synced, or written to backup files.
+
+The app fetches each word and sentence once, saves the clip on the device, and plays it from there, so audio works offline. New lessons get their clips the same way, about 12 a minute while the app is open. Slow playback slows the saved clip and keeps its pitch. A card whose clip is not saved yet uses the device voice.
+
 ## How it is built
 
 - TypeScript, React and Vite. Installable PWA through `vite-plugin-pwa`.

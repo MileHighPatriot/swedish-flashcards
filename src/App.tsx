@@ -11,6 +11,7 @@ import { Grammar } from './pages/Grammar';
 import { Stats } from './pages/Stats';
 import { useReminder } from './lib/reminder';
 import { useAutoSync } from './sync/auto';
+import { useNeuralPrefetch } from './lib/neural';
 import { SettingsPage } from './pages/SettingsPage';
 
 const NAV = [
@@ -28,6 +29,7 @@ export function App() {
   useEffect(() => setPreferredVoice(settings.ttsVoice), [settings.ttsVoice]);
   useReminder(settings);
   useAutoSync();
+  useNeuralPrefetch();
   // Ask the browser not to evict the database when the device runs low on space.
   useEffect(() => {
     void navigator.storage?.persist?.().catch(() => false);

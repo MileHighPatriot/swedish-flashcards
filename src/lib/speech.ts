@@ -1,9 +1,10 @@
-// Swedish audio: the browser's text-to-speech (Web Speech API, sv-SE), or a
-// recording attached to the card when there is one.
+// Swedish audio: a recording attached to the card, the natural voice from
+// Azure when it is set up (see neural.ts), or the browser's own text-to-speech.
 
 import { useEffect, useState } from 'react';
 import { db } from '../db/db';
 import type { ID } from '../db/types';
+import { getClip, neuralEnabled } from './neural';
 
 export const speechSupported = (): boolean => typeof window !== 'undefined' && 'speechSynthesis' in window;
 
@@ -63,17 +64,18 @@ export function useSwedishVoices(): SpeechSynthesisVoice[] {
   return voices;
 }
 
-let currentAudio: HTMLAudioElement | null = null;
+// One audio element for everything. On iPhone an element that has played once
+// from a tap may play again later without one, which auto-play relies on.
+let player: HTMLAudioElement | null = null;
+let playerUrl = '';
+let sayToken = 0;
 
 export function stopSpeaking(): void {
   if (speechSupported()) window.speechSynthesis.cancel();
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
+  player?.pause();
 }
 
-/** Say something in Swedish with text-to-speech. Stops whatever was playing. */
+/** Say something in Swedish with the device's own voice. Stops whatever was playing. */
 export function speak(text: string, rate = 1): void {
   stopSpeaking();
   if (!speechSupported() || !text.trim()) return;
@@ -85,32 +87,47 @@ export function speak(text: string, rate = 1): void {
   window.speechSynthesis.speak(u);
 }
 
-/** Play a recording from the media table. Resolves false if it is missing. */
-export async function playMedia(id: ID, rate = 1): Promise<boolean> {
-  const row = await db.media.get(id);
-  if (!row || row.deletedAt != null || row.blob.size === 0) return false;
+async function playBlob(blob: Blob, rate: number): Promise<boolean> {
   stopSpeaking();
-  const url = URL.createObjectURL(row.blob);
-  const audio = new Audio(url);
-  audio.playbackRate = Math.min(2, Math.max(0.3, rate));
-  audio.preservesPitch = true;
-  audio.onended = audio.onerror = () => URL.revokeObjectURL(url);
-  currentAudio = audio;
+  if (typeof Audio === 'undefined') return false;
+  player ??= new Audio();
+  if (playerUrl) URL.revokeObjectURL(playerUrl);
+  playerUrl = URL.createObjectURL(blob);
+  player.src = playerUrl;
+  // Slowing a clip keeps its pitch, so slow playback still sounds natural.
+  player.preservesPitch = true;
+  player.defaultPlaybackRate = player.playbackRate = Math.min(2, Math.max(0.3, rate));
   try {
-    await audio.play();
+    await player.play();
     return true;
   } catch {
-    URL.revokeObjectURL(url);
     return false;
   }
 }
 
-/** Play the card's own recording if it has one, otherwise speak the text. */
+/** Play a recording from the media table. Resolves false if it is missing. */
+export async function playMedia(id: ID, rate = 1): Promise<boolean> {
+  const row = await db.media.get(id);
+  if (!row || row.deletedAt != null || row.blob.size === 0) return false;
+  return playBlob(row.blob, rate);
+}
+
+/**
+ * Play Swedish: the card's own recording if it has one, then the natural
+ * voice (saved clip, or fetched when online), then the device's voice.
+ */
 export function say(text: string, rate = 1, audioId?: ID | null): void {
-  if (!audioId) return speak(text, rate);
-  void playMedia(audioId, rate).then((ok) => {
-    if (!ok) speak(text, rate);
-  });
+  const token = ++sayToken;
+  // Nothing to wait for: speak straight away, inside the tap.
+  if (!audioId && !neuralEnabled()) return speak(text, rate);
+  void (async () => {
+    if (audioId && (await playMedia(audioId, rate))) return;
+    if (token !== sayToken) return;
+    const clip = await getClip(text);
+    if (token !== sayToken) return;
+    if (clip && (await playBlob(new Blob([clip.data], { type: clip.mime }), rate))) return;
+    if (token === sayToken) speak(text, rate);
+  })();
 }
 
 /** Can this device make Swedish sound at all (a voice, or at least speech support)? */

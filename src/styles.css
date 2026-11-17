@@ -1610,3 +1610,21 @@ a.pill-btn {
   color: var(--muted);
   white-space: nowrap;
 }
+
+/* ---------- natural voice (settings) ---------- */
+.subcard {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 0 16px;
+}
+.subcard h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.subcard summary {
+  cursor: pointer;
+}
+.subcard[open] summary {
+  margin-bottom: 8px;
+}

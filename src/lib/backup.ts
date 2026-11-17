@@ -1,5 +1,6 @@
 // CSV import/export of cards, and full JSON backup/restore of everything.
 
+import { NEURAL_KV } from './neural';
 import { db } from '../db/db';
 import { alive, setKV } from '../db/repo';
 import {
@@ -281,8 +282,8 @@ export async function exportBackup(): Promise<Backup> {
   tables.media = await Promise.all(
     (await db.media.toArray()).map(async ({ blob, ...rest }) => ({ ...rest, data: await blobToBase64(blob) })),
   );
-  // Sign-in tokens and sync bookkeeping never go into a backup file.
-  tables.kv = (await db.kv.toArray()).filter((r) => !r.key.startsWith('sync'));
+  // Sign-in tokens, sync bookkeeping and the speech key never go into a backup file.
+  tables.kv = (await db.kv.toArray()).filter((r) => !r.key.startsWith('sync') && r.key !== NEURAL_KV);
   return { app: BACKUP_APP, version: BACKUP_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 
@@ -312,7 +313,12 @@ export async function restoreBackup(data: unknown, mode: 'replace' | 'merge'): P
   const backup = validateBackup(data);
   const media: Media[] = (backup.tables.media ?? []).map(({ data: d, ...rest }) => ({ ...rest, blob: base64ToBlob(d, rest.mime) }));
   await db.transaction('rw', db.tables, async () => {
-    if (mode === 'replace') await Promise.all(db.tables.map((t) => t.clear()));
+    if (mode === 'replace') {
+      // The speech key and its saved clips belong to this device, not to the backup.
+      const speech = await db.kv.get(NEURAL_KV);
+      await Promise.all(db.tables.filter((t) => t.name !== 'tts').map((t) => t.clear()));
+      if (speech) await db.kv.put(speech);
+    }
     const put = async (name: string, rows: SyncMeta[]) => {
       const table = db.table(name);
       if (mode === 'replace') return void (await table.bulkPut(rows));
