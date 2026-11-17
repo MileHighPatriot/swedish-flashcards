@@ -1628,3 +1628,200 @@ a.pill-btn {
 .subcard[open] summary {
   margin-bottom: 8px;
 }
+
+/* ---------- practice ---------- */
+.tool-link {
+  align-items: center;
+  gap: 12px;
+}
+.tool-blurb {
+  display: block;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 400;
+  margin-top: 2px;
+}
+.actions-center {
+  justify-content: center;
+}
+.btn-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.recorder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.rec-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  background: var(--again);
+  margin-right: 8px;
+}
+.btn-rec.is-recording {
+  border-color: var(--again);
+  color: var(--again);
+}
+.btn-rec.is-recording .rec-dot {
+  border-radius: 2px;
+  animation: rec-pulse 1s ease-in-out infinite;
+}
+@keyframes rec-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-rec.is-recording .rec-dot {
+    animation: none;
+  }
+}
+.btn-choice {
+  min-width: 96px;
+  min-height: 56px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.btn-choice.is-right {
+  border-color: var(--good);
+  color: var(--good);
+}
+.btn-choice.is-wrong {
+  border-color: var(--again);
+  color: var(--again);
+}
+
+/* dialogue */
+.bubbles {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bubble {
+  align-self: flex-start;
+  max-width: 86%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+.bubble-me {
+  align-self: flex-end;
+  background: var(--accent-soft);
+  border-radius: 16px 16px 4px 16px;
+}
+.bubble-who {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.bubble-en {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.turn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.turn p {
+  margin: 0;
+}
+.turn-en {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* reader */
+.reader {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 6px 16px;
+  margin-top: 12px;
+}
+.reader-line {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.reader-line:last-child {
+  border-bottom: 0;
+}
+.reader-line p {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.reader-line .reader-en {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.tok {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 4px;
+  padding: 2px 1px;
+  margin: 0;
+  cursor: pointer;
+}
+.tok-new {
+  border-bottom: 2px dotted var(--muted);
+}
+.tok-on,
+.tok:hover {
+  background: var(--accent-soft);
+}
+.tok-play {
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 6px 8px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.word-panel {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 0 4px;
+}
+.word-panel p {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin: 6px 0;
+}
+.word-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.word-panel-head strong {
+  font-size: 1.15rem;
+  margin-right: auto;
+}
+.reader-open {
+  color: inherit;
+  text-decoration: none;
+}

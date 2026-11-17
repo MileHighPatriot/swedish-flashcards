@@ -1,0 +1,14 @@
+# Lesson 03 – Hur var din dag?
+# A talk with your mother-in-law, from the Lesson 3 printable.
+# Lines:  Speaker | Swedish | English
+Svärmor | Hej! Hur var din dag? | Hi! How was your day?
+Du | Den var bra! Jag gick till jobbet och jag såg en gammal vän. | It was good! I went to work and I saw an old friend.
+Svärmor | Vad kul! Vad gjorde ni? | How fun! What did you do?
+Du | Vi åt lunch tillsammans och pratade en stund. | We ate lunch together and talked for a while.
+Du | Min vän gav mig en present. Jag fick en bok! | My friend gave me a present. I got a book!
+Svärmor | Åh, vad fint! Tog du den med hem? | Oh, how nice! Did you take it home?
+Du | Ja, jag tog den med hem. | Yes, I took it home.
+Svärmor | Kom du hem sent? | Did you get home late?
+Du | Nej, jag kom hem klockan sex. | No, I got home at six.
+Svärmor | Hade du mycket att göra? | Did you have a lot to do?
+Du | Ja, jag hade mycket att göra. | Yes, I had a lot to do.

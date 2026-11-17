@@ -93,12 +93,17 @@ Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `ve
 - **Keys:** Space flips (then rates Good), 1–4 rate, Z undoes, E edits. On a phone, swipe left for Again and right for Good.
 - **Swedish:** text-to-speech with a slow button and optional auto-play, å ä ö buttons wherever you type, answers that forgive a missing å/ä/ö with a warning, and en/ett colour labels.
 - **Grammar tab:** editable notes pages, a mistake log, weak-spots study, "Export for Claude", and a past-tense verb drill.
+- **Practice tab:** dictation (hear a sentence from your cards, type it), dialogue role-play (the app speaks the other person's lines and waits for yours), a daily journal that hands your entry to Claude and turns the corrections into fix cards, record and compare (your voice next to the Swedish voice), a reader where every word can be tapped and added as a card, a verb drill for present, past and third form, and an en/ett drill.
 - **Stats:** review heatmap, retention, cards by maturity, a 14-day forecast, and a streak that forgives a missed day with a freeze.
 - **Data:** stored on the device, one-click full backup, CSV import and export.
 
 The starter content lives in `seed/` and loads itself the first time the app opens: your Lesson 1 and 2 grammar file, plus extras taken from the two printables.
 
 From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irregular-verbs.txt`, with the title on the first line (`# Lesson 03 – Irregular verbs`) and the same `###` sections as a pasted lesson. Every device loads a new file once, the next time the app opens. Words that were waiting in the locked "Coming soon" deck move into the lesson, and a grammar card with the same prompt as an older one is updated instead of doubled.
+
+Dialogues and reading texts live in `seed/texts/`, one file each. The first line is the title (`# Lesson 03 – Hur var din dag?`), then one line per sentence: `Speaker | Swedish | English` for a dialogue, `Swedish | English` for a story. A new file shows up in the Reader, and in Dialogue role-play if it has two speakers. You can also paste your own texts in the Reader.
+
+Recordings made in the Practice tab are never saved. The journal and your own texts are stored like cards: on the device, in backups, and in sync.
 
 ## Sync between devices (optional)
 

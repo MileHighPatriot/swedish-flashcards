@@ -1,0 +1,9 @@
+# Lesson 02 – Vad gjorde du i helgen?
+# A talk with your mother-in-law, from the Lesson 2 printable.
+# Lines:  Speaker | Swedish | English
+Svärmor | Hej! Vad gjorde du i helgen? | Hi! What did you do this past weekend?
+Du | I lördags köpte jag en bok och läste den på kvällen. | Last Saturday I bought a book and read it in the evening.
+Svärmor | Vad bra! Vad handlade den om? | How nice! What was it about?
+Du | Den handlade om Sverige. Jag tänkte på dig! | It was about Sweden. I thought of you!
+Svärmor | Åh, vad fint! Åkte ni någonstans? | Oh, how sweet! Did you go anywhere?
+Du | Ja, vi åkte till bergen i söndags. | Yes, we went to the mountains last Sunday.

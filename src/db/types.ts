@@ -259,6 +259,21 @@ export interface Mistake extends SyncMeta {
   manual: boolean;
 }
 
+/** A reading text or dialogue I added myself. `body` uses the same lines as the files in seed/texts. */
+export interface TextDoc extends SyncMeta {
+  title: string;
+  body: string;
+}
+
+/** One day's journal entry. */
+export interface JournalEntry extends SyncMeta {
+  /** Local date, "YYYY-MM-DD". One entry per day. */
+  date: string;
+  text: string;
+  /** The corrections pasted back from Claude, kept for reference. */
+  feedback: string;
+}
+
 export type ThemeSetting = 'system' | 'light' | 'dark';
 
 export interface Settings {

@@ -66,6 +66,9 @@ export function Home() {
       <Link className="btn btn-primary btn-big" to="/study?start=1">
         Start studying
       </Link>
+      <Link className="btn btn-big" to="/practice">
+        Practice: listen, speak, write, read
+      </Link>
 
       {backupDue && (
         <div className="notice backup-nudge">

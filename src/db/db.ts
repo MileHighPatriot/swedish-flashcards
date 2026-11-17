@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable, type Table } from 'dexie';
-import type { Card, Deck, GrammarPage, KeyValue, Media, Mistake, Note, ReviewLog, TtsClip } from './types';
+import type { Card, Deck, GrammarPage, JournalEntry, KeyValue, Media, Mistake, Note, ReviewLog, TextDoc, TtsClip } from './types';
 
 // The Dexie schema. Only `repo.ts` (and backup/import code) should touch these
 // tables directly, so that every write gets stamped and a sync layer has one
@@ -12,6 +12,8 @@ export class FlashcardDB extends Dexie {
   media!: EntityTable<Media, 'id'>;
   grammarPages!: EntityTable<GrammarPage, 'id'>;
   mistakes!: EntityTable<Mistake, 'id'>;
+  texts!: EntityTable<TextDoc, 'id'>;
+  journal!: EntityTable<JournalEntry, 'id'>;
   kv!: Table<KeyValue, string>;
   /** Saved clips of the natural voice. Per device: never synced or backed up. */
   tts!: Table<TtsClip, string>;
@@ -29,6 +31,8 @@ export class FlashcardDB extends Dexie {
       kv: 'key',
     });
     this.version(2).stores({ tts: 'key' });
+    // Practice tools: my own reading texts and the daily journal.
+    this.version(3).stores({ texts: 'id, updatedAt', journal: 'id, date, updatedAt' });
   }
 }
 

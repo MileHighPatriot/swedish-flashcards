@@ -7,6 +7,8 @@ export interface DrillVerb {
   infinitive: string;
   english: string;
   past: string;
+  present: string;
+  supine: string;
   lesson: string;
   tags: string[];
 }
@@ -59,6 +61,9 @@ export function pastRule(infinitive: string, past: string): PastRule {
 /** "lesson-01" → "Lesson 01" */
 export const lessonLabel = (tag: string) => tag.replace(/^lesson-/i, 'Lesson ');
 
+export type VerbForm = 'past' | 'present' | 'supine';
+export const VERB_FORM_LABELS: Record<VerbForm, string> = { past: 'Past tense', present: 'Present tense', supine: 'Third form (after har)' };
+
 /** Every verb that has a past form, with the lesson it belongs to. */
 export function drillVerbs(notes: Note[], suspendedNoteIds: Set<string> = new Set()): DrillVerb[] {
   const seen = new Set<string>();
@@ -71,7 +76,7 @@ export function drillVerbs(notes: Note[], suspendedNoteIds: Set<string> = new Se
     const key = `${lesson}:${infinitive.toLowerCase()}`;
     if (!lesson || seen.has(key)) continue;
     seen.add(key);
-    out.push({ noteId: n.id, infinitive, english: n.english, past: n.verb.past.trim(), lesson, tags: n.tags });
+    out.push({ noteId: n.id, infinitive, english: n.english, past: n.verb.past.trim(), present: n.verb.present.trim(), supine: n.verb.supine.trim(), lesson, tags: n.tags });
   }
   return out;
 }

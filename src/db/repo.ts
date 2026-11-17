@@ -12,6 +12,7 @@ import {
   type Grade,
   type GrammarPage,
   type ID,
+  type JournalEntry,
   type Media,
   type Mistake,
   type Note,
@@ -21,6 +22,7 @@ import {
   type SchedState,
   type Settings,
   type SyncMeta,
+  type TextDoc,
 } from './types';
 import { newSchedState, studyDayEnd, studyDayStart } from '../lib/scheduler';
 import { DEFAULT_PAGES } from '../data/grammarPages';
@@ -437,6 +439,46 @@ export async function ensureGrammarPages(): Promise<void> {
     order: p.order ?? i + 1,
   })).filter((p) => !have.has(p.slug));
   if (missing.length) await db.grammarPages.bulkAdd(missing);
+}
+
+// ---------- practice: my reading texts and the journal ----------
+
+export async function listTexts(): Promise<TextDoc[]> {
+  return alive(await db.texts.toArray()).sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function saveText(input: { id?: ID; title: string; body: string }): Promise<TextDoc> {
+  const now = Date.now();
+  const existing = input.id ? await db.texts.get(input.id) : undefined;
+  const row: TextDoc = existing
+    ? { ...existing, title: input.title.trim(), body: input.body, updatedAt: now, deletedAt: null }
+    : { ...meta(now), title: input.title.trim(), body: input.body };
+  await db.texts.put(row);
+  return row;
+}
+
+export async function deleteText(id: ID): Promise<void> {
+  const now = Date.now();
+  await db.texts.update(id, { deletedAt: now, updatedAt: now });
+}
+
+export async function listJournal(): Promise<JournalEntry[]> {
+  return alive(await db.journal.toArray()).sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/** One entry per day: its id is the date, so two devices writing the same day share a row. */
+export async function saveJournal(date: string, patch: Partial<Pick<JournalEntry, 'text' | 'feedback'>>): Promise<JournalEntry> {
+  const now = Date.now();
+  const id = `journal:${date}`;
+  const existing = await db.journal.get(id);
+  const row: JournalEntry = { ...(existing ?? { ...meta(now, id), date, text: '', feedback: '' }), ...patch, updatedAt: now, deletedAt: null };
+  await db.journal.put(row);
+  return row;
+}
+
+export async function deleteJournal(date: string): Promise<void> {
+  const now = Date.now();
+  await db.journal.update(`journal:${date}`, { deletedAt: now, updatedAt: now });
 }
 
 // ---------- media (recordings, images) ----------

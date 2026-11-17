@@ -24,7 +24,7 @@ import { checkAnswer } from '../lib/check';
 import { Markdown } from '../lib/markdown';
 import { shuffled } from '../lib/queue';
 import { TOPICS, topicFor, topicTitle } from '../lib/topics';
-import { drillVerbs, lessonLabel, pastRule, type DrillVerb } from '../lib/verbdrill';
+import { VERB_FORM_LABELS, drillVerbs, lessonLabel, pastRule, type DrillVerb, type VerbForm } from '../lib/verbdrill';
 import { computeWeakSpots, exportForClaude, weakSpotCardIds } from '../lib/weakspots';
 import { TypedInput, VerdictBox, type Answer } from '../study/CardView';
 
@@ -479,7 +479,7 @@ interface DrillResult {
   answer: Answer;
 }
 
-function VerbDrill() {
+export function VerbDrill() {
   const verbs = useLiveQuery(async () => {
     const [notes, cards] = await Promise.all([listNotes(), listCards()]);
     const active = new Set(cards.filter((c) => !c.suspended).map((c) => c.noteId));
@@ -488,6 +488,7 @@ function VerbDrill() {
   const lessons = useMemo(() => [...new Set((verbs ?? []).map((v) => v.lesson))].sort(), [verbs]);
   const [picked, setPicked] = useState<string[] | null>(null);
   const [size, setSize] = useState(10);
+  const [form, setForm] = useState<VerbForm>('past');
   const [queue, setQueue] = useState<DrillVerb[] | null>(null);
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState<Answer | null>(null);
@@ -500,8 +501,9 @@ function VerbDrill() {
 
   if (!verbs) return <p className="muted">Loading…</p>;
   if (verbs.length === 0) return <p className="muted">No verbs with a past form yet. Load the starter lessons from Add → Files.</p>;
-  const chosen = picked ?? lessons.filter((l) => l === 'lesson-01' || l === 'lesson-02');
-  const pool = verbs.filter((v) => chosen.includes(v.lesson));
+  // Every lesson to begin with; a verb only counts if it has the form being drilled.
+  const chosen = picked ?? lessons;
+  const pool = verbs.filter((v) => chosen.includes(v.lesson) && v[form]);
 
   const start = () => {
     setQueue(shuffled(pool).slice(0, size || pool.length));
@@ -513,13 +515,23 @@ function VerbDrill() {
   if (!queue)
     return (
       <>
-        <p className="muted">You see the infinitive, you type the past tense. After each one you get the stem-ending rule that decides it.</p>
+        <p className="muted">You see the infinitive, you type the form you chose. For the past tense you also get the stem-ending rule that decides it.</p>
+        <label className="field">
+          <span className="field-label">Form</span>
+          <select value={form} onChange={(e) => setForm(e.target.value as VerbForm)}>
+            {(Object.keys(VERB_FORM_LABELS) as VerbForm[]).map((f) => (
+              <option key={f} value={f}>
+                {VERB_FORM_LABELS[f]}
+              </option>
+            ))}
+          </select>
+        </label>
         <fieldset className="checks">
           <legend className="field-label">Lessons</legend>
           {lessons.map((l) => (
             <label key={l} className="check">
               <input type="checkbox" checked={chosen.includes(l)} onChange={(e) => setPicked(e.target.checked ? [...chosen, l] : chosen.filter((x) => x !== l))} />
-              {lessonLabel(l)} ({verbs.filter((v) => v.lesson === l).length})
+              {lessonLabel(l)} ({verbs.filter((v) => v.lesson === l && v[form]).length})
             </label>
           ))}
         </fieldset>
@@ -548,7 +560,7 @@ function VerbDrill() {
           <ul>
             {misses.map((r) => (
               <li key={r.verb.noteId} lang="sv">
-                {r.verb.infinitive} → <strong>{r.verb.past}</strong>
+                {r.verb.infinitive} → <strong>{r.verb[form]}</strong>
                 {r.answer.typed.trim() ? ` (you typed ${r.answer.typed.trim()})` : ''}
               </li>
             ))}
@@ -567,9 +579,11 @@ function VerbDrill() {
   }
 
   const verb = queue[index];
-  const rule = pastRule(verb.infinitive, verb.past);
+  const target = verb[form];
+  const rule = form === 'past' ? pastRule(verb.infinitive, verb.past) : null;
+  const formName = VERB_FORM_LABELS[form].replace(/ \(.*$/, '');
   const submit = (typed: string, skipped = false) => {
-    const check = checkAnswer(typed, [verb.past]);
+    const check = checkAnswer(typed, [target]);
     const a: Answer = { typed, check: skipped ? { ...check, verdict: 'wrong' } : check };
     setAnswer(a);
     setResults((r) => [...r, { verb, answer: a }]);
@@ -578,11 +592,11 @@ function VerbDrill() {
         at: Date.now(),
         cardId: null,
         noteId: verb.noteId,
-        prompt: `Verb drill: past tense of ${verb.infinitive}`,
+        prompt: `Verb drill: ${formName.toLowerCase()} of ${verb.infinitive}`,
         typed: typed.trim(),
-        correct: verb.past,
+        correct: target,
         tags: verb.tags,
-        topic: rule.kind === 'ade' ? 'past-ade' : rule.kind === 'irregular' ? null : 'past-te-de',
+        topic: !rule ? null : rule.kind === 'ade' ? 'past-ade' : rule.kind === 'irregular' ? 'irregular' : 'past-te-de',
         manual: false,
       });
   };
@@ -593,7 +607,7 @@ function VerbDrill() {
         {index + 1} of {queue.length}
       </p>
       <div className="study-card drill-card">
-        <p className="face-type">Past tense of</p>
+        <p className="face-type">{formName} of</p>
         <p className="face-main" lang="sv">
           {verb.infinitive}
         </p>
@@ -602,11 +616,17 @@ function VerbDrill() {
           <div className="back">
             <VerdictBox answer={answer} />
             <p className="face-answer" lang="sv">
-              {verb.infinitive} → {verb.past}
+              {verb.infinitive} → {target}
             </p>
-            <p className="face-notes">
-              <span className={`ending ending-${rule.kind === 'dde' ? 'de' : rule.kind}`}>{rule.kind === 'irregular' ? 'irregular' : `-${rule.kind}`}</span> {rule.text}
-            </p>
+            {rule ? (
+              <p className="face-notes">
+                <span className={`ending ending-${rule.kind === 'dde' ? 'de' : rule.kind}`}>{rule.kind === 'irregular' ? 'irregular' : `-${rule.kind}`}</span> {rule.text}
+              </p>
+            ) : (
+              <p className="face-notes" lang="sv">
+                {[verb.infinitive, verb.present, verb.past, verb.supine].filter(Boolean).join(', ')}
+              </p>
+            )}
             <button
               ref={nextBtn}
               type="button"
@@ -620,7 +640,7 @@ function VerbDrill() {
             </button>
           </div>
         ) : (
-          <TypedInput key={index} label="Type the past tense" onSubmit={(t) => submit(t)} onSkip={() => submit('', true)} />
+          <TypedInput key={index} label={`Type the ${formName.toLowerCase()}`} onSubmit={(t) => submit(t)} onSkip={() => submit('', true)} />
         )}
       </div>
       <button type="button" className="btn btn-small" onClick={() => setQueue(null)}>

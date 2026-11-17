@@ -8,6 +8,7 @@ import { EditNote, Words } from './pages/Words';
 import { Add } from './pages/Add';
 import { Study } from './pages/Study';
 import { Grammar } from './pages/Grammar';
+import { Practice } from './pages/Practice';
 import { Stats } from './pages/Stats';
 import { useReminder } from './lib/reminder';
 import { useAutoSync } from './sync/auto';
@@ -18,6 +19,7 @@ const NAV = [
   { to: '/', label: 'Home', icon: 'M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
   { to: '/words', label: 'Browse', icon: 'M4 5h16v3H4zm0 5.5h16v3H4zM4 16h16v3H4z' },
   { to: '/add', label: 'Add', icon: 'M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z' },
+  { to: '/practice', label: 'Practice', icon: 'M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zm-6 8a6 6 0 0 0 5 5.9V20H8v2h8v-2h-3v-3.1A6 6 0 0 0 18 11h-2a4 4 0 0 1-8 0z' },
   { to: '/grammar', label: 'Grammar', icon: 'M5 3h11l3 3v15H5zm3 5v2h8V8zm0 4v2h8v-2zm0 4v2h5v-2z' },
   { to: '/stats', label: 'Stats', icon: 'M4 20V10h3v10zm6.5 0V4h3v16zM17 20v-7h3v7z' },
   { to: '/settings', label: 'Settings', icon: 'M4 6h9v2H4zm13 0h3v2h-3zM4 11h3v2H4zm7 0h9v2h-9zM4 16h9v2H4zm13 0h3v2h-3zM14 4.5h2v5h-2zM8 9.5h2v5H8zm6 5h2v5h-2z' },
@@ -67,6 +69,7 @@ export function App() {
             <Route path="/add" element={<Add />} />
             <Route path="/edit/:id" element={<EditNote />} />
             <Route path="/study" element={<Study />} />
+            <Route path="/practice/:tool?" element={<Practice />} />
             <Route path="/grammar/:slug?" element={<Grammar />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/settings" element={<SettingsPage />} />

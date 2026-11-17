@@ -250,7 +250,7 @@ export function csvToGroups(text: string, fallbackDeck: string): CsvImport {
 
 export const BACKUP_APP = 'svenska-kort';
 export const BACKUP_VERSION = 1;
-const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes'] as const;
+const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes', 'texts', 'journal'] as const;
 
 type MediaJSON = Omit<Media, 'blob'> & { data: string };
 
