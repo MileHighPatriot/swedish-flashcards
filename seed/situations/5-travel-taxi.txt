@@ -1,0 +1,18 @@
+# Ta en taxi
+# Category: Travel
+# English: Taking a taxi
+# Scene: You get into a taxi outside the station.
+# Goal: Say where you are going and ask about time and price.
+# Lines:  Speaker | Swedish | English
+Chaufför | Hej! Vart ska du? | Hi! Where are you going?
+Du | Till Storgatan fem, tack. | To Storgatan five, please.
+Chaufför | Det går bra. | That's fine.
+Du | Hur lång tid tar det? | How long does it take?
+Chaufför | Ungefär tjugo minuter. Det är mycket trafik nu. | About twenty minutes. There is a lot of traffic now.
+Du | Ungefär hur mycket kostar det? | Roughly how much does it cost?
+Chaufför | Runt trehundra kronor. | Around three hundred kronor.
+Du | Okej, det är bra. | Okay, that's fine.
+Chaufför | Är du här på semester? | Are you here on holiday?
+Du | Nej, jag hälsar på familjen. | No, I'm visiting the family.
+Chaufför | Vad trevligt. Nu är vi framme. | How nice. Here we are.
+Du | Tack! Kan jag betala med kort? | Thanks! Can I pay by card?

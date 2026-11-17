@@ -103,6 +103,8 @@ From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irreg
 
 Dialogues and reading texts live in `seed/texts/`, one file each. The first line is the title (`# Lesson 03 – Hur var din dag?`), then one line per sentence: `Speaker | Swedish | English` for a dialogue, `Swedish | English` for a story. A new file shows up in the Reader, and in Dialogue role-play if it has two speakers. You can also paste your own texts in the Reader.
 
+Role-play situations that are not tied to a lesson (café, doctor, in-laws and so on) live in `seed/situations/`, one file each, in the same line format with four extra header lines: `# Category:` (Everyday, Social, Family, Practical, Travel, Work and home), `# English:`, `# Scene:` and `# Goal:`. Your own lines use the speaker name `Du`. The scene and goal are also what a live chat partner would be given as its brief.
+
 Recordings made in the Practice tab are never saved. The journal and your own texts are stored like cards: on the device, in backups, and in sync.
 
 ## Sync between devices (optional)

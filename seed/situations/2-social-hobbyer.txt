@@ -1,0 +1,18 @@
+# Prata om hobbyer
+# Category: Social
+# English: Talking about hobbies
+# Scene: A friend asks what you like to do in your free time.
+# Goal: Say what you like doing and ask about their hobbies.
+# Lines:  Speaker | Swedish | English
+Vän | Vad tycker du om att göra på fritiden? | What do you like to do in your free time?
+Du | Jag tycker om att läsa och att träna. | I like reading and working out.
+Vän | Vad tränar du? | What kind of training do you do?
+Du | Jag går på gym tre gånger i veckan. | I go to the gym three times a week.
+Vän | Vad duktig du är! Jag springer ibland. | Good for you! I run sometimes.
+Du | Var springer du? | Where do you run?
+Vän | I skogen nära mitt hus. | In the forest near my house.
+Du | Det låter skönt. Läser du mycket? | That sounds nice. Do you read a lot?
+Vän | Inte så ofta. Jag tittar mest på serier. | Not so often. I mostly watch series.
+Du | Vilken serie tittar du på just nu? | Which series are you watching right now?
+Vän | En svensk deckare. Den är jättebra! | A Swedish crime drama. It's really good!
+Du | Då kanske jag ska titta på den också. Det är bra för min svenska. | Then maybe I should watch it too. It's good for my Swedish.

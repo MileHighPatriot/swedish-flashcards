@@ -1,0 +1,16 @@
+# Träffa en granne
+# Category: Social
+# English: Meeting a neighbour
+# Scene: You have just moved in and meet a neighbour on the stairs.
+# Goal: Say who you are and where you come from.
+# Lines:  Speaker | Swedish | English
+Granne | Hej! Är det du som är ny här? | Hi! Are you the one who is new here?
+Du | Ja, det är jag. Vi flyttade in förra veckan. | Yes, that's me. We moved in last week.
+Granne | Välkommen! Jag heter Karin och bor på andra våningen. | Welcome! My name is Karin and I live on the second floor.
+Du | Trevligt att träffas, Karin! | Nice to meet you, Karin!
+Granne | Var kommer du ifrån? | Where do you come from?
+Du | Jag kommer från USA, men jag har familj i Sverige. | I come from the USA, but I have family in Sweden.
+Granne | Vad roligt! Du pratar bra svenska. | How nice! You speak good Swedish.
+Du | Tack! Jag lär mig fortfarande. | Thanks! I'm still learning.
+Granne | Säg till om du behöver hjälp med något. | Let me know if you need help with anything.
+Du | Tack, det var snällt. Vi ses! | Thanks, that was kind. See you!

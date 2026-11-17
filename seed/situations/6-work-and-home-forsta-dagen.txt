@@ -1,0 +1,18 @@
+# Första dagen på jobbet
+# Category: Work and home
+# English: First day at work
+# Scene: It is your first day at a new job and your boss shows you around.
+# Goal: Ask the practical questions: lunch, hours and who to ask for help.
+# Lines:  Speaker | Swedish | English
+Chef | Välkommen! Hur känns det i dag? | Welcome! How does it feel today?
+Du | Tack! Jag är lite nervös, men glad. | Thanks! I'm a little nervous, but happy.
+Chef | Det går säkert bra. Det här är ditt skrivbord. | I'm sure it will go well. This is your desk.
+Du | Vad fint! Var kan jag hänga min jacka? | How nice! Where can I hang my jacket?
+Chef | Där borta, bredvid dörren. | Over there, next to the door.
+Du | När äter ni lunch? | When do you eat lunch?
+Chef | Vi brukar äta klockan tolv. | We usually eat at twelve.
+Du | Och när slutar vi för dagen? | And when do we finish for the day?
+Chef | Klockan fem. Har du några frågor? | At five. Do you have any questions?
+Du | Ja. Vem kan jag fråga om jag behöver hjälp? | Yes. Who can I ask if I need help?
+Chef | Fråga Maria. Hon sitter bredvid dig. | Ask Maria. She sits next to you.
+Du | Tack. Jag ser fram emot att börja. | Thanks. I'm looking forward to starting.

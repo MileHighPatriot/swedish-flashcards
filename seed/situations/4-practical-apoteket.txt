@@ -1,0 +1,18 @@
+# På apoteket
+# Category: Practical
+# English: At the pharmacy
+# Scene: You have a headache and a cough and go to the pharmacy.
+# Goal: Get something for the headache and ask how to take it.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Jag behöver något mot huvudvärk. | Hi! I need something for a headache.
+Farmaceut | Har du provat något tidigare? | Have you tried anything before?
+Du | Nej, inte här i Sverige. | No, not here in Sweden.
+Farmaceut | Då rekommenderar jag de här tabletterna. | Then I recommend these tablets.
+Du | Hur många ska jag ta? | How many should I take?
+Farmaceut | En eller två tabletter, högst tre gånger om dagen. | One or two tablets, at most three times a day.
+Du | Behöver jag recept? | Do I need a prescription?
+Farmaceut | Nej, de är receptfria. | No, they are sold without a prescription.
+Du | Bra. Har ni också hostmedicin? | Good. Do you also have cough medicine?
+Farmaceut | Ja, den står där borta på hyllan. | Yes, it's over there on the shelf.
+Du | Tack. Då tar jag båda. | Thanks. Then I'll take both.
+Farmaceut | Det blir hundrafyrtio kronor. Krya på dig! | That will be one hundred and forty kronor. Get well soon!

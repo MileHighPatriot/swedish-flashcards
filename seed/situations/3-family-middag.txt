@@ -1,0 +1,18 @@
+# Middag hos svärföräldrarna
+# Category: Family
+# English: Dinner at the in-laws
+# Scene: You arrive for dinner at your in-laws.
+# Goal: Be a good guest: praise the food, ask for things and offer to help.
+# Lines:  Speaker | Swedish | English
+Svärmor | Välkommen! Kom in, kom in. | Welcome! Come in, come in.
+Du | Tack! Vad gott det luktar! | Thanks! It smells so good!
+Svärmor | Jag har lagat köttbullar. Är du hungrig? | I have made meatballs. Are you hungry?
+Du | Ja, jag är jättehungrig. | Yes, I'm really hungry.
+Svärmor | Varsågod och ta för dig. | Go ahead and help yourself.
+Du | Tack. Kan du skicka potatisen? | Thanks. Can you pass the potatoes?
+Svärmor | Javisst. Vill du ha mer sås? | Sure. Do you want more sauce?
+Du | Ja tack, lite till. Det här är jättegott! | Yes please, a little more. This is delicious!
+Svärmor | Vad roligt att du tycker om det. | I'm so glad you like it.
+Du | Tack för maten! | Thank you for the meal!
+Svärmor | Varsågod. Vill du ha kaffe? | You're welcome. Would you like coffee?
+Du | Ja tack, gärna. Kan jag hjälpa till med disken? | Yes please. Can I help with the dishes?

@@ -1,0 +1,17 @@
+# Lämna tillbaka en vara
+# Category: Practical
+# English: Returning something to a shop
+# Scene: You bought a sweater that is too small and go back to the shop.
+# Goal: Return the sweater and get your money back.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Jag vill lämna tillbaka den här tröjan. | Hi! I'd like to return this sweater.
+Expedit | Okej. Är det något fel på den? | Okay. Is there something wrong with it?
+Du | Nej, men den är för liten. | No, but it's too small.
+Expedit | Har du kvittot? | Do you have the receipt?
+Du | Ja, här är det. | Yes, here it is.
+Expedit | Vill du byta till en större storlek? | Do you want to exchange it for a bigger size?
+Du | Ja, gärna. Har ni den i large? | Yes, please. Do you have it in large?
+Expedit | Jag ska titta. Tyvärr, den är slut. | I'll have a look. Sorry, it's sold out.
+Du | Kan jag få pengarna tillbaka då? | Can I get my money back then?
+Expedit | Javisst. Pengarna kommer tillbaka på ditt kort. | Sure. The money will go back on your card.
+Du | Perfekt. Tack för hjälpen! | Perfect. Thanks for the help!

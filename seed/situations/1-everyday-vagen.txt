@@ -1,0 +1,16 @@
+# Fråga om vägen
+# Category: Everyday
+# English: Asking for directions
+# Scene: You are lost in town and stop someone on the street.
+# Goal: Find out how to get to the train station.
+# Lines:  Speaker | Swedish | English
+Du | Ursäkta, kan du hjälpa mig? | Excuse me, can you help me?
+Kvinna | Ja, självklart. | Yes, of course.
+Du | Var ligger tågstationen? | Where is the train station?
+Kvinna | Gå rakt fram och ta sedan till vänster vid kyrkan. | Go straight ahead and then turn left at the church.
+Du | Är det långt? | Is it far?
+Kvinna | Nej, det tar ungefär tio minuter att gå. | No, it takes about ten minutes to walk.
+Du | Kan du säga det en gång till, lite långsammare? | Can you say that once more, a little slower?
+Kvinna | Javisst. Rakt fram, och sedan till vänster vid kyrkan. | Sure. Straight ahead, and then left at the church.
+Du | Rakt fram och sedan till vänster. Tack så mycket! | Straight ahead and then left. Thank you very much!
+Kvinna | Ingen orsak. Lycka till! | You're welcome. Good luck!

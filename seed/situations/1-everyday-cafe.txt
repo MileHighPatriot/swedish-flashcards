@@ -1,0 +1,18 @@
+# På kaféet
+# Category: Everyday
+# English: At the café
+# Scene: You walk into a café in town.
+# Goal: Order a coffee and a cinnamon bun, and pay by card.
+# Lines:  Speaker | Swedish | English
+Barista | Hej! Vad vill du ha? | Hi! What would you like?
+Du | Hej! Jag vill ha en kaffe och en kanelbulle, tack. | Hi! I'd like a coffee and a cinnamon bun, please.
+Barista | Vill du ha mjölk i kaffet? | Do you want milk in your coffee?
+Du | Ja, lite mjölk, tack. | Yes, a little milk, please.
+Barista | Ska du äta här eller ta med? | Are you eating here or taking it with you?
+Du | Jag äter här. | I'm eating here.
+Barista | Det blir sextiofem kronor. | That will be sixty-five kronor.
+Du | Kan jag betala med kort? | Can I pay by card?
+Barista | Ja, det går bra. Varsågod! | Yes, that's fine. Here you go!
+Du | Tack så mycket! | Thank you very much!
+Barista | Tack själv. Ha en bra dag! | Thank you. Have a good day!
+Du | Tack, detsamma! | Thanks, you too!

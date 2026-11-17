@@ -1,0 +1,18 @@
+# Boka bord
+# Category: Practical
+# English: Booking a table
+# Scene: You call a restaurant to book a table.
+# Goal: Book a table for four on Friday evening.
+# Lines:  Speaker | Swedish | English
+Personal | Restaurang Hamnen, hej! | Restaurant Hamnen, hello!
+Du | Hej! Jag vill boka ett bord. | Hi! I'd like to book a table.
+Personal | För vilken dag? | For which day?
+Du | På fredag kväll. | On Friday evening.
+Personal | Hur många blir ni? | How many will you be?
+Du | Vi blir fyra personer. | There will be four of us.
+Personal | Vilken tid vill ni komma? | What time do you want to come?
+Du | Klockan sju, om det går. | Seven o'clock, if possible.
+Personal | Tyvärr är det fullt då. Går det bra halv åtta? | Sorry, we are full then. Is half past seven all right?
+Du | Ja, det går bra. | Yes, that's fine.
+Personal | Då är det bokat. Välkomna på fredag! | Then it's booked. See you on Friday!
+Du | Tack så mycket! Hej då! | Thank you very much! Bye!

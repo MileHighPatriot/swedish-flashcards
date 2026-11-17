@@ -1,0 +1,17 @@
+# Bjuda hem en vän
+# Category: Social
+# English: Inviting a friend over
+# Scene: You call a friend to invite them to dinner.
+# Goal: Agree on a day and a time, and find out what they eat.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Vad gör du på lördag? | Hi! What are you doing on Saturday?
+Vän | Ingenting särskilt. Hur så? | Nothing special. Why?
+Du | Vill du komma hem till oss på middag? | Would you like to come to our place for dinner?
+Vän | Ja, gärna! Vilken tid? | Yes, gladly! What time?
+Du | Klockan sex, om det passar. | Six o'clock, if that suits you.
+Vän | Det passar bra. Ska jag ta med något? | That suits me well. Shall I bring anything?
+Du | Nej, det behövs inte. Äter du allt? | No, there's no need. Do you eat everything?
+Vän | Jag äter inte fisk, men allt annat går bra. | I don't eat fish, but everything else is fine.
+Du | Inga problem. Då lagar jag kyckling. | No problem. Then I'll cook chicken.
+Vän | Vad gott! Vi ses på lördag. | How tasty! See you on Saturday.
+Du | Vi ses! | See you!

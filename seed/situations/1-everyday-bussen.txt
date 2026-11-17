@@ -1,0 +1,17 @@
+# På bussen
+# Category: Everyday
+# English: On the bus
+# Scene: You get on a bus and are not sure it is the right one.
+# Goal: Check that the bus goes to the centre and ask the driver to tell you when to get off.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Går den här bussen till centrum? | Hi! Does this bus go to the centre?
+Chaufför | Ja, det gör den. | Yes, it does.
+Du | Kan jag köpa en biljett här? | Can I buy a ticket here?
+Chaufför | Nej, tyvärr. Du måste köpa den i appen. | No, sorry. You have to buy it in the app.
+Du | Okej, jag köper en nu. Hur lång tid tar det till centrum? | Okay, I'll buy one now. How long does it take to the centre?
+Chaufför | Ungefär en kvart. | About a quarter of an hour.
+Du | Kan du säga till när vi är framme? | Can you tell me when we are there?
+Chaufför | Ja, det kan jag göra. | Yes, I can do that.
+Du | Tack, vad snällt! | Thanks, how kind!
+Chaufför | Nästa hållplats är centrum. Här ska du gå av. | The next stop is the centre. This is where you get off.
+Du | Tack för hjälpen! Hej då! | Thanks for the help! Bye!

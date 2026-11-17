@@ -1,0 +1,18 @@
+# Köpa tågbiljett
+# Category: Everyday
+# English: Buying a train ticket
+# Scene: You are at the ticket desk in the train station.
+# Goal: Buy a return ticket to Sundsvall for tomorrow morning.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Jag vill köpa en biljett till Sundsvall. | Hi! I'd like to buy a ticket to Sundsvall.
+Säljare | Enkel eller tur och retur? | One way or return?
+Du | Tur och retur, tack. | Return, please.
+Säljare | När vill du åka? | When do you want to travel?
+Du | I morgon på förmiddagen. | Tomorrow morning.
+Säljare | Det går ett tåg klockan nio och ett klockan elva. | There is a train at nine and one at eleven.
+Du | Jag tar tåget klockan nio. Hur lång tid tar resan? | I'll take the nine o'clock train. How long does the trip take?
+Säljare | Ungefär tre och en halv timme. | About three and a half hours.
+Du | Vad kostar biljetten? | How much is the ticket?
+Säljare | Den kostar sexhundra kronor. | It costs six hundred kronor.
+Du | Okej. Från vilket spår går tåget? | Okay. Which platform does the train leave from?
+Säljare | Från spår fyra. Trevlig resa! | From platform four. Have a nice trip!

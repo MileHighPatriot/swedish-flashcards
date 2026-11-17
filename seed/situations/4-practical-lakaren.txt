@@ -1,0 +1,18 @@
+# Hos läkaren
+# Category: Practical
+# English: At the doctor's
+# Scene: You have been ill for a few days and see a doctor.
+# Goal: Describe how you feel and how long it has lasted.
+# Lines:  Speaker | Swedish | English
+Läkare | Hej! Hur kan jag hjälpa dig? | Hi! How can I help you?
+Du | Hej. Jag mår inte så bra. | Hi. I'm not feeling very well.
+Läkare | Vad har du för besvär? | What is troubling you?
+Du | Jag har ont i halsen och jag hostar mycket. | I have a sore throat and I'm coughing a lot.
+Läkare | Hur länge har du haft det? | How long have you had it?
+Du | I tre dagar. | For three days.
+Läkare | Har du feber? | Do you have a fever?
+Du | Ja, jag hade feber i går kväll. | Yes, I had a fever last night.
+Läkare | Jag ska titta i halsen. Säg "aaa". | I'm going to look in your throat. Say "aaa".
+Du | Är det något allvarligt? | Is it anything serious?
+Läkare | Nej, det är en vanlig förkylning. Du behöver vila och dricka mycket. | No, it's an ordinary cold. You need to rest and drink a lot.
+Du | Okej, tack för hjälpen. | Okay, thanks for the help.

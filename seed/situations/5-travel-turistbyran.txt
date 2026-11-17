@@ -1,0 +1,18 @@
+# På turistbyrån
+# Category: Travel
+# English: At the tourist office
+# Scene: You are visiting a new town and go to the tourist office.
+# Goal: Find out what there is to do and how to get there.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Vad kan man göra här i stan? | Hi! What is there to do here in town?
+Personal | Det finns mycket att se. Tycker du om museer? | There is a lot to see. Do you like museums?
+Du | Ja, men jag vill också vara ute. | Yes, but I want to be outdoors too.
+Personal | Då kan du gå upp på berget. Utsikten är fantastisk. | Then you can walk up the mountain. The view is fantastic.
+Du | Hur kommer man dit? | How do you get there?
+Personal | Du kan gå eller ta bussen. | You can walk or take the bus.
+Du | Hur lång tid tar det att gå? | How long does it take to walk?
+Personal | Ungefär en halvtimme. | About half an hour.
+Du | Har du en karta? | Do you have a map?
+Personal | Ja, varsågod. Den är gratis. | Yes, here you go. It's free.
+Du | Tack! Finns det något bra kafé där uppe? | Thanks! Is there a good café up there?
+Personal | Ja, och de har stans bästa våfflor. | Yes, and they have the best waffles in town.

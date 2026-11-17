@@ -1,0 +1,19 @@
+# På flygplatsen
+# Category: Travel
+# English: At the airport
+# Scene: You are at the check-in desk at the airport.
+# Goal: Check in your bag and find out about the gate and boarding.
+# Lines:  Speaker | Swedish | English
+Personal | Hej! Vart ska du resa? | Hi! Where are you travelling to?
+Du | Jag ska till Stockholm. | I'm going to Stockholm.
+Personal | Kan jag få se ditt pass? | Can I see your passport?
+Du | Ja, varsågod. | Yes, here you are.
+Personal | Har du något bagage att checka in? | Do you have any luggage to check in?
+Du | Ja, en resväska. | Yes, one suitcase.
+Personal | Har du packat den själv? | Did you pack it yourself?
+Du | Ja, det har jag. | Yes, I did.
+Personal | Vill du sitta vid fönstret eller vid gången? | Do you want to sit by the window or by the aisle?
+Du | Vid fönstret, tack. | By the window, please.
+Personal | Här är ditt boardingkort. Gaten är nummer tolv. | Here is your boarding pass. The gate is number twelve.
+Du | När börjar ombordstigningen? | When does boarding start?
+Personal | Klockan halv fyra. Trevlig resa! | At half past three. Have a nice trip!

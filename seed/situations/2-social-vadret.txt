@@ -1,0 +1,16 @@
+# Prata om vädret
+# Category: Social
+# English: Talking about the weather
+# Scene: You are waiting at the bus stop and a man starts chatting.
+# Goal: Keep the small talk going about the weather.
+# Lines:  Speaker | Swedish | English
+Man | Vilket väder vi har i dag! | What weather we are having today!
+Du | Ja, det regnar hela tiden. | Yes, it's raining all the time.
+Man | Och det blåser också. | And it's windy too.
+Du | Det var bättre i går. Då var det sol. | It was better yesterday. It was sunny then.
+Man | Det blir kallare i morgon, säger de. | It will be colder tomorrow, they say.
+Du | Jaha. Kommer det snö? | I see. Is snow coming?
+Man | Kanske till helgen. | Maybe by the weekend.
+Du | Jag tycker om snö, men inte om kylan. | I like snow, but not the cold.
+Man | Haha, då bor du i fel land! | Haha, then you live in the wrong country!
+Du | Ja, kanske det! Men sommaren är fin här. | Yes, maybe so! But the summer is lovely here.

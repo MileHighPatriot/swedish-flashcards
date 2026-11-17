@@ -1,0 +1,17 @@
+# Fika med en kollega
+# Category: Social
+# English: Coffee break with a coworker
+# Scene: A coworker asks you to take a coffee break.
+# Goal: Talk about the weekend and your plans for tonight.
+# Lines:  Speaker | Swedish | English
+Kollega | Ska vi ta en fika? | Shall we have a coffee break?
+Du | Ja, gärna! Jag behöver en paus. | Yes, gladly! I need a break.
+Kollega | Hur var din helg? | How was your weekend?
+Du | Den var bra. Jag var hemma och vilade. Och din? | It was good. I was at home and rested. And yours?
+Kollega | Jag var i stugan med familjen. | I was at the cabin with the family.
+Du | Vad härligt! Var det fint väder? | How lovely! Was the weather nice?
+Kollega | Ja, solen sken hela helgen. | Yes, the sun shone all weekend.
+Du | Vad skönt. Vill du ha en bulle? | How nice. Do you want a bun?
+Kollega | Ja tack! Vad ska du göra i kväll? | Yes please! What are you going to do tonight?
+Du | Jag ska laga mat och titta på en film. | I'm going to cook and watch a film.
+Kollega | Det låter mysigt. | That sounds cosy.

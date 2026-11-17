@@ -1,0 +1,18 @@
+# Boka tid hos tandläkaren
+# Category: Practical
+# English: Booking a dentist appointment
+# Scene: You have a toothache and call the dentist.
+# Goal: Book an appointment at a time when you are not working.
+# Lines:  Speaker | Swedish | English
+Receptionist | Tandläkarmottagningen, hej! | The dental clinic, hello!
+Du | Hej! Jag vill boka en tid. | Hi! I'd like to book an appointment.
+Receptionist | Har du ont någonstans? | Does it hurt anywhere?
+Du | Ja, jag har ont i en tand. | Yes, I have a toothache.
+Receptionist | Hur länge har du haft ont? | How long has it been hurting?
+Du | Sedan i måndags. | Since Monday.
+Receptionist | Vi har en tid i morgon klockan tio. Passar det? | We have a slot tomorrow at ten. Does that suit you?
+Du | Jag jobbar då. Har ni någon tid på eftermiddagen? | I'm working then. Do you have a time in the afternoon?
+Receptionist | Ja, klockan tre på torsdag. | Yes, at three on Thursday.
+Du | Det passar bra. | That suits me well.
+Receptionist | Då bokar jag in dig. Välkommen på torsdag! | Then I'll book you in. See you on Thursday!
+Du | Tack för hjälpen. Hej då! | Thanks for the help. Bye!

@@ -1,0 +1,18 @@
+# Berätta om din familj
+# Category: Family
+# English: Telling about your family
+# Scene: Your father-in-law wants to know more about your own family.
+# Goal: Talk about your siblings, where they live and how often you see them.
+# Lines:  Speaker | Swedish | English
+Svärfar | Berätta om din familj! Har du några syskon? | Tell me about your family! Do you have any siblings?
+Du | Ja, jag har en bror och en syster. | Yes, I have a brother and a sister.
+Svärfar | Är de äldre eller yngre än du? | Are they older or younger than you?
+Du | Min bror är äldre och min syster är yngre. | My brother is older and my sister is younger.
+Svärfar | Var bor de? | Where do they live?
+Du | De bor i USA, nära mina föräldrar. | They live in the USA, near my parents.
+Svärfar | Träffar du dem ofta? | Do you see them often?
+Du | Inte så ofta, men vi pratar i telefon varje vecka. | Not so often, but we talk on the phone every week.
+Svärfar | Vad jobbar din bror med? | What does your brother do for work?
+Du | Han är lärare. | He is a teacher.
+Svärfar | Saknar du dem? | Do you miss them?
+Du | Ja, ibland. Men jag trivs bra här också. | Yes, sometimes. But I like it here too.

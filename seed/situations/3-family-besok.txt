@@ -1,0 +1,18 @@
+# Planera ett besök
+# Category: Family
+# English: Planning a visit
+# Scene: Your father-in-law asks when you are coming to visit.
+# Goal: Say when you arrive, how long you stay and what you want to do.
+# Lines:  Speaker | Swedish | English
+Svärfar | När kommer ni och hälsar på? | When are you coming to visit?
+Du | Vi kommer i juli. | We are coming in July.
+Svärfar | Vad roligt! Hur länge stannar ni? | How nice! How long are you staying?
+Du | Vi stannar i två veckor. | We are staying for two weeks.
+Svärfar | När landar ni? | When do you land?
+Du | Vi landar på fredag klockan tre. | We land on Friday at three.
+Svärfar | Jag hämtar er på flygplatsen. | I'll pick you up at the airport.
+Du | Tack, vad snällt! Vad ska vi göra i sommar? | Thanks, how kind! What shall we do this summer?
+Svärfar | Vi kan åka till stugan och bada. | We can go to the cabin and swim.
+Du | Det låter härligt. Jag vill gärna fiska också. | That sounds lovely. I'd like to fish too.
+Svärfar | Det ordnar vi! | We'll arrange that!
+Du | Vi längtar efter att träffa er. | We are longing to see you.

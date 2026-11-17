@@ -1,0 +1,18 @@
+# Rörmokaren kommer
+# Category: Work and home
+# English: The plumber comes
+# Scene: There is a leak in your kitchen and the plumber has arrived.
+# Goal: Explain the problem and ask about time and cost.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Tack för att du kunde komma. | Hi! Thanks for being able to come.
+Rörmokare | Inga problem. Vad är det som är fel? | No problem. What is wrong?
+Du | Det läcker vatten under diskbänken. | Water is leaking under the sink.
+Rörmokare | När började det? | When did it start?
+Du | I går morse. | Yesterday morning.
+Rörmokare | Jag ska titta. Ja, röret är gammalt. Jag måste byta det. | I'll have a look. Yes, the pipe is old. I have to replace it.
+Du | Hur lång tid tar det? | How long does it take?
+Rörmokare | Ungefär en timme. | About an hour.
+Du | Och vad kostar det? | And what does it cost?
+Rörmokare | Runt femtonhundra kronor. | Around fifteen hundred kronor.
+Du | Okej, det går bra. Vill du ha en kopp kaffe? | Okay, that's fine. Would you like a cup of coffee?
+Rörmokare | Ja tack, gärna! | Yes please, gladly!

@@ -1,0 +1,18 @@
+# Checka in på hotell
+# Category: Travel
+# English: Checking in at a hotel
+# Scene: You arrive at the hotel reception with a booking.
+# Goal: Check in and find out about breakfast, wifi and check-out.
+# Lines:  Speaker | Swedish | English
+Receptionist | Hej och välkommen! | Hi and welcome!
+Du | Hej! Jag har bokat ett rum för två nätter. | Hi! I have booked a room for two nights.
+Receptionist | Har du ett bokningsnummer? | Do you have a booking number?
+Du | Ja, här är det. | Yes, here it is.
+Receptionist | Tack. Ett dubbelrum, två nätter. Stämmer det? | Thanks. A double room, two nights. Is that right?
+Du | Ja, det stämmer. Ingår frukost? | Yes, that's right. Is breakfast included?
+Receptionist | Ja, frukosten serveras mellan sju och tio. | Yes, breakfast is served between seven and ten.
+Du | Bra. Finns det wifi på rummet? | Good. Is there wifi in the room?
+Receptionist | Ja, lösenordet står på nyckelkortet. | Yes, the password is on the key card.
+Du | När måste vi checka ut? | When do we have to check out?
+Receptionist | Senast klockan elva. Här är nyckeln. Rum trehundratolv, på tredje våningen. | By eleven at the latest. Here is the key. Room three hundred and twelve, on the third floor.
+Du | Tack så mycket! | Thank you very much!

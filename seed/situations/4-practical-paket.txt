@@ -1,0 +1,18 @@
+# Hämta ett paket
+# Category: Practical
+# English: Picking up a parcel
+# Scene: You go to the parcel counter to collect a package.
+# Goal: Collect your parcel and send a letter to the USA.
+# Lines:  Speaker | Swedish | English
+Du | Hej! Jag ska hämta ett paket. | Hi! I'm here to pick up a parcel.
+Personal | Har du ett sms med en kod? | Do you have a text message with a code?
+Du | Ja, här är koden. | Yes, here is the code.
+Personal | Tack. Kan jag få se din legitimation? | Thanks. Can I see your ID?
+Du | Javisst, här är mitt pass. | Sure, here is my passport.
+Personal | Ett ögonblick, jag hämtar det. | One moment, I'll get it.
+Du | Tack. Är det tungt? | Thanks. Is it heavy?
+Personal | Nej, det är ganska litet. Varsågod. | No, it's quite small. Here you go.
+Du | Tack. Kan jag skicka ett brev här också? | Thanks. Can I send a letter here too?
+Personal | Ja. Vart ska det? | Yes. Where is it going?
+Du | Till USA. Vad kostar det? | To the USA. How much is it?
+Personal | Det kostar trettiosex kronor. | It costs thirty-six kronor.

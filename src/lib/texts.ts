@@ -23,6 +23,11 @@ export interface ReadingText {
   lines: TextLine[];
   /** Built into the app (from seed/texts) rather than added by me. */
   builtIn: boolean;
+  /** Role-play situations only: the group it is listed under, its English name, the scene and what I am trying to do. */
+  category?: string;
+  english?: string;
+  scene?: string;
+  goal?: string;
 }
 
 /** "One. Two? Three!" → ["One.", "Two?", "Three!"] */
@@ -39,12 +44,17 @@ export function parseText(raw: string, id: string, builtIn = false, fallbackTitl
   let title = fallbackTitle;
   let lesson: number | null = null;
   let titled = false;
+  const meta: Pick<ReadingText, 'category' | 'english' | 'scene' | 'goal'> = {};
   const lines: TextLine[] = [];
   for (const rawLine of raw.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line) continue;
     if (line.startsWith('#')) {
-      if (titled) continue;
+      if (titled) {
+        const info = /^#+\s*(Category|English|Scene|Goal):\s*(.+)$/i.exec(line);
+        if (info) meta[info[1].toLowerCase() as keyof typeof meta] = info[2].trim();
+        continue;
+      }
       titled = true;
       const m = /^#+\s*(?:Lesson\s+(\d+)\s*[-–—:]\s*)?(.*)$/i.exec(line);
       if (m?.[1]) lesson = Number(m[1]);
@@ -62,7 +72,7 @@ export function parseText(raw: string, id: string, builtIn = false, fallbackTitl
     if (spoken) lines.push({ speaker: spoken[1], sv: spoken[2], en: '' });
     else for (const sv of splitSentences(line)) lines.push({ speaker: '', sv, en: '' });
   }
-  return { id, title: title || 'Untitled', lesson, lines: lines.filter((l) => l.sv), builtIn };
+  return { id, title: title || 'Untitled', lesson, lines: lines.filter((l) => l.sv), builtIn, ...meta };
 }
 
 const files = import.meta.glob<string>('../../seed/texts/*.txt', { query: '?raw', import: 'default', eager: true });
@@ -70,6 +80,16 @@ const files = import.meta.glob<string>('../../seed/texts/*.txt', { query: '?raw'
 export const BUILT_IN_TEXTS: ReadingText[] = Object.keys(files)
   .sort()
   .map((path) => parseText(files[path], `seed:${path.split('/').pop()!.replace(/\.txt$/, '')}`, true));
+
+// Role-play situations that are not tied to a lesson: seed/situations/*.txt.
+// Same line format, plus "# Category:", "# English:", "# Scene:" and "# Goal:".
+const situationFiles = import.meta.glob<string>('../../seed/situations/*.txt', { query: '?raw', import: 'default', eager: true });
+
+export const SITUATION_CATEGORIES = ['Everyday', 'Social', 'Family', 'Practical', 'Travel', 'Work and home'];
+
+export const SITUATIONS: ReadingText[] = Object.keys(situationFiles)
+  .sort()
+  .map((path) => parseText(situationFiles[path], `seed:situation:${path.split('/').pop()!.replace(/\.txt$/, '')}`, true));
 
 export const speakersOf = (t: ReadingText): string[] => [...new Set(t.lines.map((l) => l.speaker).filter(Boolean))];
 export const isDialogue = (t: ReadingText): boolean => speakersOf(t).length >= 2;

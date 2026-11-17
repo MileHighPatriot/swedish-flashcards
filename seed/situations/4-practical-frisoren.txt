@@ -1,0 +1,18 @@
+# Hos frisören
+# Category: Practical
+# English: At the hairdresser's
+# Scene: You sit down in the chair at the hairdresser's.
+# Goal: Explain how you want your hair cut and make small talk.
+# Lines:  Speaker | Swedish | English
+Frisör | Hej och välkommen! Hur vill du ha det? | Hi and welcome! How would you like it?
+Du | Jag vill bara klippa mig lite kortare. | I just want my hair cut a little shorter.
+Frisör | Hur kort vill du ha det på sidorna? | How short do you want it on the sides?
+Du | Ganska kort på sidorna och lite längre uppe. | Quite short on the sides and a little longer on top.
+Frisör | Ska jag tvätta håret först? | Shall I wash your hair first?
+Du | Ja tack. | Yes please.
+Frisör | Är du ledig i dag? | Are you off today?
+Du | Ja, jag jobbar inte i dag. | Yes, I'm not working today.
+Frisör | Så där. Vad tycker du? | There. What do you think?
+Du | Det blev jättebra. Tack! | It turned out great. Thanks!
+Frisör | Vill du ha lite vax i håret? | Do you want a little wax in your hair?
+Du | Nej tack, det är bra så. | No thanks, it's fine as it is.

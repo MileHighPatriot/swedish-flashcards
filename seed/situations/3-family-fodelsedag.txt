@@ -1,0 +1,18 @@
+# Fira en födelsedag
+# Category: Family
+# English: Celebrating a birthday
+# Scene: You arrive at your sister-in-law's birthday party.
+# Goal: Congratulate her, give a present and accept some cake.
+# Lines:  Speaker | Swedish | English
+Du | Grattis på födelsedagen! | Happy birthday!
+Svägerska | Tack! Vad roligt att du kunde komma. | Thanks! How nice that you could come.
+Du | Här är en liten present till dig. | Here is a little present for you.
+Svägerska | Åh, tack! Det behövdes inte. | Oh, thank you! You didn't have to.
+Du | Jag hoppas att du tycker om den. | I hope you like it.
+Svägerska | Vilken fin bok! Tack så mycket. | What a lovely book! Thank you so much.
+Du | Hur gammal blir du i dag? | How old are you turning today?
+Svägerska | Jag fyller trettiofem. | I'm turning thirty-five.
+Du | Hur känns det? | How does it feel?
+Svägerska | Det känns bra! Vill du ha tårta? | It feels good! Would you like cake?
+Du | Ja tack, gärna en liten bit. | Yes please, a small piece would be nice.
+Svägerska | Nu ska vi sjunga! | Now let's sing!

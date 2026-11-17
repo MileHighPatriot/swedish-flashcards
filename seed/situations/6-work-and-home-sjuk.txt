@@ -1,0 +1,17 @@
+# Ringa och sjukanmäla sig
+# Category: Work and home
+# English: Calling in sick
+# Scene: You wake up ill and call your boss.
+# Goal: Explain that you are ill and cannot come in today.
+# Lines:  Speaker | Swedish | English
+Du | Hej, det är jag. Jag kan tyvärr inte komma i dag. | Hi, it's me. Unfortunately I can't come in today.
+Chef | Oj då. Vad har hänt? | Oh dear. What has happened?
+Du | Jag är sjuk. Jag har feber och ont i huvudet. | I'm ill. I have a fever and a headache.
+Chef | Stackars dig. När blev du sjuk? | Poor you. When did you get ill?
+Du | I går kväll. | Last night.
+Chef | Stanna hemma och vila. | Stay at home and rest.
+Du | Tack. Jag hoppas att jag kan komma i morgon. | Thanks. I hope I can come in tomorrow.
+Chef | Kom inte förrän du är frisk. | Don't come until you are well.
+Du | Okej. Jag ringer i morgon bitti. | Okay. I'll call tomorrow morning.
+Chef | Bra. Krya på dig! | Good. Get well soon!
+Du | Tack så mycket. Hej då. | Thank you very much. Bye.

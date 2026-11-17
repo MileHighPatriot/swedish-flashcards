@@ -9,7 +9,7 @@ import { db } from '../db/db';
 import { deleteJournal, listJournal, listNotes, listTexts, saveJournal, saveText } from '../db/repo';
 import { applyPlan, buildPlan, groupLesson, loadBuiltInLesson, loadStarterLessons, toBuiltInLesson } from './importer';
 import { dateKey, drillNouns, journalForClaude, sentencePool } from './practice';
-import { BUILT_IN_TEXTS, buildLexicon, isDialogue, knownShare, lookup, parseText, speakersOf, splitSentences, tokenize } from './texts';
+import { BUILT_IN_TEXTS, SITUATION_CATEGORIES, SITUATIONS, buildLexicon, isDialogue, knownShare, lookup, parseText, speakersOf, splitSentences, tokenize } from './texts';
 import { drillVerbs } from './verbdrill';
 import { fixLines } from '../practice/Journal';
 
@@ -160,5 +160,25 @@ describe('my own texts', () => {
     const [mine] = await listTexts();
     expect(mine).toMatchObject({ id: t.id, title: 'Nyheter' });
     expect(parseText(mine.body, mine.id, false, mine.title).lines).toHaveLength(2);
+  });
+});
+
+describe('role-play situations', () => {
+  it('has a good spread across every category', () => {
+    expect(SITUATIONS.length).toBeGreaterThanOrEqual(30);
+    for (const c of SITUATION_CATEGORIES) expect(SITUATIONS.filter((t) => t.category === c).length).toBeGreaterThanOrEqual(3);
+    expect(new Set(SITUATIONS.map((t) => t.id)).size).toBe(SITUATIONS.length);
+  });
+
+  it.each(SITUATIONS.map((t) => [t.id, t] as const))('%s is a complete two-person talk', (_id, t) => {
+    expect(SITUATION_CATEGORIES).toContain(t.category);
+    expect(t.title).not.toBe('Untitled');
+    expect(t.english && t.scene && t.goal).toBeTruthy();
+    expect(t.lesson).toBeNull();
+    expect(speakersOf(t)).toHaveLength(2);
+    expect(speakersOf(t)).toContain('Du');
+    expect(t.lines.length).toBeGreaterThanOrEqual(10);
+    for (const l of t.lines) expect(l.sv && l.en && l.speaker).toBeTruthy();
+    expect(t.lines.filter((l) => l.speaker === 'Du').length).toBeGreaterThanOrEqual(5);
   });
 });

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSettings } from '../lib/hooks';
 import { say, stopSpeaking } from '../lib/speech';
-import { isDialogue, speakersOf, type ReadingText } from '../lib/texts';
+import { isDialogue, SITUATION_CATEGORIES, SITUATIONS, speakersOf, type ReadingText } from '../lib/texts';
 import { SpeakButton } from '../study/CardView';
 import { Recorder, useTexts } from './shared';
 
@@ -87,7 +87,7 @@ function Play({ text, me, listenFirst, onExit }: { text: ReadingText; me: string
           <p className="face-type">{line.speaker} says</p>
           {listenFirst && !shown ? (
             <button type="button" className="btn" onClick={() => setShown(true)}>
-              Show what she said
+              Show what they said
             </button>
           ) : (
             <>
@@ -123,30 +123,58 @@ export function Dialogue() {
   const [playing, setPlaying] = useState(false);
 
   if (!texts) return <p className="muted">Loading…</p>;
-  const dialogues = texts.filter(isDialogue);
-  if (dialogues.length === 0) return <p className="muted">No dialogues yet.</p>;
-  // Newest lesson first.
-  const sorted = [...dialogues].sort((a, b) => (b.lesson ?? 0) - (a.lesson ?? 0));
-  const text = sorted.find((t) => t.id === id) ?? sorted[0];
+  // My lesson dialogues, newest lesson first, then the ready-made situations.
+  const lessons = texts.filter(isDialogue).sort((a, b) => (b.lesson ?? 0) - (a.lesson ?? 0));
+  const groups = [
+    { label: 'From my lessons', items: lessons },
+    ...SITUATION_CATEGORIES.map((c) => ({ label: c, items: SITUATIONS.filter((t) => t.category === c) })),
+  ].filter((g) => g.items.length > 0);
+  const all = groups.flatMap((g) => g.items);
+  if (all.length === 0) return <p className="muted">No dialogues yet.</p>;
+  const text = all.find((t) => t.id === id) ?? all[0];
   const speakers = speakersOf(text);
   const me = role && speakers.includes(role) ? role : speakers.includes('Du') ? 'Du' : speakers[speakers.length - 1];
+  const name = (t: ReadingText) => `${t.lesson != null ? `Lesson ${t.lesson}: ` : ''}${t.title}${t.english ? ` (${t.english})` : ''}`;
 
   if (playing) return <Play key={`${text.id}:${me}`} text={text} me={me} listenFirst={listenFirst} onExit={() => setPlaying(false)} />;
 
   return (
     <>
-      <p className="muted">The app speaks the other person's lines and waits while you say yours. Then it shows your line so you can check.</p>
+      <p className="muted">Pick a situation. The app speaks the other person's lines and waits while you say yours. Then it shows your line so you can check.</p>
       <label className="field">
-        <span className="field-label">Dialogue</span>
+        <span className="field-label">Situation ({all.length})</span>
         <select value={text.id} onChange={(e) => setId(e.target.value)}>
-          {sorted.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.lesson != null ? `Lesson ${t.lesson}: ` : ''}
-              {t.title}
-            </option>
+          {groups.map((g) => (
+            <optgroup key={g.label} label={g.label}>
+              {g.items.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {name(t)}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </label>
+      <button
+        type="button"
+        className="btn btn-small"
+        onClick={() => {
+          const others = SITUATIONS.filter((t) => t.id !== text.id);
+          if (others.length) setId(others[Math.floor(Math.random() * others.length)].id);
+        }}
+      >
+        Surprise me
+      </button>
+      {(text.scene || text.goal) && (
+        <div className="card scene">
+          {text.scene && <p>{text.scene}</p>}
+          {text.goal && (
+            <p>
+              <strong>Your goal:</strong> {text.goal}
+            </p>
+          )}
+        </div>
+      )}
       <fieldset className="checks">
         <legend className="field-label">I play</legend>
         {speakers.map((s) => (

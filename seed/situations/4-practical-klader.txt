@@ -1,0 +1,18 @@
+# Köpa kläder
+# Category: Practical
+# English: Buying clothes
+# Scene: You are in a clothes shop looking for a jacket.
+# Goal: Try on a jacket, ask the price and find a cheaper one.
+# Lines:  Speaker | Swedish | English
+Expedit | Hej! Behöver du hjälp? | Hi! Do you need help?
+Du | Ja tack. Jag letar efter en jacka. | Yes please. I'm looking for a jacket.
+Expedit | Vilken storlek har du? | What size are you?
+Du | Jag har medium, tror jag. | I'm a medium, I think.
+Expedit | Vi har den här i svart och i blått. | We have this one in black and in blue.
+Du | Kan jag prova den svarta? | Can I try the black one?
+Expedit | Javisst. Provrummen är där borta. | Sure. The fitting rooms are over there.
+Du | Den passar bra. Vad kostar den? | It fits well. How much is it?
+Expedit | Den kostar åttahundra kronor. | It costs eight hundred kronor.
+Du | Det är lite dyrt. Har ni någon billigare? | That's a bit expensive. Do you have a cheaper one?
+Expedit | Den här är på rea. Den kostar femhundra. | This one is on sale. It costs five hundred.
+Du | Den tar jag. | I'll take that one.

@@ -1,0 +1,18 @@
+# Telefonsamtal med svärmor
+# Category: Family
+# English: Phone call with your mother-in-law
+# Scene: Your mother-in-law calls to hear how you are.
+# Goal: Say how you are, what you are doing, and ask about the weather.
+# Lines:  Speaker | Swedish | English
+Svärmor | Hej! Det är jag. Hur mår du? | Hi! It's me. How are you?
+Du | Hej! Jag mår bra, tack. Hur mår du? | Hi! I'm fine, thanks. How are you?
+Svärmor | Bara bra. Vad gör ni i dag? | Just fine. What are you doing today?
+Du | Vi är hemma. Jag pluggar svenska. | We are at home. I'm studying Swedish.
+Svärmor | Vad duktig du är! Går det bra? | Good for you! Is it going well?
+Du | Ja, men det är svårt ibland. | Yes, but it's hard sometimes.
+Svärmor | Du pratar bättre och bättre. | You speak better and better.
+Du | Tack, vad snällt! Hur är vädret hos er? | Thanks, how kind! How is the weather where you are?
+Svärmor | Det snöar i dag. | It's snowing today.
+Du | Oj! Här är det soligt. | Oh! It's sunny here.
+Svärmor | Hälsa alla från mig! | Say hello to everyone from me!
+Du | Det ska jag göra. Kram! Hej då! | I will. Hugs! Bye!

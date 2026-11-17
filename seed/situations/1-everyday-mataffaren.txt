@@ -1,0 +1,18 @@
+# I mataffären
+# Category: Everyday
+# English: At the grocery store
+# Scene: You are shopping for food and then go to the checkout.
+# Goal: Find the milk and the bread, then pay.
+# Lines:  Speaker | Swedish | English
+Du | Ursäkta, var finns mjölken? | Excuse me, where is the milk?
+Expedit | Den finns längst bort, bredvid osten. | It's at the far end, next to the cheese.
+Du | Tack! Och har ni färskt bröd? | Thanks! And do you have fresh bread?
+Expedit | Ja, brödet finns där borta till höger. | Yes, the bread is over there on the right.
+Expedit | Hej! Vill du ha en påse? | Hi! Do you want a bag?
+Du | Ja tack, en påse. | Yes please, one bag.
+Expedit | Har du medlemskort? | Do you have a membership card?
+Du | Nej, det har jag inte. | No, I don't.
+Expedit | Det blir tvåhundratio kronor. | That will be two hundred and ten kronor.
+Du | Jag betalar med kort. | I'll pay by card.
+Expedit | Vill du ha kvittot? | Do you want the receipt?
+Du | Nej tack, det behövs inte. Hej då! | No thanks, there's no need. Bye!

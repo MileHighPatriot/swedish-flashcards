@@ -1,0 +1,18 @@
+# Småprat på en fest
+# Category: Social
+# English: Small talk at a party
+# Scene: You are at a party and a stranger starts talking to you.
+# Goal: Introduce yourself and talk about work and free time.
+# Lines:  Speaker | Swedish | English
+Erik | Hej! Jag tror inte att vi har träffats. Jag heter Erik. | Hi! I don't think we have met. My name is Erik.
+Du | Hej Erik! Trevligt att träffas. | Hi Erik! Nice to meet you.
+Erik | Hur känner du Anna? | How do you know Anna?
+Du | Vi arbetar tillsammans. Och du? | We work together. And you?
+Erik | Hon är min syster. Vad jobbar du med? | She is my sister. What do you do for work?
+Du | Jag bygger hemsidor. | I build websites.
+Erik | Vad spännande! Tycker du om det? | How exciting! Do you like it?
+Du | Ja, jag tycker mycket om det. Vad gör du på fritiden? | Yes, I like it a lot. What do you do in your free time?
+Erik | Jag spelar gitarr och tittar på fotboll. | I play guitar and watch football.
+Du | Vad kul! Jag tittar också gärna på fotboll. | How fun! I like watching football too.
+Erik | Vill du ha något att dricka? | Would you like something to drink?
+Du | Ja tack, gärna en öl. | Yes please, a beer would be nice.

@@ -1,0 +1,18 @@
+# På restaurangen
+# Category: Everyday
+# English: At the restaurant
+# Scene: You arrive at a restaurant for dinner with a table booked.
+# Goal: Order food and a drink, then ask for the bill.
+# Lines:  Speaker | Swedish | English
+Servitör | Hej och välkomna! Har ni bokat bord? | Hi and welcome! Have you booked a table?
+Du | Ja, ett bord för två klockan sju. | Yes, a table for two at seven.
+Servitör | Perfekt. Varsågoda, här är menyn. | Perfect. Here you are, here is the menu.
+Du | Tack. Vad rekommenderar du? | Thanks. What do you recommend?
+Servitör | Laxen är mycket god i dag. | The salmon is very good today.
+Du | Då tar jag laxen, tack. | Then I'll have the salmon, please.
+Servitör | Och vad vill du ha att dricka? | And what would you like to drink?
+Du | Ett glas vatten och en öl, tack. | A glass of water and a beer, please.
+Servitör | Smakade det bra? | Did it taste good?
+Du | Ja, det var jättegott! | Yes, it was delicious!
+Du | Kan vi få notan, tack? | Can we have the bill, please?
+Servitör | Självklart. Jag kommer med den. | Of course. I'll bring it.

@@ -9,7 +9,7 @@ import { VerbDrill } from './Grammar';
 
 const TOOLS = [
   { id: 'dictation', title: 'Dictation', blurb: 'Hear a sentence, type what you heard.', skill: 'Listening', view: Dictation },
-  { id: 'dialogue', title: 'Dialogue role-play', blurb: 'Rehearse the talk with your mother-in-law, line by line.', skill: 'Speaking', view: Dialogue },
+  { id: 'dialogue', title: 'Dialogue role-play', blurb: 'Pick a situation, from the café to the in-laws, and play your part.', skill: 'Speaking', view: Dialogue },
   { id: 'journal', title: 'Journal', blurb: 'Write about your day. Mistakes come back as fix cards.', skill: 'Writing', view: Journal },
   { id: 'speak', title: 'Record and compare', blurb: 'Say a sentence, then hear yourself next to the Swedish voice.', skill: 'Speaking', view: Speak },
   { id: 'reader', title: 'Reader', blurb: 'Short texts where every word can be tapped.', skill: 'Reading', view: Reader },
