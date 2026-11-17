@@ -9,6 +9,7 @@ import type { Settings, ThemeSetting } from '../db/types';
 import { useSettings } from '../lib/hooks';
 import { MAX_RETENTION, MIN_RETENTION, clampRetention } from '../lib/scheduler';
 import { say, setPreferredVoice, speechSupported, useSwedishVoices } from '../lib/speech';
+import { loadChatKey, saveChatKey } from '../lib/chat';
 import { DEFAULT_NEURAL_REGION, DEFAULT_NEURAL_VOICE, NEURAL_VOICES, clearClips, neuralConfig, parseKeyInput, requestClip, saveNeural, useNeuralStatus } from '../lib/neural';
 
 function clampInt(value: string, min: number, max: number, fallback: number): number {
@@ -97,6 +98,64 @@ function SyncCard() {
             </button>
           </div>
         </form>
+      )}
+    </div>
+  );
+}
+
+function ChatKeyCard() {
+  const saved = useLiveQuery(loadChatKey, []);
+  const [key, setKey] = useState('');
+  const [message, setMessage] = useState<string | null>(null);
+
+  const save = async () => {
+    const next = key.trim();
+    if (!next) return;
+    await saveChatKey(next);
+    setKey('');
+    setMessage('Saved on this device.');
+  };
+
+  return (
+    <div className="card">
+      <h2>Free conversation</h2>
+      <p className="muted small">
+        Paste an xAI API key. It stays on this device: it is not synced or put in backup files, so enter it once on each device. Talking uses the
+        cheaper model. The review at the end uses Grok 4.7 with light thinking. Scripted role-plays do not use this key.
+      </p>
+      {saved && <p>A key is saved on this device.</p>}
+      <label className="field">
+        <span className="field-label">{saved ? 'Replace the key' : 'Key'}</span>
+        <input
+          type="password"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+        />
+      </label>
+      <div className="actions">
+        <button type="button" className="btn btn-primary" disabled={!key.trim()} onClick={() => void save()}>
+          Save on this device
+        </button>
+        {saved && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              void saveChatKey(null);
+              setMessage('Removed from this device.');
+            }}
+          >
+            Turn off
+          </button>
+        )}
+      </div>
+      {message && (
+        <p className="small" role="status">
+          {message}
+        </p>
       )}
     </div>
   );
@@ -357,6 +416,8 @@ export function SettingsPage() {
           On a Mac keyboard, Option+A types å, and Option+U followed by A or O types ä or ö. The å ä ö buttons appear wherever you type Swedish.
         </p>
       </div>
+
+      <ChatKeyCard />
 
       <div className="card">
         <h2>en and ett</h2>
