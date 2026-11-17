@@ -15,6 +15,9 @@ import {
   type ReviewSections,
 } from '../lib/chat';
 import { useSettings } from '../lib/hooks';
+import { listenReady, useListen } from '../lib/listen';
+import { useNeuralStatus } from '../lib/neural';
+import { recorderSupported } from '../lib/recorder';
 import { say } from '../lib/speech';
 import { SpeakButton } from '../study/CardView';
 
@@ -42,6 +45,12 @@ export function Chat() {
   const [lastReview, setLastReview] = useState<string | null>(null);
   const [busy, setBusy] = useState<'talk' | 'review' | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const neural = useNeuralStatus();
+  // What I say lands in the box, so I can check it before sending.
+  const listen = useListen((text) => setDraft((d) => (d.trim() ? `${d.trim()} ${text}` : text)));
+  const canListen = neural.enabled && listenReady();
+  const recording = listen.state === 'recording';
 
   const addSpend = (usd: number | null, setLabel: (label: string | null) => void) => {
     if (usd == null) {
@@ -166,7 +175,19 @@ export function Chat() {
         />
       </label>
       <div className="actions">
-        <button type="button" className="btn btn-primary" disabled={busy != null || !draft.trim()} onClick={() => void send()}>
+        {canListen && (
+          <button
+            type="button"
+            className={recording ? 'btn btn-rec is-recording' : 'btn btn-rec'}
+            aria-pressed={recording}
+            disabled={busy != null || listen.state === 'starting' || listen.state === 'working'}
+            onClick={() => (recording ? listen.stop() : void listen.start())}
+          >
+            <span className="rec-dot" aria-hidden="true" />
+            {recording ? 'Stop' : listen.state === 'starting' ? 'Waiting for the microphone…' : listen.state === 'working' ? 'Writing it down…' : 'Speak'}
+          </button>
+        )}
+        <button type="button" className="btn btn-primary" disabled={busy != null || recording || !draft.trim()} onClick={() => void send()}>
           {busy === 'talk' ? 'Sending…' : 'Send'}
         </button>
         <button type="button" className="btn" disabled={busy != null || turns.length === 0} onClick={() => void end()}>
@@ -178,6 +199,32 @@ export function Chat() {
           </button>
         )}
       </div>
+      {!canListen && (
+        <p className="muted small">
+          {recorderSupported() ? (
+            <>
+              To speak instead of type, add the natural voice key in <Link to="/settings">Settings</Link>. The same key writes down what you say.
+            </>
+          ) : (
+            'This browser cannot use the microphone, so typing is the only way here.'
+          )}
+        </p>
+      )}
+      {listen.state === 'denied' && (
+        <p className="small notice" role="alert">
+          The microphone is blocked. Allow it for this site in your browser settings, then try again.
+        </p>
+      )}
+      {listen.state === 'error' && (
+        <p className="small notice" role="alert">
+          Could not start the microphone.
+        </p>
+      )}
+      {listen.message && (
+        <p className="small notice" role="status">
+          {listen.message}
+        </p>
+      )}
       {error && (
         <p className="notice" role="alert">
           {error}
