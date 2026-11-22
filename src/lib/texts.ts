@@ -6,9 +6,12 @@
 //   Speaker | Swedish | English  (a dialogue line)
 //   Swedish | English            (a sentence with its meaning)
 //   Swedish                      (just the sentence)
+//   ? question | answer // other answer | line number
+//                                (a Story mode question; never shown as text)
 // A pasted paragraph with no pipes is split into sentences.
 
 import type { Note } from '../db/types';
+import { splitAlternatives } from './parser';
 
 export interface TextLine {
   speaker: string;
@@ -16,11 +19,21 @@ export interface TextLine {
   en: string;
 }
 
+/** A Story mode question about the text, answered by typing Swedish. */
+export interface TextQuestion {
+  question: string;
+  /** Accepted answers. Empty when the answer was never filled in: the question is then left out of the quiz. */
+  answers: string[];
+  /** 1-based line of the text that holds the answer, or null. */
+  line: number | null;
+}
+
 export interface ReadingText {
   id: string;
   title: string;
   lesson: number | null;
   lines: TextLine[];
+  questions: TextQuestion[];
   /** Built into the app (from seed/texts) rather than added by me. */
   builtIn: boolean;
   /** Role-play situations only: the group it is listed under, its English name, the scene and what I am trying to do. */
@@ -46,9 +59,16 @@ export function parseText(raw: string, id: string, builtIn = false, fallbackTitl
   let titled = false;
   const meta: Pick<ReadingText, 'category' | 'english' | 'scene' | 'goal'> = {};
   const lines: TextLine[] = [];
+  const questions: TextQuestion[] = [];
   for (const rawLine of raw.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line) continue;
+    if (/^\?\s*\S/.test(line) && line.includes('|')) {
+      const [question, answer = '', at = ''] = line.replace(/^\?\s*/, '').split('|').map((x) => x.trim());
+      const n = Number(at);
+      questions.push({ question, answers: splitAlternatives(answer), line: at && Number.isInteger(n) && n > 0 ? n : null });
+      continue;
+    }
     if (line.startsWith('#')) {
       if (titled) {
         const info = /^#+\s*(Category|English|Scene|Goal):\s*(.+)$/i.exec(line);
@@ -72,7 +92,7 @@ export function parseText(raw: string, id: string, builtIn = false, fallbackTitl
     if (spoken) lines.push({ speaker: spoken[1], sv: spoken[2], en: '' });
     else for (const sv of splitSentences(line)) lines.push({ speaker: '', sv, en: '' });
   }
-  return { id, title: title || 'Untitled', lesson, lines: lines.filter((l) => l.sv), builtIn, ...meta };
+  return { id, title: title || 'Untitled', lesson, lines: lines.filter((l) => l.sv), questions, builtIn, ...meta };
 }
 
 const files = import.meta.glob<string>('../../seed/texts/*.txt', { query: '?raw', import: 'default', eager: true });

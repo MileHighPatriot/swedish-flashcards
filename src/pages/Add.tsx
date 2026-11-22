@@ -13,14 +13,17 @@ import {
   applyPlan,
   buildPlan,
   groupLesson,
-  lessonTag,
   lessonTitle,
   loadStarterLessons,
   type ImportResult,
   type PlanGroup,
   type StarterResult,
 } from '../lib/importer';
-import { parseLesson } from '../lib/parser';
+import { parseLessonDoc } from '../lib/lessonDoc';
+import { buildLessonImport, isFixOnly, lessonTags, looksLikePrintable, mistakesFromFixes, needsToGroup, type ImportText, type LessonImport, type NeedsAnswer } from '../lib/lessonImport';
+import { saveFixMistakes, saveLessonExtras } from '../lib/lessonSave';
+import { hasSections, parseLesson } from '../lib/parser';
+import { weekForLesson } from '../lib/plan';
 
 type Tab = 'paste' | 'card' | 'files';
 const TABS: { id: Tab; label: string }[] = [
@@ -68,13 +71,19 @@ interface Problem {
   error: string;
 }
 
-function ResultCard({ result, onAgain }: { result: ImportResult; onAgain: () => void }) {
+interface Saved extends ImportResult {
+  /** What was saved besides cards. */
+  extras: string[];
+}
+
+function ResultCard({ result, onAgain }: { result: Saved; onAgain: () => void }) {
   return (
     <div className="card" role="status">
       <h2>Saved</h2>
       <p>
         {result.added} added, {result.merged} merged, {result.skipped} skipped.
       </p>
+      {result.extras.length > 0 && <p>Also saved: {result.extras.join(', ')}.</p>}
       <ul>
         {Object.entries(result.perDeck).map(([deck, n]) => (
           <li key={deck}>
@@ -100,9 +109,17 @@ function PasteLesson() {
   const [plan, setPlan] = useState<PlanGroup[] | null>(null);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [types, setTypes] = useState<VocabCardType[] | null>(null);
-  const [result, setResult] = useState<ImportResult | null>(null);
+  const [result, setResult] = useState<Saved | null>(null);
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const textFileRef = useRef<HTMLInputElement>(null);
+  // What the preview found: which kind of text it was, and for a printable, everything besides the cards.
+  const [source, setSource] = useState<'block' | 'fix-only' | 'printable' | 'lines'>('lines');
+  const [skipped, setSkipped] = useState<{ line: number; raw: string }[]>([]);
+  const [lesson, setLesson] = useState<LessonImport | null>(null);
+  const [texts, setTexts] = useState<ImportText[]>([]);
+  const [needs, setNeeds] = useState<NeedsAnswer[]>([]);
+  const [askNumber, setAskNumber] = useState('');
   const pasteRef = useRef<HTMLDivElement>(null);
 
   // Autosave what is typed, so a refresh or a crash never loses a pasted lesson.
@@ -117,15 +134,47 @@ function PasteLesson() {
   const lessonNumber = draft.number.trim() === '' || Number.isNaN(Number(draft.number)) ? null : Math.max(0, Math.round(Number(draft.number)));
   const cardTypes = types ?? settings.defaultCardTypes;
 
-  const preview = async () => {
-    const parsed = parseLesson(draft.text);
-    setProblems(parsed.errors.map((e) => ({ line: e.line, raw: e.raw, error: e.error ?? '' })));
-    setPlan(await buildPlan(groupLesson(parsed, lessonNumber, draft.name)));
+  /**
+   * The flashcard block comes first: text with "###" sections goes through the
+   * card parser. Without sections, a lesson printable is read by its own parser.
+   * Anything else is plain card lines, as before. Nothing is saved until Save.
+   */
+  const preview = async (numberOverride?: number) => {
+    const text = draft.text.replace(/\f/g, '\n');
+    setLesson(null);
+    setTexts([]);
+    setNeeds([]);
+    if (hasSections(text) || !looksLikePrintable(text)) {
+      const parsed = parseLesson(text);
+      const number = numberOverride ?? lessonNumber ?? parsed.lessonNumber ?? null;
+      const name = draft.name.trim() || parsed.lessonName || '';
+      if (number !== lessonNumber || name !== draft.name) setDraft({ ...draft, number: number == null ? '' : String(number), name });
+      setSource(isFixOnly(parsed) ? 'fix-only' : hasSections(text) ? 'block' : 'lines');
+      setSkipped(parsed.skipped ?? []);
+      setProblems(parsed.errors.map((e) => ({ line: e.line, raw: e.raw, error: e.error ?? '' })));
+      setPlan(await buildPlan(groupLesson(parsed, number, name)));
+      return;
+    }
+    const doc = parseLessonDoc(text);
+    const number = numberOverride ?? lessonNumber ?? doc.number;
+    const name = draft.name.trim() || doc.title;
+    if (number !== lessonNumber || name !== draft.name) setDraft({ ...draft, number: number == null ? '' : String(number), name });
+    const imp = buildLessonImport(doc, number, name);
+    setSource('printable');
+    setLesson(imp);
+    setTexts(imp.texts);
+    setNeeds(imp.needs);
+    setSkipped(imp.skipped.map((x) => ({ line: x.line, raw: x.raw })));
+    setProblems(imp.unparsed.map((u) => ({ line: u.line, raw: u.raw, error: u.reason })));
+    setPlan(await buildPlan(imp.groups));
   };
 
   const importCsv = async (file: File) => {
     const { groups, errors } = csvToGroups(await file.text(), lessonTitle(lessonNumber, draft.name || file.name.replace(/\.\w+$/, '')));
     setProblems(errors);
+    setSource('lines');
+    setSkipped([]);
+    setLesson(null);
     setPlan(await buildPlan(groups));
   };
 
@@ -133,10 +182,33 @@ function PasteLesson() {
     if (!plan) return;
     setBusy(true);
     try {
-      const tag = lessonTag(lessonNumber);
-      const r = await applyPlan(plan, { lessonNumber, lessonName: draft.name.trim(), extraTags: tag ? [tag] : [], cardTypes });
-      setResult(r);
+      const name = draft.name.trim();
+      // Every card is tagged lesson-NN and week-NN (the week comes from the plan's Week Map).
+      const opts = { lessonNumber, lessonName: name, extraTags: lessonTags(lessonNumber), cardTypes };
+      const r = await applyPlan(plan, opts);
+      const extras: string[] = [];
+      // Worksheet items I answered in the preview become cards too.
+      const filled = needsToGroup(needs, lessonNumber, name);
+      if (filled.length) {
+        const more = await applyPlan(await buildPlan(filled), opts);
+        r.added += more.added;
+        r.merged += more.merged;
+        r.skipped += more.skipped;
+        for (const [deck, n] of Object.entries(more.perDeck)) r.perDeck[deck] = (r.perDeck[deck] ?? 0) + n;
+      }
+      if (lesson) {
+        const x = await saveLessonExtras({ ...lesson, number: lessonNumber, title: name }, texts);
+        if (x.texts) extras.push(`${x.texts} text${x.texts === 1 ? '' : 's'} for the Reader, Story mode and Dialogue`);
+        if (x.lesson) extras.push('the lesson’s checklist, speaking prompt and questions');
+        if (x.report) extras.push('the report, as a Grammar notes page');
+      }
+      if (source === 'fix-only') {
+        const n = await saveFixMistakes(mistakesFromFixes(plan));
+        extras.push(`${n} new item${n === 1 ? '' : 's'} in My mistakes`);
+      }
+      setResult({ ...r, extras });
       setPlan(null);
+      setLesson(null);
       setDraft({ text: '', number: '', name: '' });
     } finally {
       setBusy(false);
@@ -164,15 +236,101 @@ function PasteLesson() {
             </ul>
           </div>
         )}
-        {plan.length === 0 && <p className="muted">Nothing to import yet.</p>}
+        <p className="notice" role="status">
+          {source === 'printable'
+            ? 'Read as a lesson printable (no ### sections found).'
+            : source === 'fix-only'
+              ? `Read as a “Fix the error” block from a marked worksheet. The cards go into the mistakes deck and each line is added to My mistakes.`
+              : source === 'block'
+                ? 'Read as a flashcard block.'
+                : 'Read as card lines.'}{' '}
+          {lessonNumber != null ? `Lesson ${lessonNumber}, plan week ${weekForLesson(lessonNumber)}: cards are tagged ${lessonTags(lessonNumber).join(' and ')}.` : ''}
+        </p>
+        {lessonNumber == null && source !== 'lines' && (
+          <form
+            className="card card-warn"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const n = Math.round(Number(askNumber));
+              if (askNumber.trim() && n >= 0) void preview(n);
+            }}
+          >
+            <label className="field">
+              <span className="field-label">Which lesson is this? No “Lesson N” line was found.</span>
+              <input type="number" inputMode="numeric" min={0} value={askNumber} onChange={(e) => setAskNumber(e.target.value)} />
+            </label>
+            <button type="submit" className="btn" disabled={!askNumber.trim()}>
+              Set the lesson number
+            </button>
+          </form>
+        )}
+        {plan.length === 0 && <p className="muted">No cards found in this text.</p>}
         <ImportPreview plan={plan} onChange={setPlan} />
+        {texts.length > 0 && (
+          <section className="card" aria-label="Texts">
+            <h3>Texts ({texts.length})</h3>
+            <p className="muted small">
+              Saved as reading texts for the Reader, Story mode and Dialogue role-play. Lines are <code>Swedish | English</code> or{' '}
+              <code>Speaker | Swedish | English</code>. A question line is <code>? question | answer // other answer | line number</code>: fill in the
+              answers, or delete the lines you do not want.
+            </p>
+            {texts.map((t, i) => (
+              <label key={i} className="field">
+                <span className="field-label">
+                  {t.kind}: {t.title}
+                </span>
+                <textarea className="paste-box" rows={Math.min(12, t.body.split('\n').length + 1)} lang="sv" spellCheck={false} value={t.body} onChange={(e) => setTexts(texts.map((x, j) => (j === i ? { ...x, body: e.target.value } : x)))} />
+              </label>
+            ))}
+          </section>
+        )}
+        {needs.length > 0 && (
+          <section className="card" aria-label="Worksheet items that need an answer">
+            <h3>Needs an answer ({needs.length})</h3>
+            <p className="muted small">Worksheet items with no answer in the file. Type the right answer to save one as a card; leave it empty to leave it out.</p>
+            {needs.map((n, i) => (
+              <label key={n.key} className="field">
+                <span className="field-label" lang="sv">
+                  {n.kind === 'fix' ? 'Fix' : 'Translate'} ({n.label}): {n.text}
+                </span>
+                <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={n.answer} onChange={(e) => setNeeds(needs.map((x, j) => (j === i ? { ...x, answer: e.target.value } : x)))} />
+              </label>
+            ))}
+          </section>
+        )}
+        {lesson?.lesson && (
+          <section className="card" aria-label="Lesson details">
+            <h3>Also saved with the lesson</h3>
+            <ul>
+              <li>{lesson.lesson.checklist.length} checklist items</li>
+              <li>{lesson.lesson.speakingPrompt ? 'The speaking prompt for Claude' : 'No speaking prompt found'}</li>
+              <li>{lesson.lesson.questions.length} conversation questions for the journal</li>
+              <li>{lesson.reportPage ? `The report, as the Grammar notes page “${lesson.reportPage.title}”` : 'No report section found'}</li>
+            </ul>
+            {lesson.notImported.length > 0 && <p className="muted small">{lesson.notImported.length} other worksheet items (fill-ins, sorting, writing) are not imported.</p>}
+          </section>
+        )}
+        {skipped.length > 0 && (
+          <details className="card help">
+            <summary>
+              {skipped.length} line{skipped.length === 1 ? '' : 's'} skipped (not card lines)
+            </summary>
+            <ul>
+              {skipped.map((p) => (
+                <li key={p.line}>
+                  Line {p.line}: <code>{p.raw}</code>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
         {plan.some((g) => g.rows.some((r) => r.draft.kind === 'vocab')) && (
           <div className="card">
             <CardTypePicker value={cardTypes} onChange={setTypes} />
           </div>
         )}
         <div className="actions sticky-actions">
-          <button type="button" className="btn btn-primary" disabled={busy || total === 0} onClick={() => void save()}>
+          <button type="button" className="btn btn-primary" disabled={busy || (total === 0 && !lesson && !needs.some((n) => n.answer.trim()))} onClick={() => void save()}>
             Save {total} card{total === 1 ? '' : 's'}
           </button>
           <button type="button" className="btn" onClick={() => setPlan(null)}>
@@ -203,8 +361,9 @@ function PasteLesson() {
         </label>
       </div>
       <p className="muted small">
-        Words go into “{lessonTitle(lessonNumber, draft.name)}”{lessonTag(lessonNumber) ? `, tagged ${lessonTag(lessonNumber)}` : ''}. Grammar and
-        phrases get their own decks. You can change all of that on the next screen.
+        Paste the flashcard block from your lesson, a “Fix the error” block from a marked worksheet, or the text of the lesson printable. Words go into “
+        {lessonTitle(lessonNumber, draft.name)}”{lessonNumber != null ? `, tagged ${lessonTags(lessonNumber).join(' and ')}` : ''}. The lesson number is read
+        from a “Lesson N” line when there is one.
       </p>
       <div ref={pasteRef}>
       <SwedishKeys container={pasteRef} />
@@ -227,6 +386,22 @@ function PasteLesson() {
         <button type="button" className="btn btn-primary" disabled={!draft.text.trim()} onClick={() => void preview()}>
           Preview
         </button>
+        <button type="button" className="btn" onClick={() => textFileRef.current?.click()}>
+          Upload a .txt or .md file
+        </button>
+        <input
+          ref={textFileRef}
+          type="file"
+          accept=".txt,.md,text/plain,text/markdown"
+          hidden
+          aria-label="Upload a lesson file"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            // The file only fills the box. Nothing is saved before the preview.
+            if (f) void f.text().then((text) => setDraft((d) => ({ ...d, text })));
+            e.target.value = '';
+          }}
+        />
         <button type="button" className="btn" onClick={() => fileRef.current?.click()}>
           Import a CSV file
         </button>

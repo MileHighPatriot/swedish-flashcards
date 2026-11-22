@@ -1,0 +1,6 @@
+I marked your worksheet. Here are the corrections.
+
+### Fix the error
+fix | Sedan vi tog tåget hem. | Sedan tog vi tåget hem. | The verb takes seat 2 after sedan. | my-mistake, verb-second, word-order
+fix | Jag lekte med min barn. | Jag lekte med mina barn. | Barn is an ett-word: mitt barn for one, mina barn for more. | my-mistake, pronouns
+fix | Jag ska ringde på eftermiddagen. | Jag ska ringa på eftermiddagen. | After a modal, use the infinitive.

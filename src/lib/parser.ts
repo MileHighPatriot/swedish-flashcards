@@ -32,6 +32,11 @@ export interface ParseResult {
   /** Lines that could not be turned into a card. */
   errors: ParsedItem[];
   count: number;
+  /** Lines around or between the cards that are not card lines (chat text pasted along with a block). Listed, not errors. */
+  skipped?: { line: number; raw: string }[];
+  /** From a "Lesson 6" title line, when the text has one. */
+  lessonNumber?: number | null;
+  lessonName?: string;
 }
 
 const GRAMMAR_ALIASES: Record<string, GrammarKind> = {
@@ -48,8 +53,8 @@ const GRAMMAR_ALIASES: Record<string, GrammarKind> = {
 
 /** What kind of lines a "### Heading" announces. */
 export function hintForHeading(heading: string): SectionHint {
-  const h = heading.toLowerCase();
-  if (/\brules?\b/.test(h)) return 'rule';
+  const h = heading.toLowerCase().replace(/[:\s]+$/, '');
+  if (/\brules?\b/.test(h) || h === 'grammar') return 'rule';
   if (/\bfix|\berrors?\b|mistake/.test(h)) return 'fix';
   if (/reorder|scramble/.test(h)) return 'reorder';
   if (/translat/.test(h)) return 'translate';
@@ -258,25 +263,71 @@ export function parseLine(raw: string, hint: SectionHint = null): LineResult {
 const isTableRule = (line: string) => /^\s*\|?[\s:|-]*-{2,}[\s:|-]*$/.test(line);
 const isHeaderRow = (line: string) => /^\s*\|?\s*(swedish|svenska|word|type)\s*[|\t]/i.test(line);
 
+/** "Lesson 6", "# Lesson 06 – Negation", "**Swedish Lesson 6 (Day 6)**": the lesson a text belongs to. */
+export function readLessonLine(line: string): { number: number; name: string } | null {
+  const m = /^[#*\s]*(?:Swedish\s+)?Lesson\s+(\d+)\b\s*(?:\([^)]*\))?\s*(?:[-–—:]\s*(.*?))?[*\s]*$/i.exec(line);
+  return m ? { number: Number(m[1]), name: (m[2] ?? '').trim() } : null;
+}
+
+const headingOf = (raw: string) => /^(#{1,6})\s*(.+?)[\s:#]*$/.exec(raw);
+const isFence = (raw: string) => /^```/.test(raw);
+
+/**
+ * Is this line a section heading? Two or more # always are. A single # is a
+ * comment or a title, unless it names one of the lesson sections ("# Vocab").
+ */
+function sectionHeading(raw: string): string | null {
+  const h = headingOf(raw);
+  if (!h) return null;
+  if (h[1].length >= 2) return h[2];
+  return hintForHeading(h[2]) && !readLessonLine(raw) ? h[2] : null;
+}
+
+/** Does the text hold a flashcard block: at least one section heading with a card line under it? */
+export function hasSections(text: string): boolean {
+  return text.split(/\r?\n/).some((l) => sectionHeading(l.trim()) != null);
+}
+
 export function parseLesson(text: string): ParseResult {
   const sections: ParsedSection[] = [];
   let current: ParsedSection | null = null;
   const errors: ParsedItem[] = [];
+  const skipped: { line: number; raw: string }[] = [];
   let count = 0;
+  let title: { number: number; name: string } | null = null;
 
-  text.split(/\r?\n/).forEach((rawLine, i) => {
+  const lines = text.split(/\r?\n/);
+  // A block pasted together with other text: only what sits under a heading is a
+  // card, and when the cards use pipes, a line without one is chat, not a card.
+  const block = lines.some((l) => sectionHeading(l.trim()) != null);
+  const piped = block && lines.some((l) => l.includes('|') && sectionHeading(l.trim()) == null);
+  let fences = 0;
+
+  lines.forEach((rawLine, i) => {
     const raw = rawLine.trim();
     if (!raw) return;
-    const heading = /^#{2,6}\s+(.+?)\s*#*$/.exec(raw);
-    if (heading) {
-      current = { heading: heading[1], hint: hintForHeading(heading[1]), items: [] };
+    if (isFence(raw)) {
+      fences++;
+      return;
+    }
+    title ??= readLessonLine(raw);
+    const heading = sectionHeading(raw);
+    if (heading != null) {
+      current = { heading, hint: hintForHeading(heading), items: [] };
       sections.push(current);
       return;
     }
     // "# ..." is a comment (or a title); horizontal rules and table furniture are skipped.
     if (/^#(\s|$)/.test(raw) || /^([-*_=])\1{2,}$/.test(raw) || isTableRule(raw) || isHeaderRow(raw)) return;
-    if (/^```/.test(raw)) return;
 
+    if (block) {
+      // Before the first heading, after the closing code fence, or plain prose inside a piped block.
+      const closed = fences > 0 && fences % 2 === 0 && sections.length > 0;
+      if (!current || closed || (piped && !raw.includes('|') && !raw.includes('\t'))) {
+        skipped.push({ line: i + 1, raw });
+        return;
+      }
+    }
     if (!current) {
       current = { heading: '', hint: null, items: [] };
       sections.push(current);
@@ -287,7 +338,8 @@ export function parseLesson(text: string): ParseResult {
     else errors.push(item);
   });
 
-  return { sections: sections.filter((s) => s.items.length > 0), errors, count };
+  const found = title as { number: number; name: string } | null;
+  return { sections: sections.filter((s) => s.items.length > 0), errors, count, skipped, lessonNumber: found?.number ?? null, lessonName: found?.name ?? '' };
 }
 
 // ---------- helpers shared with the answer checkers ----------

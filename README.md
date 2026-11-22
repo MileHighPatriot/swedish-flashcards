@@ -86,6 +86,41 @@ The parser also copes with tabs, dashes, commas, bullets, numbering and markdown
 
 Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `verb-second`, `word-order`, `questions`, `irregular`, `modals`, `connectors`, `negation`, `hem-hemma`, `spelling`, `watch-spelling`, `pronunciation`.
 
+## Importing a lesson
+
+Add → Paste takes text three ways: pasted, uploaded as a `.txt` or `.md` file, or typed. Nothing is saved until you have seen the preview and pressed Save. The text is read in this order:
+
+1. **The flashcard block first.** If the text has `###` sections, it is read as cards in the format above. *This is assumed until the first real Lesson 6 block arrives:* no B2-plan block exists yet, so the format is taken from my Lesson 5 file. The reader is tolerant:
+   - code fences (three backticks, with or without a language) around the block are ignored;
+   - headings may use any number of `#`, any case and a trailing colon, and these variants work: `Vocabulary`, `Grammar` or `Rules`, `Fix`, `Fix-the-error`, `Fix the errors`, `Reorder the words`, `Translation`;
+   - the tags column may be missing, and blank lines are fine;
+   - chat text pasted along with the block (before the first heading, after the closing fence, or a line with no pipes) is listed as *skipped*, not as an error;
+   - the lesson number is read from a `Lesson N` line; if there is none, the preview asks for it.
+2. **A fix-only block.** When the only section is `### Fix the error` (a marked worksheet coming back), the cards go into “Grammar – My mistakes” as before, and each line is also added to **My mistakes** as “Fix this sentence: …” with what I wrote, the correct sentence and the reason.
+3. **The lesson printable, as a fallback.** With no `###` sections, the text of the lesson PDF is read by rules. For the best result on a Mac, make the text with poppler (`brew install poppler`):
+
+   ```
+   pdftotext -layout lesson6.pdf lesson6.txt
+   ```
+
+   What each part becomes:
+
+   | In the lesson | In the app |
+   |---|---|
+   | Word tables (with en/ett, verb forms, examples) | Vocabulary cards |
+   | My own lines in a dialogue (speaker `Du`) | Phrase cards |
+   | The story, the dialogue and the reading | Texts for the Reader, Story mode and Dialogue role-play |
+   | “Answer in Swedish” and reading questions | Question lines on that text, with the answer left for me to fill in |
+   | “Check yourself” items with `(answer: …)` | Rule cards |
+   | Fix and translate items with an answer key | Fix and translate cards |
+   | Fix and translate items without one | Listed as “needs an answer”; saved only if I type it |
+   | Checklist, speaking prompt, conversation questions | The lesson’s row (used by the journal and the checkpoints) |
+   | The weak-spot report | A Grammar notes page, “Lesson NN report” |
+
+   Lines the reader could not place are listed with their line number; none is dropped silently. Text copied out of Preview loses its column spacing, so tables come through less well than with `pdftotext -layout`.
+
+Every imported card is tagged `lesson-NN` and `week-NN`, where the week comes from the plan’s Week Map. Importing the same lesson twice flags the duplicates (merge, skip or add) and updates the lesson’s row, texts and report in place.
+
 ## What is in it
 
 - **Card types:** Swedish → English, English → Swedish, fill in the blank, type the Swedish, listening, grammar rule, fix the error, reorder the words, translate.

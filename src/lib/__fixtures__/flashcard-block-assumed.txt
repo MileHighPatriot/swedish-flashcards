@@ -1,0 +1,27 @@
+Here is your flashcard block for Lesson 5. Paste it into the app.
+
+```text
+# Lesson 5 – Modals, pronouns and review
+
+## Vocabulary:
+kunna | can, be able to, know (a skill) | kan, kunde, kunnat | Jag kan lite svenska. = I know a little Swedish. | verbs, modals
+hjälpa | help | hjälper, hjälpte, hjälpt | Kan du hjälpa mig? = Can you help me?
+en familj | family | en familj, familjen, familjer | Min familj är stor. = My family is big. | family
+
+### Phrases
+Kan jag hjälpa dig? | Can I help you? | | Kan du hjälpa mig? = Can you help me? | phrases, conversation
+
+#### Grammar
+rule | What follows a modal verb? | The infinitive with no att: Jag vill äta middag. | Never add att and never change the second verb. | modals, verbs
+
+### Fix the errors
+fix | Jag vill kaffe. | Jag vill ha kaffe. | Use vill ha before a noun. | modals
+
+### Reorder the words
+reorder | du / hjälpa / kan / mig (Can you help me?) | Kan du hjälpa mig? | Yes/no question: modal first. | word-order, questions, modals
+
+### TRANSLATION
+translate | Can I pay by card? | Kan jag betala med kort? | Kan jag plus the infinitive. | modals, questions
+```
+
+Let me know when you have done the worksheet and I will mark it.
