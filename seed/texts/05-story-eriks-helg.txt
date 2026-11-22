@@ -8,3 +8,8 @@ Han kan inte laga middag, men han kan åka till affären och köpa mat. | He can
 På söndag ska de träffa Annas mamma. | On Sunday they are going to meet Anna's mother.
 Barnen vill ge mormor en present. | The children want to give grandma a present.
 Mormor säger att de måste komma tidigt. | Grandma says they have to come early.
+? Vad vill barnen göra på lördag? | De vill leka i parken. // Barnen vill leka i parken. // På lördag vill barnen leka i parken. | 2
+? Vem måste arbeta? | Anna måste arbeta. | 3
+? Vem ska vara hemma med barnen? | Erik ska vara hemma med barnen. | 3
+? Vad kan Erik inte göra? | Han kan inte laga middag. // Erik kan inte laga middag. | 4
+? Vem ska de träffa på söndag? | De ska träffa Annas mamma. // På söndag ska de träffa Annas mamma. | 5

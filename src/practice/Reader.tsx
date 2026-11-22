@@ -11,7 +11,7 @@ import { useNotes, useTexts } from './shared';
 
 export const READER_DECK = 'Reader words';
 
-function WordPanel({ word, line, lex, onClose }: { word: string; line: TextLine; lex: Lexicon; onClose: () => void }) {
+export function WordPanel({ word, line, lex, onClose }: { word: string; line: TextLine; lex: Lexicon; onClose: () => void }) {
   const settings = useSettings();
   const hit = lookup(lex, word);
   const [english, setEnglish] = useState('');

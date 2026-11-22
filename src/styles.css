@@ -1855,3 +1855,18 @@ a.pill-btn {
   margin-top: 0.25rem;
   overflow-wrap: anywhere;
 }
+
+/* ---------- story mode ---------- */
+.story-lines {
+  list-style: none;
+  padding-left: 0;
+}
+.line-audio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.line-audio .btn {
+  min-height: 44px;
+}

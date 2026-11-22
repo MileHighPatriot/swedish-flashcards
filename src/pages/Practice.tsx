@@ -6,6 +6,7 @@ import { EnEtt } from '../practice/EnEtt';
 import { Journal } from '../practice/Journal';
 import { Reader } from '../practice/Reader';
 import { Speak } from '../practice/Speak';
+import { Story } from '../practice/Story';
 import { VerbDrill } from './Grammar';
 
 const TOOLS = [
@@ -14,6 +15,7 @@ const TOOLS = [
   { id: 'chat', title: 'Free conversation', blurb: 'Talk freely. A review at the end shows what to fix.', skill: 'Speaking', view: Chat },
   { id: 'journal', title: 'Journal', blurb: 'Write about your day. Mistakes come back as fix cards.', skill: 'Writing', view: Journal },
   { id: 'speak', title: 'Record and compare', blurb: 'Say a sentence, then hear yourself next to the Swedish voice.', skill: 'Speaking', view: Speak },
+  { id: 'story', title: 'Story mode', blurb: 'Read a story, listen to it, then answer questions in Swedish.', skill: 'Reading', view: Story },
   { id: 'reader', title: 'Reader', blurb: 'Short texts where every word can be tapped.', skill: 'Reading', view: Reader },
   { id: 'verbs', title: 'Verb drill', blurb: 'Present, past and third form of your verbs.', skill: 'Grammar', view: VerbDrill },
   { id: 'en-ett', title: 'en or ett', blurb: 'Pick the right article for your nouns.', skill: 'Grammar', view: EnEtt },
