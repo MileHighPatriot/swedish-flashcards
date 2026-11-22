@@ -30,6 +30,8 @@ export interface QueueOptions extends Scope {
   extraNew?: number;
   /** Cram exactly these cards, in this order (weak spots, practise a rule). */
   cardIds?: ID[];
+  /** Started from the Today screen: the end of the session shows what is next on today's list. */
+  fromToday?: boolean;
 }
 
 export interface QueueInput {

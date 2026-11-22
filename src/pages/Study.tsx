@@ -49,6 +49,7 @@ import { dueItems, isActive } from '../lib/mistakeItems';
 import { planPosition, weekSessionTags } from '../lib/plan';
 import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, mistakeInputFor, reverseIsTyped, withReason, type Answer } from '../study/CardView';
 import { MistakeRound, type RoundSummary } from '../study/MistakeRound';
+import { TodayNext } from '../study/TodayNext';
 
 // ---------- the session ----------
 
@@ -362,9 +363,10 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
         ) : (
           <p className="muted">No cards are due in this selection right now. Cram mode shows them anyway.</p>
         )}
+        {opts.fromToday && <TodayNext />}
         <div className="actions">
           <Link className="btn btn-primary" to="/">
-            Back to home
+            Back to Today
           </Link>
           <button type="button" className="btn" onClick={onExit}>
             Study something else
@@ -601,15 +603,20 @@ export function Study() {
   }, [counts, params, fixes]);
 
   // "This week's lesson" on the home screen: my mistakes, then the cards of every lesson in my current plan week.
+  // "Start today's session" on Today is the same session; when this week's lessons have nothing due, it carries on with everything due.
   const week = params.get('week') === '1';
+  const fromToday = params.get('today') === '1';
   useEffect(() => {
-    if (autoStarted.current || !data || !week) return;
+    if (autoStarted.current || !data || (!week && !fromToday)) return;
     autoStarted.current = true;
     void listCheckpoints().then((checkpoints) => {
       const { week: w } = planPosition(data.decks, settings, Date.now());
-      setRun({ mode: 'normal', shuffle: false, tags: weekSessionTags(w, checkpoints) });
+      const tags = weekSessionTags(w, checkpoints);
+      const q = buildQueue({ ...data, settings, now: Date.now() }, { tags, mode: 'normal', shuffle: false });
+      const empty = q.learning.length + q.main.length === 0;
+      setRun(fromToday && empty ? { mode: 'normal', shuffle: false, fromToday } : { mode: 'normal', shuffle: false, tags, fromToday });
     });
-  }, [data, week, settings]);
+  }, [data, week, fromToday, settings]);
 
   // A set of tags from a link, e.g. the lessons of a block to repeat: /study?tags=lesson-06,lesson-07.
   const tagSet = params.get('tags');
