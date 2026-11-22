@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 import { ensureSeeded } from './db/seed';
 import { useSettings, useTheme } from './lib/hooks';
 import { setPreferredVoice } from './lib/speech';
@@ -9,10 +9,9 @@ import { Add } from './pages/Add';
 import { Study } from './pages/Study';
 import { Grammar } from './pages/Grammar';
 import { Practice } from './pages/Practice';
-import { Stats } from './pages/Stats';
 import { Mistakes } from './pages/Mistakes';
 import { Checkpoints } from './pages/Checkpoints';
-import { Hours } from './pages/Hours';
+import { Progress } from './pages/Progress';
 import { Decks } from './pages/Decks';
 import { useReminder } from './lib/reminder';
 import { useAutoSync } from './sync/auto';
@@ -75,11 +74,13 @@ export function App() {
             <Route path="/study" element={<Study />} />
             <Route path="/mistakes" element={<Mistakes />} />
             <Route path="/checkpoints/:cp?" element={<Checkpoints />} />
-            <Route path="/hours" element={<Hours />} />
+            <Route path="/hours" element={<Navigate to="/progress?section=hours" replace />} />
             <Route path="/decks" element={<Decks />} />
             <Route path="/practice/:tool?" element={<Practice />} />
             <Route path="/grammar/:slug?" element={<Grammar />} />
-            <Route path="/stats" element={<Stats />} />
+            <Route path="/progress" element={<Progress />} />
+            {/* Old addresses of the three progress screens. /checkpoints (the list) redirects from inside Checkpoints. */}
+            <Route path="/stats" element={<Navigate to="/progress?section=stats" replace />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Home />} />
           </Routes>

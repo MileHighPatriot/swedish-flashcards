@@ -21,7 +21,8 @@ const MATURITY = [
 const WEEKS = 18;
 const FORECAST_DAYS = 14;
 
-export function Stats() {
+/** The charts and the streak. Shown as the last section of Progress. */
+export function StatsPanel() {
   const settings = useSettings();
   const now = useNow();
   const today = studyDayKey(now, settings.dayStartHour);
@@ -60,10 +61,7 @@ export function Stats() {
   const activeLast30 = last30.filter((k) => s.counts.has(k)).length;
 
   return (
-    <section className="viz-root">
-      <header className="page-head">
-        <h1>Stats</h1>
-      </header>
+    <div className="viz-root">
 
       {/* ----- streak ----- */}
       <div className="card streak-card">
@@ -267,8 +265,8 @@ export function Stats() {
       </div>
 
       <p className="muted small">
-        Looking for what to fix? Your <Link to="/grammar?tab=weak">weak spots</Link> and <Link to="/grammar?tab=mistakes">mistake log</Link> are under Grammar.
+        Looking for what to fix? See <Link to="/mistakes">My mistakes</Link> and your <Link to="/grammar?tab=weak">weak spots</Link>.
       </p>
-    </section>
+    </div>
   );
 }

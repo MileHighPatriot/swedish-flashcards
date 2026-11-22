@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Link } from 'react-router-dom';
 import { addHours, deleteHours, listHours, listReviews, updateHours, updateSettings } from '../db/repo';
 import { HOURS_CATEGORIES, HOURS_LABELS, type HoursCategory, type HoursEntry } from '../db/types';
 import { useNow, useSettings } from '../lib/hooks';
@@ -100,7 +99,8 @@ function Entry({ entry }: { entry: HoursEntry }) {
   );
 }
 
-export function Hours() {
+/** The hours log for one week, with manual entry. Shown as the middle section of Progress. */
+export function HoursPanel() {
   const settings = useSettings();
   const now = useNow();
   const today = isoDate(now);
@@ -133,14 +133,8 @@ export function Hours() {
   };
 
   return (
-    <section>
-      <header className="page-head">
-        <Link to="/" className="back-link">
-          ← Home
-        </Link>
-        <h1>Hours</h1>
-        <p className="muted">Your Hours Log, by calendar week. Target: 11 hours a week (9 in the two holiday weeks), 634 in all.</p>
-      </header>
+    <div>
+      <p className="muted">Your Hours Log, by calendar week. Target: 11 hours a week (9 in the two holiday weeks), 634 in all.</p>
 
       <div className="hours-nav">
         <button type="button" className="btn" onClick={() => setMonday(addDays(monday, -7))} aria-label="Previous week">
@@ -214,7 +208,7 @@ export function Hours() {
           void add();
         }}
       >
-        <h2>Add time</h2>
+        <h3>Add time</h3>
         <div className="field-grid">
           <label className="field">
             <span className="field-label">Date</span>
@@ -252,8 +246,8 @@ export function Hours() {
         </div>
       </form>
 
-      <h2>This week’s entries ({mine.length})</h2>
+      <h3>This week’s entries ({mine.length})</h3>
       {mine.length === 0 ? <p className="muted">Nothing logged by hand or by the practice tools this week.</p> : <ul className="list">{mine.map((e) => <Entry key={e.id} entry={e} />)}</ul>}
-    </section>
+    </div>
   );
 }

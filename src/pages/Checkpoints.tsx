@@ -541,7 +541,7 @@ function Run({ cp, practice }: { cp: PlanCheckpoint; practice: boolean }) {
           <button type="button" className="btn btn-primary" onClick={() => setStage('recall')}>
             Start: recall
           </button>
-          <Link className="btn" to="/checkpoints">
+          <Link className="btn" to="/progress">
             Not now
           </Link>
         </div>
@@ -592,8 +592,8 @@ function Run({ cp, practice }: { cp: PlanCheckpoint; practice: boolean }) {
   return (
     <>
       {row && <ResultCard row={row} plan={cp} />}
-      <Link className="btn btn-primary btn-big" to="/checkpoints">
-        Back to checkpoints
+      <Link className="btn btn-primary btn-big" to="/progress">
+        Back to Progress
       </Link>
     </>
   );
@@ -692,7 +692,8 @@ function PaperForm({ onSaved }: { onSaved: () => void }) {
   );
 }
 
-function Overview() {
+/** Every checkpoint with its date and state, paper entry, and the score history. Shown as the first section of Progress. */
+export function CheckpointsOverview() {
   const now = useNow();
   const rows = useLiveQuery(listCheckpoints, []);
   const [paper, setPaper] = useState(false);
@@ -756,11 +757,11 @@ function Overview() {
       </button>
       {paper && <PaperForm onSaved={() => setPaper(false)} />}
 
-      <h2>Score history</h2>
+      <h3>Score history</h3>
       {history.length === 0 && <p className="muted">Nothing yet.</p>}
       {scored.length > 0 && (
         <div className="card">
-          <h3>Production scores</h3>
+          <h4>Production scores</h4>
           <ol className="cp-trend">
             {scored.map((r) => (
               <li key={r.id}>
@@ -811,20 +812,21 @@ export function Checkpoints() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const cp = id ? checkpointOf(id) : undefined;
+  // The list of checkpoints lives on Progress now; only a sitting has its own screen.
   useEffect(() => {
-    if (id && !cp) navigate('/checkpoints', { replace: true });
-  }, [id, cp, navigate]);
+    if (!cp) navigate('/progress?section=checkpoints', { replace: true });
+  }, [cp, navigate]);
+  if (!cp) return null;
 
   return (
     <section>
       <header className="page-head">
-        <Link to={cp ? '/checkpoints' : '/'} className="back-link">
-          {cp ? '← Checkpoints' : '← Home'}
+        <Link to="/progress?section=checkpoints" className="back-link">
+          ← Progress
         </Link>
-        <h1>{cp ? checkpointTitle(cp.cp) : 'Checkpoints'}</h1>
-        {!cp && <p className="muted">The 14 Sunday checkpoints and the Final from your B2 plan. Each is a 75-minute test: recall 15, production 20, writing 20, speaking 20.</p>}
+        <h1>{checkpointTitle(cp.cp)}</h1>
       </header>
-      {cp ? <Run key={`${cp.cp}:${params.get('practice')}`} cp={cp} practice={params.get('practice') === '1'} /> : <Overview />}
+      <Run key={`${cp.cp}:${params.get('practice')}`} cp={cp} practice={params.get('practice') === '1'} />
     </section>
   );
 }

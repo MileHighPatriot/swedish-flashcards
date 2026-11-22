@@ -2288,3 +2288,26 @@ a.pill-btn {
 .deck-group-title {
   flex: 1 1 auto;
 }
+
+/* ---------- progress ---------- */
+.progress-section {
+  scroll-margin-top: 12px;
+  margin-top: 22px;
+  padding-top: 6px;
+  border-top: 2px solid var(--border);
+}
+.progress-summary {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+.progress-summary dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.progress-summary dd {
+  margin: 0;
+  font-weight: 600;
+}
