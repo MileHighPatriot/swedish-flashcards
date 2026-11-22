@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addMistake, recordTyped } from '../db/repo';
+import { useActivity } from '../lib/activity';
 import { drillNouns, type DrillNoun } from '../lib/practice';
 import { shuffled } from '../lib/queue';
 import { ALL, LessonSelect, inLesson, useNotes } from './shared';
 
 export function EnEtt() {
   const data = useNotes();
+  useActivity('lessons');
   const [lesson, setLesson] = useState(ALL);
   const [queue, setQueue] = useState<DrillNoun[] | null>(null);
   const [index, setIndex] = useState(0);

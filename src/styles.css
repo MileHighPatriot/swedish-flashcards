@@ -2067,3 +2067,55 @@ a.pill-btn {
 .journal-question .face-question {
   margin: 4px 0;
 }
+
+/* ---------- hours ---------- */
+.hours-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.hours-nav .btn {
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+.hours-week {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+}
+.hours-table th,
+.hours-table td {
+  text-align: left;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.hours-table thead th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hours-table tbody th {
+  font-weight: 700;
+}
+.hours-progress {
+  margin: 10px 0;
+}
+.hours-progress-text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 4px;
+}

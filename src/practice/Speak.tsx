@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import { shuffled } from '../lib/queue';
 import { say } from '../lib/speech';
 import { ALL, LessonSelect, Recorder, inLesson, useSentences } from './shared';
 
 export function Speak() {
+  useActivity('speaking');
   const settings = useSettings();
   const sentences = useSentences();
   const [lesson, setLesson] = useState(ALL);

@@ -14,6 +14,7 @@ import {
   type ChatTurn,
   type ReviewSections,
 } from '../lib/chat';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import { listenReady, useListen } from '../lib/listen';
 import { useNeuralStatus } from '../lib/neural';
@@ -32,6 +33,7 @@ function priceOf(kind: 'chat' | 'review', usage: { inputTokens: number; outputTo
 }
 
 export function Chat() {
+  useActivity('speaking');
   const settings = useSettings();
   const key = useLiveQuery(loadChatKey, []);
   const box = useRef<HTMLDivElement>(null);

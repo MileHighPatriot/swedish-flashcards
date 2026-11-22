@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { recordTyped } from '../db/repo';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import { neuralEnabled } from '../lib/neural';
 import { say, stopSpeaking, useSwedishVoices } from '../lib/speech';
@@ -176,6 +177,7 @@ export function Story() {
   const [params, setParams] = useSearchParams();
   const [stage, setStage] = useState<'read' | 'quiz' | 'done'>('read');
   const [answers, setAnswers] = useState<StoryAnswer[]>([]);
+  useActivity('reading-writing');
   const lex = useMemo(() => buildLexicon(data?.notes ?? []), [data]);
   if (!all || !data) return <p className="muted">Loading…</p>;
   const texts = storyTexts(all);

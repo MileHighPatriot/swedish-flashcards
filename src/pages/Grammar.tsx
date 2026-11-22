@@ -21,6 +21,7 @@ import {
   updateGrammarPage,
 } from '../db/repo';
 import type { Deck, Note } from '../db/types';
+import { useActivity } from '../lib/activity';
 import { checkAnswer } from '../lib/check';
 import { Markdown } from '../lib/markdown';
 import { shuffled } from '../lib/queue';
@@ -514,6 +515,7 @@ export function VerbDrill({ preset }: { preset?: DrillPreset }) {
   const [results, setResults] = useState<DrillResult[]>([]);
   const nextBtn = useRef<HTMLButtonElement>(null);
   const started = useRef(false);
+  useActivity('lessons');
   // Coming from the verb table, the drill starts straight away.
   useEffect(() => {
     if (!preset || started.current) return;

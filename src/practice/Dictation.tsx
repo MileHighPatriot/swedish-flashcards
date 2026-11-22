@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addMistake, recordTyped } from '../db/repo';
 import { checkAnswer } from '../lib/check';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import type { Sentence } from '../lib/practice';
 import { shuffled } from '../lib/queue';
@@ -13,6 +14,7 @@ export function Dictation() {
   const settings = useSettings();
   const sentences = useSentences();
   const reasons = useReasons();
+  useActivity('lessons');
   const [lesson, setLesson] = useState(ALL);
   const [size, setSize] = useState(10);
   const [queue, setQueue] = useState<Sentence[] | null>(null);

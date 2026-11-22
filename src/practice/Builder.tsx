@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ensureBuilderCard, getCard, getSettings, listCards, listDecks, listNotes, recordTyped, saveReview, updateSettings } from '../db/repo';
 import { BUILDER_DECK, BUILDER_DECK_ID, builderGrade, builderPool, isCurrent, pickSession, type BuilderItem } from '../lib/builder';
 import { checkAnswer } from '../lib/check';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import { splitAlternatives } from '../lib/parser';
 import { lessonTagOf, planPosition } from '../lib/plan';
@@ -31,6 +32,7 @@ export function Builder() {
   const settings = useSettings();
   const texts = useTexts();
   const reasons = useReasons();
+  useActivity('lessons');
   const data = useLiveQuery(async () => {
     const [notes, cards, decks] = await Promise.all([listNotes(), listCards(), listDecks()]);
     return { notes, cards, decks };

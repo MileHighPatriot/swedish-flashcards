@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useActivity } from '../lib/activity';
 import { useSettings } from '../lib/hooks';
 import { say, stopSpeaking } from '../lib/speech';
 import { isDialogue, SITUATION_CATEGORIES, SITUATIONS, speakersOf, type ReadingText } from '../lib/texts';
@@ -114,6 +115,7 @@ function Play({ text, me, listenFirst, onExit }: { text: ReadingText; me: string
 }
 
 export function Dialogue() {
+  useActivity('speaking');
   const texts = useTexts();
   const settings = useSettings();
   const [params] = useSearchParams();

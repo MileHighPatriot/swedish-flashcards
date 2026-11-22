@@ -226,7 +226,7 @@ function Writing({ cp, task, onDone }: { cp: string; task: WritingTask; onDone: 
   const [score, setScore] = useState(0.7);
   const { c, toggle } = useCountdown(SECTION_MINUTES.writing, () => setOver(true));
   const box = useRef<HTMLDivElement>(null);
-  useActivity('reading-writing');
+  useActivity('lessons');
   return (
     <div ref={box}>
       {!over && <Clock section="writing" c={c} onToggle={toggle} />}
