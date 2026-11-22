@@ -2,7 +2,24 @@
 // arithmetic on top of it. Content follows my lessons (the current week is the
 // week of the newest lesson I have), the hours log follows the calendar.
 
-import { CHECKPOINTS, PHASES, SHORT_WEEKS, WEEK_HOURS, WEEK_MAP, WEEK_ZERO_LESSONS, type PlanCheckpoint, type PlanPhase } from '../data/plan';
+import {
+  CHECKPOINTS,
+  CHECKPOINT_SUNDAY,
+  HOLIDAY_WEEKS,
+  PHASES,
+  PLAN_END,
+  PLAN_START,
+  SHORT_FRIDAY,
+  SHORT_WEEKS,
+  WEEKLY_SCHEDULE,
+  WEEK_HOURS,
+  WEEK_MAP,
+  WEEK_ZERO_LESSONS,
+  type DayType,
+  type PlanCheckpoint,
+  type PlanPhase,
+  type ScheduleDay,
+} from '../data/plan';
 import type { Checkpoint, Deck, Settings } from '../db/types';
 
 export const LAST_WEEK = WEEK_MAP[WEEK_MAP.length - 1].week;
@@ -126,4 +143,113 @@ export function weekSessionTags(week: number, checkpoints: Sitting[]): string[] 
   const sat = before && latestSitting(checkpoints, before.cp);
   if (sat?.result === 'close' && sat.reviewTag) tags.push(sat.reviewTag);
   return tags;
+}
+
+// ---------- today, from the Weekly Schedule ----------
+
+
+/** 1 = Monday … 7 = Sunday, for a local "YYYY-MM-DD". */
+export function weekdayOf(date: string): number {
+  return ((new Date(`${date}T12:00:00`).getDay() + 6) % 7) + 1;
+}
+
+/** A short week has Lessons A and B only: every checkpoint week, and the two holiday weeks. */
+export function isShortWeek(week: number): boolean {
+  const row = WEEK_MAP.find((w) => w.week === week);
+  return !!row && row.lessons != null && (row.checkpoint != null || HOLIDAY_WEEKS.includes(week));
+}
+
+/** The seven days of a plan week as the schedule lays them out. */
+export function scheduleOfWeek(week: number): ScheduleDay[] {
+  const row = WEEK_MAP.find((w) => w.week === week);
+  if (!row) return [];
+  return WEEKLY_SCHEDULE.map((d) => {
+    // Week 58 has no lessons: its weekdays are review days up to the Final on the Saturday.
+    if (!row.lessons) return d.type === 'lesson' ? { ...SHORT_FRIDAY, day: d.day, name: d.name } : d;
+    if (d.day === 5 && isShortWeek(week)) return SHORT_FRIDAY;
+    if (d.day === 7 && row.checkpoint) return CHECKPOINT_SUNDAY;
+    return d;
+  });
+}
+
+/** The lesson the Week Map puts on a lesson day (A, B, C = first, second, third lesson of the week). */
+function lessonOfSlot(week: number, slot: 'A' | 'B' | 'C'): number | null {
+  return lessonsOfWeek(week)['ABC'.indexOf(slot)] ?? null;
+}
+
+/** The newest lesson the plan has reached by this date: 5 before the plan starts. */
+export function expectedLesson(date: string): number {
+  const week = weekForDate(date);
+  if (week === 0) return WEEK_ZERO_LESSONS[1];
+  const today = weekdayOf(date);
+  let lesson = lessonsOfWeek(week - 1).slice(-1)[0] ?? (week > 1 ? lessonsOfWeek(week - 2).slice(-1)[0] : undefined) ?? WEEK_ZERO_LESSONS[1];
+  for (const d of scheduleOfWeek(week)) if (d.day <= today && d.slot) lesson = lessonOfSlot(week, d.slot) ?? lesson;
+  return lesson;
+}
+
+export interface Today {
+  date: string;
+  /** Plan week by the calendar. 0 before the plan starts; never shown as "Week 0". */
+  week: number;
+  /** null outside the plan (before it starts, after the Final). */
+  dayType: DayType | null;
+  schedule: ScheduleDay | null;
+  /** The lesson for today: the newest lesson I have. null when there is none to name. */
+  lesson: number | null;
+  /** The lesson the Week Map expects me to have reached today. */
+  expected: number;
+  /** How many lessons my progress is short of that. */
+  behind: number;
+  /** "Lesson 6, day 1", "Review of Lesson 6", "Checkpoint test", "Plan starts tomorrow"… */
+  status: string;
+  /** "You're one lesson behind the plan", or null. */
+  note: string | null;
+  /** The checkpoint taken today, if any. */
+  checkpoint: PlanCheckpoint | null;
+}
+
+/**
+ * What today is. The calendar date (the device's local time) sets the week and
+ * the kind of day; my progress (the highest lesson I have unlocked) sets the
+ * lesson. Nothing is ticked by hand and nothing is stored.
+ */
+export function resolveToday(date: Date | number | string, progress: { lesson: number }): Today {
+  const day = typeof date === 'string' ? date : isoDate(date);
+  const base = { date: day, week: 0, dayType: null, schedule: null, lesson: null, expected: WEEK_ZERO_LESSONS[1], behind: 0, note: null, checkpoint: null };
+  if (day < PLAN_START) return { ...base, status: day === addDays(PLAN_START, -1) ? 'Plan starts tomorrow' : 'Plan starts Mon Nov 23' };
+  if (day > PLAN_END) return { ...base, week: LAST_WEEK, expected: expectedLesson(PLAN_END), status: 'The plan is finished' };
+
+  const week = weekForDate(day);
+  const checkpoint = CHECKPOINTS.find((c) => c.date === day) ?? null;
+  const planned = scheduleOfWeek(week).find((d) => d.day === weekdayOf(day))!;
+  // The Final sits on a Saturday, in a week with no lessons.
+  const schedule: ScheduleDay = checkpoint?.cp === 'Final' ? { ...planned, type: 'final', minutes: 75, tasks: ['Final B2 exam'] } : planned;
+  const expected = expectedLesson(day);
+  const lesson = progress.lesson > 0 ? progress.lesson : null;
+  const behind = Math.max(0, expected - progress.lesson);
+  const hasLessons = lessonsOfWeek(week).length > 0;
+
+  let status: string;
+  switch (schedule.type) {
+    case 'lesson':
+      status = lesson != null ? `Lesson ${lesson}, day ${schedule.day}` : `Lesson day ${schedule.day}`;
+      break;
+    case 'review':
+      status = hasLessons && lesson != null ? `Review of Lesson ${lesson}` : 'Review before the Final';
+      break;
+    case 'reading-writing':
+      status = 'Reading and writing';
+      break;
+    case 'weekly-review':
+      status = 'Weekly review';
+      break;
+    case 'checkpoint':
+      status = 'Checkpoint test';
+      break;
+    case 'final':
+      status = 'Final B2 exam';
+      break;
+  }
+  const note = behind === 0 ? null : behind === 1 ? "You're one lesson behind the plan" : `You're ${behind} lessons behind the plan`;
+  return { date: day, week, dayType: schedule.type, schedule, lesson, expected, behind, status, note, checkpoint };
 }

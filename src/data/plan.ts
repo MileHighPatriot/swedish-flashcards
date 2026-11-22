@@ -138,3 +138,39 @@ export const WEEK_TOPICS: Record<number, string[]> = {
   3: ['question words and indirect questions', 'prepositions of place: i, på, vid, under, över, bredvid'],
   4: ['review: past tense, modals, negation, subordinate clauses, pronouns and possessives'],
 };
+
+// ---------- the Weekly Schedule ----------
+
+export type DayType = 'lesson' | 'review' | 'reading-writing' | 'weekly-review' | 'checkpoint' | 'final';
+
+export interface ScheduleDay {
+  /** 1 = Monday … 7 = Sunday. */
+  day: number;
+  name: string;
+  type: DayType;
+  /** Lesson A, B or C of the week, on lesson days. */
+  slot: 'A' | 'B' | 'C' | null;
+  minutes: number;
+  /** What the day holds, in the plan's words. */
+  tasks: string[];
+}
+
+/** A regular week. Short weeks and checkpoint Sundays are worked out from the rules below. */
+export const WEEKLY_SCHEDULE: ScheduleDay[] = [
+  { day: 1, name: 'Mon', type: 'lesson', slot: 'A', minutes: 100, tasks: ['Lesson A'] },
+  { day: 2, name: 'Tue', type: 'review', slot: null, minutes: 75, tasks: ['Review of marked work', 'Speaking with Claude', 'Flashcards'] },
+  { day: 3, name: 'Wed', type: 'lesson', slot: 'B', minutes: 100, tasks: ['Lesson B'] },
+  { day: 4, name: 'Thu', type: 'review', slot: null, minutes: 75, tasks: ['Review of marked work', 'Speaking with Claude', 'Flashcards'] },
+  { day: 5, name: 'Fri', type: 'lesson', slot: 'C', minutes: 100, tasks: ['Lesson C'] },
+  { day: 6, name: 'Sat', type: 'reading-writing', slot: null, minutes: 90, tasks: ['Reading', 'Writing', 'Flashcards'] },
+  { day: 7, name: 'Sun', type: 'weekly-review', slot: null, minutes: 45, tasks: ['Weekly review', 'Flashcards'] },
+];
+
+/** A Friday without Lesson C (checkpoint weeks and the two holiday weeks): a review day. */
+export const SHORT_FRIDAY: ScheduleDay = { day: 5, name: 'Fri', type: 'review', slot: null, minutes: 75, tasks: ['Review', 'Flashcards'] };
+/** The Sunday of a checkpoint week. */
+export const CHECKPOINT_SUNDAY: ScheduleDay = { day: 7, name: 'Sun', type: 'checkpoint', slot: null, minutes: 75, tasks: ['Checkpoint test'] };
+/** The two holiday weeks: Lessons A and B only, like a checkpoint week. */
+export const HOLIDAY_WEEKS = [5, 57];
+/** The plan's minimum day: flashcards, every day. */
+export const DAILY_FLASHCARD_MINUTES = 15;
