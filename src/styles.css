@@ -2313,3 +2313,11 @@ a.pill-btn {
   margin: 0;
   font-weight: 600;
 }
+
+/* ---------- practice: suggested for today ---------- */
+.suggested {
+  border-color: var(--accent);
+}
+.suggested h2 {
+  margin-top: 0;
+}

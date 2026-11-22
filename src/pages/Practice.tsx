@@ -8,59 +8,88 @@ import { Journal } from '../practice/Journal';
 import { Reader } from '../practice/Reader';
 import { Speak } from '../practice/Speak';
 import { Story } from '../practice/Story';
+import { PRACTICE_TOOLS, SKILLS, suggestedForToday } from '../lib/practiceTools';
+import { useToday } from '../lib/useToday';
 
-const TOOLS = [
-  { id: 'dictation', title: 'Dictation', blurb: 'Hear a sentence, type what you heard.', skill: 'Listening', view: Dictation },
-  { id: 'dialogue', title: 'Dialogue role-play', blurb: 'Pick a situation, from the café to the in-laws, and play your part.', skill: 'Speaking', view: Dialogue },
-  { id: 'chat', title: 'Free conversation', blurb: 'Talk freely. A review at the end shows what to fix.', skill: 'Speaking', view: Chat },
-  { id: 'journal', title: 'Journal', blurb: 'Write about your day. Mistakes come back as fix cards.', skill: 'Writing', view: Journal },
-  { id: 'speak', title: 'Record and compare', blurb: 'Say a sentence, then hear yourself next to the Swedish voice.', skill: 'Speaking', view: Speak },
-  { id: 'builder', title: 'Sentence builder', blurb: 'See a sentence in English, type it in Swedish, word by word feedback.', skill: 'Writing', view: Builder },
-  { id: 'story', title: 'Story mode', blurb: 'Read a story, listen to it, then answer questions in Swedish.', skill: 'Reading', view: Story },
-  { id: 'reader', title: 'Reader', blurb: 'Short texts where every word can be tapped.', skill: 'Reading', view: Reader },
-  { id: 'en-ett', title: 'en or ett', blurb: 'Pick the right article for your nouns.', skill: 'Grammar', view: EnEtt },
-];
+// The screens behind the tools. Titles, blurbs and skills are in lib/practiceTools.
+const VIEWS: Record<string, () => React.ReactNode> = {
+  dictation: Dictation,
+  dialogue: Dialogue,
+  chat: Chat,
+  journal: Journal,
+  speak: Speak,
+  builder: Builder,
+  story: Story,
+  reader: Reader,
+  'en-ett': EnEtt,
+};
 
 export function Practice() {
   const { tool } = useParams();
-  const current = TOOLS.find((t) => t.id === tool);
+  const info = PRACTICE_TOOLS.find((t) => t.id === tool);
+  const t = useToday();
   // The verb drill moved to the Verbs page, next to the verb table.
   if (tool === 'verbs') return <Navigate to="/verbs" replace />;
 
-  if (current) {
-    const View = current.view;
+  const View = tool ? VIEWS[tool] : undefined;
+  if (info && View)
     return (
       <section>
         <header className="page-head">
           <Link to="/practice" className="back-link">
             ← Practice
           </Link>
-          <h1>{current.title}</h1>
+          <h1>{info.title}</h1>
         </header>
         <View />
       </section>
     );
-  }
 
+  const suggested = t ? suggestedForToday(t.today) : [];
   return (
     <section>
       <header className="page-head">
         <h1>Practice</h1>
-        <p className="muted">Beyond the cards: listening, speaking, writing and reading, all built from your own lessons.</p>
+        <p className="muted">Beyond the cards, by skill. Everything is built from your own lessons.</p>
       </header>
-      <ul className="list">
-        {TOOLS.map((t) => (
-          <li key={t.id} className="list-item">
-            <Link className="list-link tool-link" to={`/practice/${t.id}`}>
-              <span>
-                <span className="list-title">{t.title}</span>
-                <span className="tool-blurb">{t.blurb}</span>
-              </span>
-              <span className="pill pill-tag">{t.skill}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      {suggested.length > 0 && (
+        <section className="card suggested" aria-labelledby="suggested-title">
+          <h2 id="suggested-title">Suggested for today</h2>
+          <ul className="list">
+            {suggested.map((s) => (
+              <li key={s.to} className="list-item">
+                <Link className="list-link tool-link" to={s.to}>
+                  <span>
+                    <span className="list-title">{s.title}</span>
+                    <span className="tool-blurb">{s.why}</span>
+                  </span>
+                  <span aria-hidden="true">›</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {SKILLS.map((skill) => (
+        <section key={skill} aria-labelledby={`skill-${skill}`}>
+          <h2 id={`skill-${skill}`}>{skill}</h2>
+          <ul className="list">
+            {PRACTICE_TOOLS.filter((x) => x.skill === skill).map((x) => (
+              <li key={x.id} className="list-item">
+                <Link className="list-link tool-link" to={x.to}>
+                  <span>
+                    <span className="list-title">{x.title}</span>
+                    <span className="tool-blurb">{x.blurb}</span>
+                  </span>
+                  <span aria-hidden="true">›</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </section>
   );
 }
