@@ -79,7 +79,7 @@ What happens when you save:
 - Phrases go into "Phrases – Lesson 07 – Name" (Phrases).
 - Rules, reorder and translate cards go into "Grammar – Lesson 07 – Name" (Grammar).
 - Fix-the-error cards go into "Grammar – My mistakes", one running deck.
-- Every card is tagged `lesson-07`. You can change any of this on the preview screen.
+- Every card is tagged `lesson-07` and `week-01` (the week comes from the plan's Week Map). You can change any of this on the preview screen.
 - A card that already exists is flagged, and you choose to merge it, skip it or add it anyway.
 
 The parser also copes with tabs, dashes, commas, bullets, numbering and markdown tables. Lines it cannot read are listed with their line number and left out.
@@ -124,19 +124,51 @@ Every imported card is tagged `lesson-NN` and `week-NN`, where the week comes fr
 ## What is in it
 
 - **Card types:** Swedish → English, English → Swedish, fill in the blank, type the Swedish, listening, grammar rule, fix the error, reorder the words, translate.
-- **Study:** everything, one section, one deck or one tag. Daily limits for new cards and reviews. Cram mode ignores the schedule. Undo, edit and suspend without leaving the session.
+- **Study:** everything, one section, one deck or one tag. Daily limits for new cards and reviews. Cram mode ignores the schedule. Undo, edit and suspend without leaving the session. Every scheduled session opens with up to 10 of **My mistakes**. English → Swedish cards are answered by typing (Settings → Scheduling turns that off; verbs and anything on your mistakes list stay typed).
+- **Why it was wrong:** under the diff of a wrong typed answer the app names the mistake when it is one of yours: -ade on an -er verb, -te/-de, a regular ending on an irregular verb, the third form as the past, modal + infinitive, måste inte / får inte, verb second, verb-first questions, var / vart, en / ett, object pronouns, possessives, where inte goes, ingen / inget / inga, and a missing chunk such as *lyssna på*. The sentences are fixed templates filled with forms from your own cards. When the difference is not clear-cut it shows the diff alone.
+- **Time words:** *igår* and *i går* (and *idag*, *imorgon*, *ikväll*) are the same answer everywhere. The app writes the two-word form.
 - **Keys:** Space flips (then rates Good), 1–4 rate, Z undoes, E edits. On a phone, swipe left for Again and right for Good.
 - **Swedish:** text-to-speech with a slow button and optional auto-play, å ä ö buttons wherever you type, answers that forgive a missing å/ä/ö with a warning, and en/ett colour labels.
-- **Grammar tab:** editable notes pages, a mistake log, weak-spots study, "Export for Claude", and a past-tense verb drill.
-- **Practice tab:** dictation (hear a sentence from your cards, type it), dialogue role-play (the app speaks the other person's lines and waits for yours), a daily journal that hands your entry to Claude and turns the corrections into fix cards, record and compare (your voice next to the Swedish voice), a reader where every word can be tapped and added as a card, a verb drill for present, past and third form, and an en/ett drill.
+- **Grammar tab:** editable notes pages, a mistake log, weak-spots study, "Export for Claude", a verb table and a verb drill. The **verb table** lists every verb on your cards (infinitive, present, past, third form, English), grouped as -ar (-ade), -er (-te), -er (-de), short (-dde), irregular or modal, with filters by group and lesson. A form your lessons have not given shows as "not in your lessons yet". "Drill these" drills the filtered verbs, mostly the past, and brings up -er verbs, irregular verbs and the ones you have been getting wrong more often.
+- **Practice tab:** dictation (hear a sentence from your cards, type it), dialogue role-play (the app speaks the other person's lines and waits for yours), a daily journal, record and compare (your voice next to the Swedish voice), a reader where every word can be tapped and added as a card, a verb drill for present, past and third form, an en/ett drill, and:
+  - **Sentence builder:** an English sentence, you type the Swedish, with a word-by-word diff and the reason. Sentences come only from your translate cards, reorder cards, example pairs and text lines. A session of 10 (settable) takes 70% from your current plan week and 30% from older lessons, due sentences first. Each sentence is scheduled like a card; one that was not a translate card becomes one in the "Sentence builder" deck the first time you answer it.
+  - **Story mode:** read a text with tap-to-translate, listen to all of it or one line at normal or slow speed, then answer up to 5 questions by typing Swedish. An answer the checker rejects can be counted as right; only answers left wrong go on My mistakes.
+  - **Journal:** "Today's question" is picked by the date from your current lesson's questions, skipping any used in the last 7 days. Answer by typing, recording, or both. "Copy for my tutor" copies the date, lesson, question and your answer. The Claude correction flow (corrections come back as fix cards) is unchanged.
 - **Stats:** review heatmap, retention, cards by maturity, a 14-day forecast, and a streak that forgives a missed day with a freeze.
 - **Data:** stored on the device, one-click full backup, CSV import and export.
+
+## The B2 plan
+
+The app follows the Swedish B2 Plan: 58 weeks from Monday 2026-11-23 to 2028-01-01, Lessons 6 to 160. The plan's Week Map and Checkpoints tab are embedded as data in `src/data/plan.ts`; the Google Sheet stays the source of truth, and the app never writes to it.
+
+- **Current week by lesson.** Your current lesson is the highest lesson number among your unlocked decks (Settings → B2 plan can override it). The current week is that lesson's week in the Week Map. Lessons 1 to 5 came from the old plan and count as week 0. Home shows "Week W, Lesson N" and the phase.
+- **Plan week by date.** The calendar week is the Week Map row whose Monday is on or before today. Home shows it next to the lesson week only when the two differ, as a plain fact.
+- **This week's lesson** (Home) runs your mistakes first, then the due and new cards tagged with any lesson of the current week, within the usual daily limits. After a checkpoint that came out "Close", the following week also includes that checkpoint's review set.
+- **My mistakes** (Home → My mistakes). Every wrong typed answer, anywhere in the app, becomes one item: what was asked, what you wrote, the correct form and the reason. An item is fixed after right answers on 3 different study days with no wrong answer in between; a wrong answer sends it back to 0, and a wrong answer on a fixed item brings it back. The list starts with 20 real mistakes from the Lesson 2 to 5 worksheets (`seed/my-mistakes.txt`). The older mistake log on the Grammar tab still records every miss as an event.
+- **Checkpoints** (Home → Checkpoints). The 14 Sunday checkpoints and the Final follow the plan's dates. One shows on Home from the Monday of its week, is due on its date, and stays "not taken" until you take it or dismiss it. Any checkpoint can be opened as a practice run at any time; that is saved but never counts. Each is 75 minutes in four timed parts with a pause button:
+  - Recall, 15 min: the block's words and verb forms from English cues, plus up to 3 open mistakes. Auto-graded.
+  - Production, 20 min: English to Swedish sentences and fill-in-the-blanks from the block. Checked when the part ends; a close answer counts and is listed as "watch".
+  - Writing, 20 min: the writing task of the newest imported lesson in the block, or "Write 8 to 10 sentences about your week". Self-scored, with "Copy for my tutor".
+  - Speaking, 20 min: 4 to 5 questions from the block. Record answers and/or type notes, then answer "Did you carry it without switching to English?". No automatic speaking score.
+
+  **Scoring:** Pass = production 80% or more and speaking "yes". Production 70% to 80%, or 80%+ with speaking "no", is "Close: rebuild next week": the misses are tagged `review-cpN`, added to My mistakes and fed into next week's session. Under 70% is "Repeat this block". Two real checkpoints in a row over 90% on production shows "Ready for harder lessons: tell Claude". "Copy for my sheet" copies Recall, Production, Writing, Speaking and Result as one tab-separated line. A paper checkpoint can be entered by hand. The three old-plan worksheet scores (71%, 70%, 79%) sit in the history and take no part in any result.
+- **Hours** (Home → Hours). The Hours Log by calendar week, in its five categories: Lessons and review, Speaking, Reading and writing, Flashcards, Own listening. Target 11 hours a week, 9 in weeks 5 and 57, 634 in all. It shows the week against its target, the plan so far, and the whole plan.
+  - *Flashcards* is worked out from your reviews: the time on each card, capped at 60 seconds, summed per day. Nothing is stored, so two devices never double-count.
+  - *Practice tools and checkpoints* log the time you are active in them (screen visible, touched in the last 60 seconds), as one row per day, category and device, labelled "auto". Story mode and the journal count as Reading and writing; Dialogue, Free conversation, Record and compare and checkpoint speaking as Speaking; the rest as Lessons and review. Auto time can be left out of the totals with one tick.
+  - *Everything else* (lessons with Claude, speaking with Claude, paper reading and writing, your own listening) you add by hand, and can edit or delete.
+  - "Copy for my sheet" copies the week's five numbers, rounded to a quarter of an hour, as one tab-separated line.
+
+Home also shows today's flashcard minutes against the plan's 15-minute minimum day.
+
+## Built-in content
 
 The starter content lives in `seed/` and loads itself the first time the app opens: your Lesson 1 and 2 grammar file, plus extras taken from the two printables.
 
 From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irregular-verbs.txt`, with the title on the first line (`# Lesson 03 – Irregular verbs`) and the same `###` sections as a pasted lesson. Every device loads a new file once, the next time the app opens. Words that were waiting in the locked "Coming soon" deck move into the lesson, and a grammar card with the same prompt as an older one is updated instead of doubled. The tags help read the forms: `verbs` or `modals` makes a row a verb, and `pronouns` keeps the forms as a note.
 
-Dialogues and reading texts live in `seed/texts/`, one file each. The first line is the title (`# Lesson 03 – Hur var din dag?`), then one line per sentence: `Speaker | Swedish | English` for a dialogue, `Swedish | English` for a story. A new file shows up in the Reader, and in Dialogue role-play if it has two speakers. You can also paste your own texts in the Reader.
+Editing a seed file does not change a device that already loaded it. To reach those devices, raise `BUILT_IN_REVISION` in `src/db/seed.ts` (and `STARTER_REVISION` for the two starter files): on the next start, every built-in card you have never edited is updated in place, keeping its id, its cards and its review history. A built-in card is only ever removed by listing its id in `REMOVED_SEED_IDS`. Built-in ids were first made when the files wrote *igår* as one word; `src/data/seedIdAliases.ts` keeps those ids now that the files write *i går*.
+
+Dialogues and reading texts live in `seed/texts/`, one file each. The first line is the title (`# Lesson 03 – Hur var din dag?`), then one line per sentence: `Speaker | Swedish | English` for a dialogue, `Swedish | English` for a story. A Story mode question is a line `? question | answer // other answer | line number`; it is never shown as part of the text. A new file shows up in the Reader, in Story mode if it has questions, and in Dialogue role-play if it has two speakers. You can also paste your own texts in the Reader.
 
 Role-play situations that are not tied to a lesson (café, doctor, in-laws and so on) live in `seed/situations/`, one file each, in the same line format with four extra header lines: `# Category:` (Everyday, Social, Family, Practical, Travel, Work and home), `# English:`, `# Scene:` and `# Goal:`. Your own lines use the speaker name `Du`. The scene and goal are also what a live chat partner would be given as its brief.
 

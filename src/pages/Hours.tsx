@@ -170,7 +170,7 @@ export function Hours() {
             <tr>
               <th scope="col">Category</th>
               <th scope="col">Hours</th>
-              <th scope="col">Of which auto</th>
+              <th scope="col">Auto</th>
             </tr>
           </thead>
           <tbody>

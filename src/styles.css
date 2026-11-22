@@ -383,6 +383,7 @@ input[type='password'],
 input[type='search'],
 input[type='number'],
 input[type='time'],
+input[type='date'],
 select,
 textarea {
   width: 100%;
@@ -2101,6 +2102,8 @@ a.pill-btn {
   overflow-wrap: anywhere;
 }
 .hours-table thead th {
+  overflow-wrap: normal;
+  white-space: nowrap;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -2118,4 +2121,24 @@ a.pill-btn {
   justify-content: space-between;
   gap: 4px 12px;
   margin-bottom: 4px;
+}
+
+/* ---------- tap targets: every control is at least 44 by 44 px ---------- */
+.btn-small,
+.back-link,
+.icon-btn,
+.key-btn,
+.keys-bar .key-btn,
+.check,
+.help summary {
+  min-height: 44px;
+  min-width: 44px;
+}
+.help summary {
+  display: flex;
+  align-items: center;
+}
+.hours-progress + .check,
+.check {
+  width: fit-content;
 }

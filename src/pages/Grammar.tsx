@@ -300,7 +300,7 @@ function MistakeLog() {
             <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={correct} onChange={(e) => setCorrect(e.target.value)} />
           </Field>
           <Field label="Where it came from (optional)">
-            <input type="text" value={context} placeholder="Day 2 worksheet, part E" onChange={(e) => setContext(e.target.value)} />
+            <input type="text" value={context} placeholder="Lesson 6 worksheet, part 4" onChange={(e) => setContext(e.target.value)} />
           </Field>
           <Field label="Rule">
             <select value={topic} onChange={(e) => setTopic(e.target.value)}>
