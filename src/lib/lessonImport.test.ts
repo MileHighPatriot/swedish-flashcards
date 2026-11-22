@@ -202,3 +202,15 @@ describe('the lesson printable (fallback)', () => {
     expect((await listNotes()).every((n) => n.tags.includes('lesson-05') && n.tags.includes('week-00'))).toBe(true);
   });
 });
+
+describe('journal corrections', () => {
+  it('become My mistakes items as well as fix cards, once', async () => {
+    const { fixLines } = await import('../practice/Journal');
+    const reply = ['Here is the corrected entry.', '', '### Fix the error', 'fix | Igår jag gick hem. | I går gick jag hem. | Verb in seat 2. | my-mistake, verb-second', 'Well done on the past tense!'].join('\n');
+    const plan = await buildPlan(groupLesson(fixLines(reply), null, ''));
+    await applyPlan(plan, opts(null));
+    expect(await saveFixMistakes(mistakesFromFixes(plan, 'journal'))).toBe(1);
+    expect(await saveFixMistakes(mistakesFromFixes(plan, 'journal'))).toBe(0);
+    expect(await listMistakeItems()).toMatchObject([{ prompt: 'Fix this sentence: Igår jag gick hem.', typed: 'Igår jag gick hem.', correct: 'I går gick jag hem.', reason: 'Verb in seat 2.', source: 'journal' }]);
+  });
+});

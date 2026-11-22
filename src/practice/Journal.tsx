@@ -10,6 +10,8 @@ import { SpeakButton } from '../study/CardView';
 import { SavedRecorder } from './shared';
 import { useSettings } from '../lib/hooks';
 import { applyPlan, buildPlan, groupLesson, MISTAKES_DECK } from '../lib/importer';
+import { mistakesFromFixes } from '../lib/lessonImport';
+import { saveFixMistakes } from '../lib/lessonSave';
 import { parseLesson } from '../lib/parser';
 import { dateKey, journalForClaude } from '../lib/practice';
 
@@ -100,7 +102,9 @@ export function Journal() {
     }
     const plan = await buildPlan(groupLesson(fixes, null, ''));
     const r = await applyPlan(plan, { lessonNumber: null, lessonName: '', extraTags: ['journal'], cardTypes: settings.defaultCardTypes });
-    const parts = [`${r.added} new card${r.added === 1 ? '' : 's'} in “${MISTAKES_DECK}”`];
+    // Each correction is also a thing to fix: it goes on My mistakes (once).
+    const listed = await saveFixMistakes(mistakesFromFixes(plan, 'journal'));
+    const parts = [`${r.added} new card${r.added === 1 ? '' : 's'} in “${MISTAKES_DECK}”`, `${listed} added to My mistakes`];
     if (r.merged) parts.push(`${r.merged} already there`);
     if (r.skipped) parts.push(`${r.skipped} skipped as repeats`);
     setStatus(`${parts.join(', ')}.`);

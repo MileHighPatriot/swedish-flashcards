@@ -13,6 +13,7 @@ import { Mistakes } from './pages/Mistakes';
 import { Checkpoints } from './pages/Checkpoints';
 import { Progress } from './pages/Progress';
 import { Learn, More } from './pages/Hubs';
+import { Verbs } from './pages/VerbTable';
 import { NAV_TABS, tabFor } from './lib/nav';
 import { Decks } from './pages/Decks';
 import { useReminder } from './lib/reminder';
@@ -70,6 +71,7 @@ export function App() {
             <Route path="/hours" element={<Navigate to="/progress?section=hours" replace />} />
             <Route path="/decks" element={<Decks />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/verbs" element={<Verbs />} />
             <Route path="/more" element={<More />} />
             <Route path="/practice/:tool?" element={<Practice />} />
             <Route path="/grammar/:slug?" element={<Grammar />} />

@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { listCards, listMistakeItems, listMistakes, listNotes } from '../db/repo';
 import { GROUP_LABELS, MISSING_FORM, VERB_GROUPS, filterVerbs, toDrillVerb, troubleNotes, verbTable, verbWeight, type VerbGroup } from '../lib/verbtable';
+import { VERB_FORM_LABELS, type VerbForm } from '../lib/verbdrill';
 import { VerbDrill } from './Grammar';
+import { LearnNav } from './Hubs';
 
 const Form = ({ label, value }: { label: string; value: string }) => (
   <div className="verb-form">
@@ -22,12 +24,13 @@ export function VerbTable() {
   const [group, setGroup] = useState<VerbGroup | 'all'>('all');
   const [lesson, setLesson] = useState<number | 'all'>('all');
   const [drilling, setDrilling] = useState(false);
+  const [form, setForm] = useState<VerbForm | 'mixed'>('mixed');
   const lessons = useMemo(() => [...new Set((data?.verbs ?? []).flatMap((v) => v.lessons))].sort((a, b) => a - b), [data]);
 
   if (!data) return <p className="muted">Loading…</p>;
   if (data.verbs.length === 0) return <p className="muted">No verbs on your cards yet.</p>;
   const shown = filterVerbs(data.verbs, group, lesson);
-  const drillable = shown.filter((v) => v.present || v.past || v.supine);
+  const drillable = shown.filter((v) => (form === 'mixed' ? v.present || v.past || v.supine : v[form]));
 
   if (drilling)
     return (
@@ -35,6 +38,7 @@ export function VerbTable() {
         preset={{
           verbs: drillable.map(toDrillVerb),
           weight: (v) => verbWeight({ noteId: v.noteId, group: data.verbs.find((x) => x.noteId === v.noteId)?.group ?? 'ar' }, data.trouble),
+          form,
           onExit: () => setDrilling(false),
         }}
       />
@@ -73,13 +77,23 @@ export function VerbTable() {
             ))}
           </select>
         </label>
+        <label className="field">
+          <span className="field-label">Drill</span>
+          <select value={form} onChange={(e) => setForm(e.target.value as VerbForm | 'mixed')}>
+            <option value="mixed">Mostly past, forms mixed</option>
+            {(Object.keys(VERB_FORM_LABELS) as VerbForm[]).map((f) => (
+              <option key={f} value={f}>
+                {VERB_FORM_LABELS[f]} only
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       <button type="button" className="btn btn-primary btn-big" disabled={drillable.length === 0} onClick={() => setDrilling(true)}>
         Drill these ({drillable.length})
       </button>
       <p className="muted small">
-        The drill asks mostly for the past, with the present and third form mixed in. -er verbs, irregular verbs and the ones you have been getting wrong come up
-        more often.
+        The drill runs here, on the verbs you have filtered. -er verbs, irregular verbs and the ones you have been getting wrong come up more often.
       </p>
       <p className="small" role="status">
         {shown.length} verb{shown.length === 1 ? '' : 's'}
@@ -113,5 +127,18 @@ export function VerbTable() {
         ))}
       </ul>
     </>
+  );
+}
+
+/** The Verbs page under Learn: the table with its filters, and the drill on the same page. */
+export function Verbs() {
+  return (
+    <section>
+      <LearnNav />
+      <header className="page-head">
+        <h1>Verbs</h1>
+      </header>
+      <VerbTable />
+    </section>
   );
 }

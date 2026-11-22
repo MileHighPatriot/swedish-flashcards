@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Link } from 'react-router-dom';
-import { listMistakeItems, listNotes, removeMistakeItem } from '../db/repo';
+import { SwedishKeys } from '../components/SwedishKeys';
+import { addMistake, listMistakeItems, listNotes, recordWrong, removeMistakeItem } from '../db/repo';
 import type { MistakeItem } from '../db/types';
 import { useNow, useSettings } from '../lib/hooks';
 import { dayCount, dueItems, isActive } from '../lib/mistakeItems';
@@ -61,6 +62,65 @@ function Item({ item }: { item: MistakeItem }) {
         </div>
       </div>
     </li>
+  );
+}
+
+/** Add something I got wrong on paper. It joins the list like any other mistake, and the event log still counts it for weak spots. */
+function AddByHand() {
+  const [open, setOpen] = useState(false);
+  const [asked, setAsked] = useState('');
+  const [wrote, setWrote] = useState('');
+  const [correct, setCorrect] = useState('');
+  const [why, setWhy] = useState('');
+  const form = useRef<HTMLFormElement>(null);
+  const add = async () => {
+    if (!wrote.trim() || !correct.trim()) return;
+    const prompt = asked.trim() || `Fix this sentence: ${wrote.trim()}`;
+    await recordWrong({ prompt, typed: wrote, correct: correct.trim(), reason: why.trim(), tags: ['my-mistake'], cardId: null, noteId: null, source: 'manual' });
+    await addMistake({ at: Date.now(), cardId: null, noteId: null, prompt: asked.trim(), typed: wrote.trim(), correct: correct.trim(), tags: ['my-mistake'], topic: null, manual: true });
+    setAsked('');
+    setWrote('');
+    setCorrect('');
+    setWhy('');
+    setOpen(false);
+  };
+  return (
+    <>
+      <button type="button" className="btn" aria-expanded={open} onClick={() => setOpen(!open)}>
+        {open ? 'Close' : 'Add a mistake by hand'}
+      </button>
+      {open && (
+        <form
+          ref={form}
+          className="card"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void add();
+          }}
+        >
+          <SwedishKeys container={form} />
+          <label className="field">
+            <span className="field-label">What was asked, in English (optional)</span>
+            <input type="text" value={asked} onChange={(e) => setAsked(e.target.value)} />
+          </label>
+          <label className="field">
+            <span className="field-label">What I wrote</span>
+            <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={wrote} onChange={(e) => setWrote(e.target.value)} />
+          </label>
+          <label className="field">
+            <span className="field-label">Correct version</span>
+            <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={correct} onChange={(e) => setCorrect(e.target.value)} />
+          </label>
+          <label className="field">
+            <span className="field-label">Why (optional)</span>
+            <input type="text" value={why} onChange={(e) => setWhy(e.target.value)} />
+          </label>
+          <button type="submit" className="btn btn-primary" disabled={!wrote.trim() || !correct.trim()}>
+            Add to My mistakes
+          </button>
+        </form>
+      )}
+    </>
   );
 }
 
@@ -145,6 +205,8 @@ export function Mistakes() {
           Practise them again anyway
         </button>
       )}
+
+      <AddByHand />
 
       <h2>To fix ({active.length})</h2>
       {active.length === 0 ? <p className="muted">Nothing here. Bra jobbat!</p> : <ul className="list">{active.map((i) => <Item key={i.id} item={i} />)}</ul>}

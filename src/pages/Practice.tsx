@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { Builder } from '../practice/Builder';
 import { Chat } from '../practice/Chat';
 import { Dialogue } from '../practice/Dialogue';
@@ -8,7 +8,6 @@ import { Journal } from '../practice/Journal';
 import { Reader } from '../practice/Reader';
 import { Speak } from '../practice/Speak';
 import { Story } from '../practice/Story';
-import { VerbDrill } from './Grammar';
 
 const TOOLS = [
   { id: 'dictation', title: 'Dictation', blurb: 'Hear a sentence, type what you heard.', skill: 'Listening', view: Dictation },
@@ -19,13 +18,14 @@ const TOOLS = [
   { id: 'builder', title: 'Sentence builder', blurb: 'See a sentence in English, type it in Swedish, word by word feedback.', skill: 'Writing', view: Builder },
   { id: 'story', title: 'Story mode', blurb: 'Read a story, listen to it, then answer questions in Swedish.', skill: 'Reading', view: Story },
   { id: 'reader', title: 'Reader', blurb: 'Short texts where every word can be tapped.', skill: 'Reading', view: Reader },
-  { id: 'verbs', title: 'Verb drill', blurb: 'Present, past and third form of your verbs.', skill: 'Grammar', view: VerbDrill },
   { id: 'en-ett', title: 'en or ett', blurb: 'Pick the right article for your nouns.', skill: 'Grammar', view: EnEtt },
 ];
 
 export function Practice() {
   const { tool } = useParams();
   const current = TOOLS.find((t) => t.id === tool);
+  // The verb drill moved to the Verbs page, next to the verb table.
+  if (tool === 'verbs') return <Navigate to="/verbs" replace />;
 
   if (current) {
     const View = current.view;

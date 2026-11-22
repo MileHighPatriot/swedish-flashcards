@@ -24,13 +24,13 @@ export function isFixOnly(parsed: ParseResult): boolean {
 }
 
 /** One "My mistakes" item per fix line that is being saved. */
-export function mistakesFromFixes(plan: PlanGroup[]): WrongInput[] {
+export function mistakesFromFixes(plan: PlanGroup[], source = 'marked-worksheet'): WrongInput[] {
   return plan.flatMap((g) =>
     g.rows.flatMap((r) => {
       const gr = r.draft.grammar;
       if (r.action === 'skip' || r.draft.kind !== 'fix' || !gr) return [];
       const wrong = splitHint(gr.prompt).text;
-      return [{ prompt: `Fix this sentence: ${wrong}`, typed: wrong, correct: gr.answer, reason: gr.explanation, tags: r.draft.tags, cardId: null, noteId: null, source: 'marked-worksheet' }];
+      return [{ prompt: `Fix this sentence: ${wrong}`, typed: wrong, correct: gr.answer, reason: gr.explanation, tags: r.draft.tags, cardId: null, noteId: null, source }];
     }),
   );
 }

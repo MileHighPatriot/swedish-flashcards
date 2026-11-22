@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Field, TagsInput } from '../components/NoteEditor';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Field } from '../components/NoteEditor';
 import { SwedishKeys } from '../components/SwedishKeys';
 import { DEFAULT_PAGES } from '../data/grammarPages';
 import {
@@ -16,7 +16,6 @@ import {
   listNotes,
   listReviews,
   recordTyped,
-  removeMistake,
   unlockDeck,
   updateGrammarPage,
 } from '../db/repo';
@@ -25,10 +24,9 @@ import { useActivity } from '../lib/activity';
 import { checkAnswer } from '../lib/check';
 import { Markdown } from '../lib/markdown';
 import { shuffled } from '../lib/queue';
-import { TOPICS, topicFor, topicTitle } from '../lib/topics';
+import { topicFor, topicTitle } from '../lib/topics';
 import { VERB_FORM_LABELS, drillVerbs, lessonLabel, pastRule, type DrillVerb, type VerbForm } from '../lib/verbdrill';
 import { pickForm, weightedPick } from '../lib/verbtable';
-import { VerbTable } from './VerbTable';
 import { LearnNav } from './Hubs';
 import { computeWeakSpots, exportForClaude, weakSpotCardIds } from '../lib/weakspots';
 import { buildReasonContext } from '../lib/reasons';
@@ -254,120 +252,6 @@ function NotesList() {
   );
 }
 
-// ---------- mistake log ----------
-
-const day = (t: number) => new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-
-function MistakeLog() {
-  const mistakes = useLiveQuery(listMistakes, []);
-  const [open, setOpen] = useState(false);
-  const [wrote, setWrote] = useState('');
-  const [correct, setCorrect] = useState('');
-  const [context, setContext] = useState('');
-  const [tags, setTags] = useState<string[]>(['my-mistake']);
-  const [topic, setTopic] = useState('');
-  const [formKey, setFormKey] = useState(0);
-  const form = useRef<HTMLFormElement>(null);
-
-  const add = async () => {
-    if (!wrote.trim() || !correct.trim()) return;
-    await addMistake({ at: Date.now(), cardId: null, noteId: null, prompt: context.trim(), typed: wrote.trim(), correct: correct.trim(), tags, topic: topic || null, manual: true });
-    setWrote('');
-    setCorrect('');
-    setContext('');
-    setFormKey((k) => k + 1);
-  };
-
-  return (
-    <>
-      <p className="muted">Every card you mark Again lands here with what you typed. You can add your own, for example from a worksheet.</p>
-      <button type="button" className="btn" aria-expanded={open} onClick={() => setOpen(!open)}>
-        {open ? 'Close' : 'Add a mistake by hand'}
-      </button>
-      {open && (
-        <form
-          ref={form}
-          className="card"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void add();
-          }}
-        >
-          <SwedishKeys container={form} />
-          <Field label="What I wrote">
-            <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={wrote} onChange={(e) => setWrote(e.target.value)} />
-          </Field>
-          <Field label="Correct version">
-            <input type="text" lang="sv" autoCapitalize="none" spellCheck={false} value={correct} onChange={(e) => setCorrect(e.target.value)} />
-          </Field>
-          <Field label="Where it came from (optional)">
-            <input type="text" value={context} placeholder="Lesson 6 worksheet, part 4" onChange={(e) => setContext(e.target.value)} />
-          </Field>
-          <Field label="Rule">
-            <select value={topic} onChange={(e) => setTopic(e.target.value)}>
-              <option value="">No rule page</option>
-              {TOPICS.map((t) => (
-                <option key={t.slug} value={t.slug}>
-                  {t.title}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Tags">
-            <TagsInput key={formKey} tags={tags} onChange={setTags} />
-          </Field>
-          <button type="submit" className="btn btn-primary" disabled={!wrote.trim() || !correct.trim()}>
-            Add to the log
-          </button>
-        </form>
-      )}
-
-      <h2>{mistakes ? `${mistakes.length} logged` : 'Loading…'}</h2>
-      <ul className="list">
-        {mistakes?.slice(0, 200).map((m) => (
-          <li key={m.id} className="list-item word">
-            <div className="word-forms">
-              {day(m.at)}
-              {m.manual ? ' · added by hand' : ''}
-            </div>
-            {m.prompt && <div className="word-example">{m.prompt}</div>}
-            <div className="mistake-pair" lang="sv">
-              <span className="seg-bad">{m.typed || '(no answer typed)'}</span>
-              <span aria-hidden="true">→</span>
-              <span className="seg-miss">{m.correct}</span>
-            </div>
-            <div className="word-foot">
-              <div className="word-tags">
-                {m.tags.map((t) => (
-                  <span key={t} className="pill pill-tag">
-                    #{t}
-                  </span>
-                ))}
-                {m.topic && (
-                  <Link className="pill pill-btn" to={`/grammar/${m.topic}`}>
-                    Rule: {topicTitle(m.topic) ?? m.topic}
-                  </Link>
-                )}
-              </div>
-              <div className="actions">
-                {m.noteId && (
-                  <Link className="btn btn-small" to={`/edit/${m.noteId}`}>
-                    Card
-                  </Link>
-                )}
-                <button type="button" className="btn btn-small" aria-label="Remove this entry from the log" onClick={() => void removeMistake(m.id)}>
-                  Remove
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {mistakes?.length === 0 && <p className="muted">Nothing logged yet. Bra jobbat!</p>}
-    </>
-  );
-}
-
 // ---------- weak spots ----------
 
 function WeakSpots() {
@@ -490,12 +374,18 @@ interface DrillResult {
 export interface DrillPreset {
   verbs: DrillVerb[];
   weight: (v: DrillVerb) => number;
+  /** One form only, or (default) mostly the past with the others mixed in. */
+  form?: VerbForm | 'mixed';
   onExit: () => void;
 }
 
 const presetQueue = (preset: DrillPreset, count: number) =>
-  weightedPick(preset.verbs, preset.weight, count).flatMap((verb) => {
-    const f = pickForm(verb);
+  weightedPick(
+    preset.verbs.filter((v) => (preset.form && preset.form !== 'mixed' ? v[preset.form] : true)),
+    preset.weight,
+    count,
+  ).flatMap((verb) => {
+    const f = preset.form && preset.form !== 'mixed' ? preset.form : pickForm(verb);
     return f ? [{ verb, form: f }] : [];
   });
 
@@ -694,13 +584,12 @@ export function VerbDrill({ preset }: { preset?: DrillPreset }) {
 
 // ---------- the tab ----------
 
-type Tab = 'notes' | 'mistakes' | 'weak' | 'verbs' | 'drill';
+type Tab = 'notes' | 'weak';
+/** Sub-tabs that moved: the mistake list is My mistakes, the verb table and drill are the Verbs page. */
+const MOVED: Record<string, string> = { mistakes: '/mistakes', verbs: '/verbs', drill: '/verbs' };
 const TABS: { id: Tab; label: string }[] = [
   { id: 'notes', label: 'Notes' },
-  { id: 'mistakes', label: 'Mistakes' },
   { id: 'weak', label: 'Weak spots' },
-  { id: 'verbs', label: 'Verb table' },
-  { id: 'drill', label: 'Verb drill' },
 ];
 
 export function Grammar() {
@@ -721,6 +610,8 @@ export function Grammar() {
       </section>
     );
 
+  const moved = MOVED[params.get('tab') ?? ''];
+  if (moved) return <Navigate to={moved} replace />;
   const tab = TABS.find((t) => t.id === params.get('tab'))?.id ?? 'notes';
   return (
     <section>
@@ -746,10 +637,7 @@ export function Grammar() {
       </div>
       <div id="grammar-panel" role="tabpanel" aria-labelledby={`gtab-${tab}`}>
         {tab === 'notes' && <NotesList />}
-        {tab === 'mistakes' && <MistakeLog />}
         {tab === 'weak' && <WeakSpots />}
-        {tab === 'verbs' && <VerbTable />}
-        {tab === 'drill' && <VerbDrill />}
       </div>
     </section>
   );
