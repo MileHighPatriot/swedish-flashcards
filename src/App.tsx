@@ -13,6 +13,7 @@ import { Stats } from './pages/Stats';
 import { Mistakes } from './pages/Mistakes';
 import { Checkpoints } from './pages/Checkpoints';
 import { Hours } from './pages/Hours';
+import { Decks } from './pages/Decks';
 import { useReminder } from './lib/reminder';
 import { useAutoSync } from './sync/auto';
 import { useNeuralPrefetch } from './lib/neural';
@@ -75,6 +76,7 @@ export function App() {
             <Route path="/mistakes" element={<Mistakes />} />
             <Route path="/checkpoints/:cp?" element={<Checkpoints />} />
             <Route path="/hours" element={<Hours />} />
+            <Route path="/decks" element={<Decks />} />
             <Route path="/practice/:tool?" element={<Practice />} />
             <Route path="/grammar/:slug?" element={<Grammar />} />
             <Route path="/stats" element={<Stats />} />
