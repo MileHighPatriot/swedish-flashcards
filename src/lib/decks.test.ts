@@ -65,3 +65,29 @@ describe('decks grouped by plan week and lesson', () => {
     expect(weekTitle(0)).toBe('Week 0 · before the plan (Lessons 1 to 5)');
   });
 });
+
+describe('what a deck row shows', () => {
+  it('"new" is the deck’s own count of unstarted cards, whatever the daily cap', async () => {
+    const { deckRowCounts } = await import('./decks');
+    const { DEFAULT_SETTINGS, CardState } = await import('../db/types');
+    const now = new Date(2026, 10, 23, 12).getTime();
+    const card = (id: string, deckId: string, state: number, over = {}) =>
+      ({ id, noteId: id, deckId, type: 'basic', state, due: now - 1000, suspended: false, leech: false, deletedAt: null, stability: 1, difficulty: 5, elapsedDays: 0, scheduledDays: 1, learningSteps: 0, reps: state === CardState.New ? 0 : 2, lapses: 0, lastReview: null, createdAt: 0, updatedAt: 0, ...over }) as never;
+    const cards = [
+      ...Array.from({ length: 37 }, (_, i) => card(`a${i}`, 'A', CardState.New)),
+      card('a-rev', 'A', CardState.Review),
+      card('a-susp', 'A', CardState.New, { suspended: true }),
+      card('a-gone', 'A', CardState.New, { deletedAt: 5 }),
+      ...Array.from({ length: 4 }, (_, i) => card(`b${i}`, 'B', CardState.New)),
+      card('b-learn', 'B', CardState.Learning),
+    ];
+    const settings = { ...DEFAULT_SETTINGS, newPerDay: 10 };
+    const a = deckRowCounts('A', cards, [], settings, now);
+    // 37 unstarted cards, though today's cap would introduce only 10 of them.
+    expect(a).toEqual({ due: 1, newToday: 10, unstarted: 37, total: 39 });
+    expect(deckRowCounts('B', cards, [], settings, now)).toEqual({ due: 1, newToday: 4, unstarted: 4, total: 5 });
+    expect(deckRowCounts('C', cards, [], settings, now)).toEqual({ due: 0, newToday: 0, unstarted: 0, total: 0 });
+    // The cap itself is untouched: with it at 0 the queue hands out nothing, and the label still tells the truth.
+    expect(deckRowCounts('A', cards, [], { ...settings, newPerDay: 0 }, now)).toMatchObject({ newToday: 0, unstarted: 37 });
+  });
+});

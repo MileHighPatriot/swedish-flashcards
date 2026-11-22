@@ -16,6 +16,10 @@ interface RowData {
   now: number;
 }
 
+/**
+ * One deck. "N new" is this deck's own count of cards never studied, not what
+ * today's cap would hand out (that read "10 new" on every row).
+ */
 export function DeckRow({ deck, data }: { deck: Deck; data: RowData }) {
   const c = deckRowCounts(deck.id, data.cards, data.logs, data.settings, data.now);
   return (
@@ -28,7 +32,7 @@ export function DeckRow({ deck, data }: { deck: Deck; data: RowData }) {
           ) : (
             <>
               <span className="pill pill-due">{c.due} due</span>
-              <span className="pill pill-new">{c.newToday} new</span>
+              <span className="pill pill-new">{c.unstarted} new</span>
             </>
           )}
           <span className="pill">{c.total} cards</span>
