@@ -99,7 +99,7 @@ Grammar cards link to a notes page through their tags: `-ade`, `-te`, `-de`, `ve
 
 The starter content lives in `seed/` and loads itself the first time the app opens: your Lesson 1 and 2 grammar file, plus extras taken from the two printables.
 
-From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irregular-verbs.txt`, with the title on the first line (`# Lesson 03 – Irregular verbs`) and the same `###` sections as a pasted lesson. Every device loads a new file once, the next time the app opens. Words that were waiting in the locked "Coming soon" deck move into the lesson, and a grammar card with the same prompt as an older one is updated instead of doubled.
+From Lesson 3 on, each lesson is its own file in `seed/`, named `lesson-03-irregular-verbs.txt`, with the title on the first line (`# Lesson 03 – Irregular verbs`) and the same `###` sections as a pasted lesson. Every device loads a new file once, the next time the app opens. Words that were waiting in the locked "Coming soon" deck move into the lesson, and a grammar card with the same prompt as an older one is updated instead of doubled. The tags help read the forms: `verbs` or `modals` makes a row a verb, and `pronouns` keeps the forms as a note.
 
 Dialogues and reading texts live in `seed/texts/`, one file each. The first line is the title (`# Lesson 03 – Hur var din dag?`), then one line per sentence: `Speaker | Swedish | English` for a dialogue, `Swedish | English` for a story. A new file shows up in the Reader, and in Dialogue role-play if it has two speakers. You can also paste your own texts in the Reader.
 

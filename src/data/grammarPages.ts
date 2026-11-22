@@ -228,26 +228,140 @@ After vad, var, när or hur, the verb stays in seat 2. It is the same verb-secon
   {
     slug: 'modals',
     title: 'Modals + infinitive',
+    // Rewritten with Lesson 5.
     markdown: `# Modals + infinitive
 
-After **kan, vill, ska, måste, får** the next verb is the **infinitive**. Never add -r after a modal.
+A modal is a helping verb that adds an attitude to another verb: ability, wish, obligation, permission or plan. The modal carries the tense. The second verb is the **plain infinitive, with no att**, and it never changes.
 
-| Infinitive | Present | Past | Meaning |
+Jag vill äta. Not ~~Jag vill att äta~~, not ~~Jag vill äter~~, not ~~Jag vill åt~~.
+
+| Infinitive | Present | Past | Supine | Meaning |
+|---|---|---|---|---|
+| kunna | kan | kunde | kunnat | can, be able to, know (a skill) |
+| vilja | vill | ville | velat | want to |
+| (none) | måste | måste | måst | must, have to |
+| skola | ska | skulle | skolat (rare) | going to, shall, is to |
+| få | får | fick | fått | may, be allowed to |
+| böra | bör | borde | bort (rare) | ought to, should |
+| behöva | behöver | behövde | behövt | need to |
+| tänka | tänker | tänkte | tänkt | intend to, think |
+| bruka | brukar | brukade | brukat | usually do, tend to |
+
+One form for every person: jag kan, du kan, hon kan, vi kan, de kan. Måste does not change in the past, so the context shows the tense: Igår måste jag arbeta *(Yesterday I had to work)*.
+
+## What each one says
+- **kan**: ability, possibility or a request. Jag kan simma. Det kan regna. Kan jag få en kaffe? With no second verb it means know a skill: Jag kan lite svenska. *(I know a little Swedish.)*
+- **vill**: want to. Jag vill sova. Before a noun it is **vill ha**: Jag vill ha kaffe. Vill gärna is warmer: would like to.
+- **ska**: a plan. Imorgon ska jag ringa henne. *(Tomorrow I am going to call her.)* Ska vi gå? *(Shall we go?)* For a pure prediction use kommer att: Det kommer att regna.
+- **skulle**: politeness. Jag skulle vilja ha en kaffe. *(I would like a coffee.)* Skulle du kunna hjälpa mig? *(Could you help me?)*
+- **bör / borde**: advice. Du borde sova mer. *(You should sleep more.)*
+- **brukar**: habits. Jag brukar äta frukost klockan sju. *(I usually eat breakfast at seven.)*
+- **tänker**: intention. Jag tänker ringa henne imorgon. *(I intend to call her tomorrow.)*
+
+## måste inte and får inte
+| Swedish | Meaning |
+|---|---|
+| Du måste inte komma. | You do not have to come. |
+| Du får inte komma. | You are not allowed to come. |
+| Du får komma. | You may come. |
+| Jag fick vänta. | I had to wait. |
+
+English "must not" is **får inte**. Kan jag få en kaffe? is the everyday request; Får jag sitta här? asks permission.
+
+## Word order
+The modal is the verb in seat 2, and the infinitive goes last. Inte and other adverbs come after the modal, and after the subject if the subject follows the modal.
+
+| Seat 1 | Seat 2 (modal) | Subject / adverb | Rest + infinitive |
 |---|---|---|---|
-| kunna | kan | kunde | can, be able to |
-| vilja | vill | ville | want |
-| skola | ska | skulle | shall, will |
-| måste | måste | var tvungen | must |
+| Jag | vill | | äta middag. |
+| Imorgon | ska | jag | träffa min syster. |
+| Vi | kan | inte | komma idag. |
+| Idag | kan | vi inte | komma. |
+| Barnen | ville | också | leka i parken. |
+| Vad | vill | du | äta? |
 
-## Examples
-- Jag kan prata svenska. *(I can speak Swedish.)*
-- Jag lär mig svenska så att jag kan prata med min svärmor. *(I am learning Swedish so that I can talk with my mother-in-law.)*
-- Jag vill prata svenska. *(I want to speak Swedish.)*
-- Vi ska laga middag. *(We are going to cook dinner.)*
-- Jag måste arbeta. *(I have to work.)*
+A yes/no question starts with the modal: Kan du komma på söndag? After att the adverb moves before the verb: Jag vet att hon inte kan komma.
+
+## The past
+Only the modal goes in the past. The second verb stays in the infinitive.
+- Igår kunde jag inte komma. *(Yesterday I could not come.)*
+- Barnen ville leka. *(The children wanted to play.)*
+- Vi fick inte sitta där. *(We were not allowed to sit there.)*
+
+## Dropping the second verb
+| Full form | Normal Swedish | Meaning |
+|---|---|---|
+| Jag måste gå hem. | Jag måste hem. | I have to go home. |
+| Jag ska gå till affären. | Jag ska till affären. | I am going to the store. |
+| Hon kan tala svenska. | Hon kan svenska. | She knows Swedish. |
 
 ## Watch out
-- ~~Jag kan pratar svenska.~~ → Jag kan prata svenska.
+- ~~Jag ska ringde.~~ → Jag ska ringa. Only the modal changes.
+- ~~Jag vill kaffe.~~ → Jag vill ha kaffe.
+- ~~Imorgon jag kan inte komma.~~ → Imorgon kan jag inte komma.
+- **borde** (should) and **bodde** (lived) differ by one letter.
+`,
+  },
+  {
+    slug: 'pronouns',
+    title: 'Pronouns & possessives',
+    // Added with Lesson 5. Sits right after Modals on every device.
+    order: 5.5,
+    markdown: `# Pronouns & possessives
+
+A pronoun changes form with its job in the sentence: the **subject** form does the action, the **object** form receives it or follows a preposition, and the **possessive** says whose.
+
+| Person | Subject | Object | Possessive (en / ett / plural) |
+|---|---|---|---|
+| I | jag | mig | min / mitt / mina |
+| you (one person) | du | dig | din / ditt / dina |
+| he | han | honom | hans |
+| she | hon | henne | hennes |
+| it (en-word) | den | den | dess (rare) |
+| it (ett-word) | det | det | dess (rare) |
+| we | vi | oss | vår / vårt / våra |
+| you (plural) | ni | er | er / ert / era |
+| they | de | dem | deras |
+
+## Object forms
+Use the object form after a verb and after a preposition. With a modal, the pronoun comes after the infinitive. With two objects, the person comes first.
+
+| Subject | Object | After a preposition |
+|---|---|---|
+| Hon ringde. | Jag ringde henne. | Jag pratade med henne. |
+| Han kommer. | Vi träffar honom. | Det är en present till honom. |
+| De kom. | Jag såg dem i parken. | Vi åt middag med dem. |
+| Vi åker. | Kan du hjälpa oss? | Kom med oss! |
+| Jag vill. | Kan du ringa mig? | Hon pratade med mig. |
+
+- Jag vill träffa henne. *(I want to meet her.)*
+- Han gav mig en bok. *(He gave me a book.)*
+- Hon ger honom en present. *(She gives him a present.)*
+
+## den and det
+Den replaces an en-word and det replaces an ett-word.
+- Jag köpte en bok och läste den. *(I bought a book and read it.)*
+- Jag köpte ett äpple och åt det. *(I bought an apple and ate it.)*
+
+Det is also the empty subject: Det regnar. Det är bra. Det går bra. And **att**, not det, joins a clause after säga, tro and veta: Hon sa att hon var trött.
+
+## Possessives agree with the thing owned
+| en-word | ett-word | plural |
+|---|---|---|
+| min fru, min bil, min vän | mitt barn, mitt hus, mitt jobb | mina barn, mina vänner, mina föräldrar |
+| din syster | ditt kök | dina böcker |
+| vår son | vårt hus | våra barn |
+
+Barn is an ett-word with the same form in singular and plural: **mitt barn** (my child), **mina barn** (my children). Hans, hennes and deras never change: hans bok, hans barn, hennes barn. The noun stays indefinite: min bok, not ~~min boken~~.
+
+## Spoken Swedish
+De and dem are both said **dom**, so you choose when you write: De kom. Jag såg dem. You will also hear mej and dej for mig and dig.
+
+## Watch out
+- ~~Vad sa honom?~~ → Vad sa hon?
+- ~~Jag lekte med min barn.~~ → Jag lekte med mina barn.
+- ~~Jag köpte en bok och läste det.~~ → Jag köpte en bok och läste den.
+- **honom** has one n and ends in -om. Think HON-OM.
 `,
   },
   {

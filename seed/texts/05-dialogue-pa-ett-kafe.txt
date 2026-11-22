@@ -1,0 +1,11 @@
+# Lesson 05 – På ett kafé
+# Ordering at a café counter, from the Lesson 5 printable.
+# Lines:  Speaker | Swedish | English
+Expedit | Hej! Kan jag hjälpa dig? | Hi! Can I help you?
+Du | Hej! Jag skulle vilja ha en kaffe, tack. | Hi! I would like a coffee, please.
+Expedit | Visst. Vill du ha något mer? | Sure. Do you want anything else?
+Du | Ja, kan jag få en kanelbulle också? | Yes, can I have a cinnamon bun too?
+Expedit | Klart du kan! Ska du sitta här eller ta med? | Of course you can! Are you going to sit here or take it with you?
+Du | Jag ska sitta här. Kan jag betala med kort? | I am going to sit here. Can I pay by card?
+Expedit | Ja, det går bra. Jag kommer med kaffet till dig. | Yes, that works. I will bring the coffee to you.
+Du | Tack så mycket! | Thanks so much!

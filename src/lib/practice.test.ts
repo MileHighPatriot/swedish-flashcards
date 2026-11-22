@@ -26,7 +26,7 @@ async function loadAll() {
 }
 
 describe('built-in texts', () => {
-  it('has a dialogue and a story for each of the three lessons', () => {
+  it('has a dialogue and a story for each lesson', () => {
     expect(BUILT_IN_TEXTS.map((t) => [t.lesson, isDialogue(t)])).toEqual([
       [1, true],
       [1, false],
@@ -34,7 +34,10 @@ describe('built-in texts', () => {
       [2, false],
       [3, true],
       [3, false],
+      [5, true],
+      [5, false],
     ]);
+    expect(speakersOf(BUILT_IN_TEXTS.find((t) => t.id === 'seed:05-dialogue-pa-ett-kafe')!)).toEqual(['Expedit', 'Du']);
     const d3 = BUILT_IN_TEXTS.find((t) => t.id === 'seed:03-dialogue-hur-var-din-dag')!;
     expect(d3.title).toBe('Hur var din dag?');
     expect(speakersOf(d3)).toEqual(['Svärmor', 'Du']);

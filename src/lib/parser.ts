@@ -115,9 +115,17 @@ const list = (field: string): string[] =>
     .filter(Boolean);
 
 /** Fill in the Swedish forms from the "forms" field. Never invents a form. */
-function applyForms(d: Draft, field: string, warnings: string[]): void {
+function applyForms(d: Draft, field: string, warnings: string[], tags: string[] = []): void {
   let items = list(field);
   if (items.length === 0) return;
+  // The tags say what the word is when the forms alone would mislead:
+  // "måste, måste, måst" looks like an adjective, "han, honom, hans" like a verb.
+  const taggedVerb = tags.some((t) => t === 'verbs' || t === 'verb' || t === 'modals');
+  if (tags.includes('pronouns') && !taggedVerb) {
+    d.pos = 'pronoun';
+    d.notes = [d.notes, `Forms: ${items.join(', ')}`].filter(Boolean).join('\n');
+    return;
+  }
 
   // Noun: "en hund, hundar" / "en hund, hunden, hundar" / "ett, huset, hus"
   const article = /^(en|ett)(?:\s+(.+))?$/i.exec(items[0]);
@@ -125,7 +133,14 @@ function applyForms(d: Draft, field: string, warnings: string[]): void {
     const gender = article ? (article[1].toLowerCase() as 'en' | 'ett') : d.noun!.gender;
     if (article) items = items.slice(1);
     d.noun = { gender, definite: '', plural: '' };
-    if (items.length === 1) d.noun.plural = items[0];
+    // One form: "ett vatten, vattnet" gives the definite, "en hund, hundar" the plural.
+    if (items.length === 1) {
+      const only = items[0].toLowerCase();
+      const word = d.swedish.toLowerCase();
+      const definite = only !== word && (gender === 'ett' ? only.endsWith('t') : only.startsWith(word) && only.endsWith('n'));
+      if (definite) d.noun.definite = items[0];
+      else d.noun.plural = items[0];
+    }
     else if (items.length >= 2) [d.noun.definite, d.noun.plural] = items;
     if (items.length > 2) warnings.push(`Extra noun forms ignored: ${items.slice(2).join(', ')}`);
     d.pos = 'noun';
@@ -135,18 +150,20 @@ function applyForms(d: Draft, field: string, warnings: string[]): void {
   const base = d.swedish.toLowerCase();
   const first = items[0].toLowerCase();
   // Adjective: "stor, stort, stora" (starts with the word itself) or "stort, stora"
-  if (items.length === 3 && first === base) {
+  if (items.length === 3 && first === base && !taggedVerb) {
     d.adjective = { common: items[0], neuter: items[1], plural: items[2] };
     d.pos = 'adjective';
     return;
   }
-  if (items.length === 2 && first === base + 't') {
+  if (items.length === 2 && first === base + 't' && !taggedVerb) {
     d.adjective = { common: d.swedish, neuter: items[0], plural: items[1] };
     d.pos = 'adjective';
     return;
   }
   // Verb: "present, past", "present, past, supine" or "infinitive, present, past, supine"
-  if (items.length >= 2 && items.length <= 4) {
+  // A list that only repeats the word ("föräldrar, föräldrarna") is not a verb.
+  const repeatsWord = items.length === 2 && first === base;
+  if (items.length >= 2 && items.length <= 4 && (taggedVerb || !repeatsWord)) {
     const [present, past, supine = ''] = items.length === 4 ? items.slice(1) : items;
     d.verb = { infinitive: items.length === 4 ? items[0] : d.swedish, present, past, supine };
     d.pos = 'verb';
@@ -190,7 +207,7 @@ export function parseVocabFields(fields: string[]): LineResult {
   }
   d.swedish = sv;
 
-  applyForms(d, forms, warnings);
+  applyForms(d, forms, warnings, parseTags(tags));
 
   if (example) {
     const i = example.search(/\s=\s/);

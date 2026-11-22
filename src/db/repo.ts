@@ -426,19 +426,29 @@ export async function deleteGrammarPage(id: ID): Promise<void> {
 }
 
 /**
- * Add any built-in page this device does not have yet. Edited pages are never
+ * Add any built-in page this device does not have yet, and bring a built-in
+ * page I have never edited up to its current text. Edited pages are never
  * overwritten, and a deleted page keeps its (tombstoned) row, so it stays deleted.
  */
 export async function ensureGrammarPages(): Promise<void> {
-  const have = new Set((await db.grammarPages.toArray()).map((p) => p.slug));
-  const missing = DEFAULT_PAGES.map((p, i) => ({
+  const have = new Map((await db.grammarPages.toArray()).map((p) => [p.slug, p]));
+  // Pages with their own order sit between the numbered ones, so adding one
+  // never renumbers the rest.
+  let n = 0;
+  const pages = DEFAULT_PAGES.map((p) => ({
     ...meta(SEED_TIME, `page:${p.slug}`),
     slug: p.slug,
     title: p.title,
     markdown: p.markdown,
-    order: p.order ?? i + 1,
-  })).filter((p) => !have.has(p.slug));
+    order: p.order ?? ++n,
+  }));
+  const missing = pages.filter((p) => !have.has(p.slug));
   if (missing.length) await db.grammarPages.bulkAdd(missing);
+  for (const p of pages) {
+    const mine = have.get(p.slug);
+    if (!mine || mine.id !== p.id || mine.deletedAt || mine.updatedAt !== SEED_TIME) continue;
+    if (mine.markdown !== p.markdown || mine.title !== p.title) await db.grammarPages.update(mine.id, { markdown: p.markdown, title: p.title });
+  }
 }
 
 // ---------- practice: my reading texts and the journal ----------

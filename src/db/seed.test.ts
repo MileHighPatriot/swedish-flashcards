@@ -10,11 +10,27 @@ beforeEach(async () => {
 
 const names = async () => (await listDecks()).map((d) => d.name);
 
-it('a new device gets lessons 1 to 3 and the Irregular verbs page', async () => {
+it('a new device gets every lesson and the notes pages in order', async () => {
   await (await import('./seed')).ensureSeeded();
-  expect(await names()).toEqual(expect.arrayContaining(['Lesson 01 – -ade verbs', 'Lesson 03 – Irregular verbs', 'Phrases – Lesson 03 – Irregular verbs', 'Grammar – Lesson 03 – Irregular verbs']));
+  expect(await names()).toEqual(expect.arrayContaining(['Lesson 01 – -ade verbs', 'Lesson 03 – Irregular verbs', 'Phrases – Lesson 03 – Irregular verbs', 'Grammar – Lesson 03 – Irregular verbs', 'Lesson 05 – Modals, pronouns and review', 'Phrases – Lesson 05 – Modals, pronouns and review', 'Grammar – Lesson 05 – Modals, pronouns and review']));
   expect((await listGrammarPages()).map((p) => p.slug).slice(0, 4)).toEqual(['past-ade', 'past-te-de', 'irregular', 'verb-second']);
-  expect(await getKV('builtInLessons')).toEqual(['lesson-03-irregular-verbs.txt']);
+  expect((await listGrammarPages()).map((p) => p.slug).slice(4, 8)).toEqual(['questions', 'modals', 'pronouns', 'connectors']);
+  expect(await getKV('builtInLessons')).toEqual(['lesson-03-irregular-verbs.txt', 'lesson-05-modals-pronouns-review.txt']);
+  const notes = await listNotes();
+  expect(notes.find((n) => n.swedish === 'måste' && n.lessonNumber === 5)?.pos).toBe('verb');
+  expect(notes.find((n) => n.swedish === 'han, honom')?.verb ?? null).toBeNull();
+});
+
+it('a notes page I never edited gets its new text, an edited one is left alone', async () => {
+  await (await import('./seed')).ensureSeeded();
+  const { ensureGrammarPages, updateGrammarPage } = await import('./repo');
+  const page = async (slug: string) => (await listGrammarPages()).find((p) => p.slug === slug)!;
+  const current = (await page('modals')).markdown;
+  await db.grammarPages.update('page:modals', { markdown: 'old text' });
+  await updateGrammarPage('page:inte', { markdown: 'my own notes' });
+  await ensureGrammarPages();
+  expect((await page('modals')).markdown).toBe(current);
+  expect((await page('inte')).markdown).toBe('my own notes');
 });
 
 it('a device set up before Lesson 3 gets it on the next start, once', async () => {

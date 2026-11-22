@@ -40,6 +40,28 @@ describe('vocab lines', () => {
     expect(vocab('att äta | eat | äta, äter, åt, ätit').verb?.supine).toBe('ätit');
   });
 
+  it('lets the tags settle forms that look like something else', () => {
+    const must = parseLine('måste | must, have to | måste, måste, måst | Hon måste arbeta. = She has to work. | verbs, modals', 'vocab').draft!;
+    expect(must.pos).toBe('verb');
+    expect(must.verb).toEqual({ infinitive: 'måste', present: 'måste', past: 'måste', supine: 'måst' });
+    expect(must.adjective).toBeNull();
+
+    const he = parseLine('han, honom | he, him | han, honom, hans | Vi träffar honom. = We meet him. | pronouns', 'vocab').draft!;
+    expect(he.pos).toBe('pronoun');
+    expect(he.verb).toBeNull();
+    expect(he.notes).toBe('Forms: han, honom, hans');
+
+    const parents = parseLine('föräldrar | parents | föräldrar, föräldrarna | Mina föräldrar bor här. = My parents live here. | family', 'vocab').draft!;
+    expect(parents.verb).toBeNull();
+    expect(parents.notes).toBe('Forms: föräldrar, föräldrarna');
+  });
+
+  it('reads a single noun form as the definite or the plural', () => {
+    expect(parseLine('vatten | water | ett vatten, vattnet', 'vocab').draft!.noun).toEqual({ gender: 'ett', definite: 'vattnet', plural: '' });
+    expect(parseLine('en hund | dog | en hund, hundar', 'vocab').draft!.noun).toEqual({ gender: 'en', definite: '', plural: 'hundar' });
+    expect(parseLine('en man | man | män', 'vocab').draft!.noun).toEqual({ gender: 'en', definite: '', plural: 'män' });
+  });
+
   it('reads adjective forms', () => {
     const d = vocab('stor | big | stor, stort, stora');
     expect(d.pos).toBe('adjective');
