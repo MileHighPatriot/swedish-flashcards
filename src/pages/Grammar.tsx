@@ -26,6 +26,8 @@ import { Markdown } from '../lib/markdown';
 import { shuffled } from '../lib/queue';
 import { TOPICS, topicFor, topicTitle } from '../lib/topics';
 import { VERB_FORM_LABELS, drillVerbs, lessonLabel, pastRule, type DrillVerb, type VerbForm } from '../lib/verbdrill';
+import { pickForm, weightedPick } from '../lib/verbtable';
+import { VerbTable } from './VerbTable';
 import { computeWeakSpots, exportForClaude, weakSpotCardIds } from '../lib/weakspots';
 import { buildReasonContext } from '../lib/reasons';
 import { TypedInput, VerdictBox, withReason, type Answer } from '../study/CardView';
@@ -478,10 +480,24 @@ function WeakSpots() {
 
 interface DrillResult {
   verb: DrillVerb;
+  form: VerbForm;
   answer: Answer;
 }
 
-export function VerbDrill() {
+/** From the verb table: drill exactly these verbs, the heavier ones more often, with the forms mixed. */
+export interface DrillPreset {
+  verbs: DrillVerb[];
+  weight: (v: DrillVerb) => number;
+  onExit: () => void;
+}
+
+const presetQueue = (preset: DrillPreset, count: number) =>
+  weightedPick(preset.verbs, preset.weight, count).flatMap((verb) => {
+    const f = pickForm(verb);
+    return f ? [{ verb, form: f }] : [];
+  });
+
+export function VerbDrill({ preset }: { preset?: DrillPreset }) {
   const loaded = useLiveQuery(async () => {
     const [notes, cards] = await Promise.all([listNotes(), listCards()]);
     const active = new Set(cards.filter((c) => !c.suspended).map((c) => c.noteId));
@@ -492,28 +508,37 @@ export function VerbDrill() {
   const [picked, setPicked] = useState<string[] | null>(null);
   const [size, setSize] = useState(10);
   const [form, setForm] = useState<VerbForm>('past');
-  const [queue, setQueue] = useState<DrillVerb[] | null>(null);
+  const [queue, setQueue] = useState<{ verb: DrillVerb; form: VerbForm }[] | null>(null);
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [results, setResults] = useState<DrillResult[]>([]);
   const nextBtn = useRef<HTMLButtonElement>(null);
+  const started = useRef(false);
+  // Coming from the verb table, the drill starts straight away.
+  useEffect(() => {
+    if (!preset || started.current) return;
+    started.current = true;
+    setQueue(presetQueue(preset, 10));
+  }, [preset]);
 
   useEffect(() => {
     if (answer) nextBtn.current?.focus();
   }, [answer]);
 
   if (!verbs) return <p className="muted">Loading…</p>;
-  if (verbs.length === 0) return <p className="muted">No verbs with a past form yet. Load the starter lessons from Add → Files.</p>;
+  if (verbs.length === 0 && !preset) return <p className="muted">No verbs with a past form yet. Load the starter lessons from Add → Files.</p>;
   // Every lesson to begin with; a verb only counts if it has the form being drilled.
   const chosen = picked ?? lessons;
   const pool = verbs.filter((v) => chosen.includes(v.lesson) && v[form]);
 
   const start = () => {
-    setQueue(shuffled(pool).slice(0, size || pool.length));
+    if (preset) setQueue(presetQueue(preset, size || preset.verbs.length));
+    else setQueue(shuffled(pool).slice(0, size || pool.length).map((verb) => ({ verb, form })));
     setIndex(0);
     setAnswer(null);
     setResults([]);
   };
+  if (preset && !queue) return <p className="muted">Loading…</p>;
 
   if (!queue)
     return (
@@ -562,8 +587,8 @@ export function VerbDrill() {
         {misses.length > 0 && (
           <ul>
             {misses.map((r) => (
-              <li key={r.verb.noteId} lang="sv">
-                {r.verb.infinitive} → <strong>{r.verb[form]}</strong>
+              <li key={`${r.verb.noteId}:${r.form}`} lang="sv">
+                {r.verb.infinitive} → <strong>{r.verb[r.form]}</strong>
                 {r.answer.typed.trim() ? ` (you typed ${r.answer.typed.trim()})` : ''}
               </li>
             ))}
@@ -573,23 +598,23 @@ export function VerbDrill() {
           <button type="button" className="btn btn-primary" onClick={start}>
             Drill again
           </button>
-          <button type="button" className="btn" onClick={() => setQueue(null)}>
-            Change lessons
+          <button type="button" className="btn" onClick={() => (preset ? preset.onExit() : setQueue(null))}>
+            {preset ? 'Back to the verb table' : 'Change lessons'}
           </button>
         </div>
       </div>
     );
   }
 
-  const verb = queue[index];
-  const target = verb[form];
-  const rule = form === 'past' ? pastRule(verb.infinitive, verb.past) : null;
-  const formName = VERB_FORM_LABELS[form].replace(/ \(.*$/, '');
+  const { verb, form: asked } = queue[index];
+  const target = verb[asked];
+  const rule = asked === 'past' ? pastRule(verb.infinitive, verb.past) : null;
+  const formName = VERB_FORM_LABELS[asked].replace(/ \(.*$/, '');
   const submit = (typed: string, skipped = false) => {
     const check = checkAnswer(typed, [target]);
     const a: Answer = withReason({ typed, check: skipped ? { ...check, verdict: 'wrong' } : check }, loaded?.reasons ?? null);
     setAnswer(a);
-    setResults((r) => [...r, { verb, answer: a }]);
+    setResults((r) => [...r, { verb, form: asked, answer: a }]);
     if (a.check)
       void recordTyped(a.check.verdict, {
         prompt: `${formName} of ${verb.infinitive} (${verb.english})`,
@@ -657,7 +682,7 @@ export function VerbDrill() {
           <TypedInput key={index} label={`Type the ${formName.toLowerCase()}`} onSubmit={(t) => submit(t)} onSkip={() => submit('', true)} />
         )}
       </div>
-      <button type="button" className="btn btn-small" onClick={() => setQueue(null)}>
+      <button type="button" className="btn btn-small" onClick={() => (preset ? preset.onExit() : setQueue(null))}>
         Stop drill
       </button>
     </div>
@@ -666,11 +691,12 @@ export function VerbDrill() {
 
 // ---------- the tab ----------
 
-type Tab = 'notes' | 'mistakes' | 'weak' | 'drill';
+type Tab = 'notes' | 'mistakes' | 'weak' | 'verbs' | 'drill';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'notes', label: 'Notes' },
   { id: 'mistakes', label: 'Mistakes' },
   { id: 'weak', label: 'Weak spots' },
+  { id: 'verbs', label: 'Verb table' },
   { id: 'drill', label: 'Verb drill' },
 ];
 
@@ -718,6 +744,7 @@ export function Grammar() {
         {tab === 'notes' && <NotesList />}
         {tab === 'mistakes' && <MistakeLog />}
         {tab === 'weak' && <WeakSpots />}
+        {tab === 'verbs' && <VerbTable />}
         {tab === 'drill' && <VerbDrill />}
       </div>
     </section>
