@@ -317,16 +317,14 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
     return (
       <section className="session">
         <h1 className="sr-only">My mistakes</h1>
-        <header className="session-head">
+        <header className="session-head round-head">
           <button type="button" className="btn btn-small" onClick={onExit} aria-label="End session">
             ✕
           </button>
-          <div className="session-progress">First, the things you are fixing</div>
-          <div className="session-tools">
-            <button type="button" className="btn btn-small" onClick={() => setRound(null)}>
-              Skip to the cards
-            </button>
-          </div>
+          <div className="session-progress">Your mistakes first</div>
+          <button type="button" className="btn btn-small" onClick={() => setRound(null)}>
+            Skip to the cards
+          </button>
         </header>
         <MistakeRound
           items={round}

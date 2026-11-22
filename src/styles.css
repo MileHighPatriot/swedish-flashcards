@@ -2321,3 +2321,98 @@ a.pill-btn {
 .suggested h2 {
   margin-top: 0;
 }
+
+/* ---------- phone layout fixes ---------- */
+/* Typed answers: å ä ö and Check share one line; "Show answer" sits on its own line below. */
+.typed-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'keys check'
+    'skip skip';
+  align-items: center;
+  gap: 8px;
+}
+.typed-row > .special-keys {
+  grid-area: keys;
+  display: flex;
+  gap: 6px;
+}
+.typed-row > .btn-primary {
+  grid-area: check;
+  min-width: 88px;
+}
+.typed-row > .btn:not(.btn-primary) {
+  grid-area: skip;
+  justify-self: start;
+}
+/* The mistakes round: close on the left, skip on the right, never touching. */
+.round-head {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.round-head .session-progress {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.round-head .btn-small {
+  flex: 0 0 auto;
+}
+/* Sub-tabs stay on one row; if there are ever too many they scroll, they never wrap. */
+.tabs {
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab-btn {
+  white-space: nowrap;
+}
+/* Review heatmap: all seven rows and every week fit the card; the legend never clips. */
+.heat {
+  overflow-x: visible;
+  align-items: stretch;
+}
+.heat-days {
+  flex: 0 0 auto;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  line-height: 1;
+  align-items: center;
+}
+.heat-grid {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 440px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+.heat-week {
+  grid-template-rows: repeat(7, auto);
+  min-width: 0;
+}
+.heat-week .heat-cell {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+.heat-legend {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+/* Today's secondary links in an even two-column grid. */
+.today-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 8px;
+}
+/* The last item on every screen clears the iPhone home bar, with or without the tab bar. */
+body.in-session .main {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+.tabbar {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
