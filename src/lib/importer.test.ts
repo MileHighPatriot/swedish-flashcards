@@ -76,7 +76,7 @@ describe('starter lessons loader', () => {
     const byKind = (k: string) => notes.filter((n) => n.kind === k).length;
     expect([byKind('rule'), byKind('fix'), byKind('reorder'), byKind('translate'), byKind('vocab')]).toEqual([17, 20, 6, 6, 39]);
     const t = notes.find((n) => n.grammar?.prompt === 'Yesterday I worked at the store.')!;
-    expect(t.grammar!.answer).toBe('Igår arbetade jag i butiken. // Jag arbetade i butiken igår.');
+    expect(t.grammar!.answer).toBe('I går arbetade jag i butiken. // Jag arbetade i butiken i går.');
     expect(t.cardTypes).toEqual(['translate']);
   });
 

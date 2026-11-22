@@ -1,7 +1,7 @@
 import { db } from './db';
 import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, setKV, type NoteInput } from './repo';
 import type { PartOfSpeech } from './types';
-import { BUILT_IN_LESSONS, loadBuiltInLesson, loadStarterLessons, refreshStarterCards } from '../lib/importer';
+import { BUILT_IN_LESSONS, loadBuiltInLesson, loadStarterLessons, refreshBuiltIn, refreshStarterCards } from '../lib/importer';
 
 type Seed = {
   sv: string;
@@ -27,7 +27,7 @@ const WORDS: Seed[] = [
   { sv: 'vän', en: 'friend', pos: 'noun', noun: ['en', 'vännen', 'vänner'], ex: ['Hon är min bästa vän.', 'She is my best friend.'], tags: ['family'] },
   { sv: 'vatten', en: 'water', pos: 'noun', noun: ['ett', 'vattnet', 'vatten'], ex: ['Kan jag få ett glas vatten?', 'Can I have a glass of water?'], tags: ['food'] },
   { sv: 'kaffe', en: 'coffee', pos: 'noun', noun: ['ett', 'kaffet', ''], ex: ['Vill du ha kaffe?', 'Do you want coffee?'], tags: ['food'] },
-  { sv: 'vara', en: 'to be', pos: 'verb', verb: ['vara', 'är', 'var', 'varit'], ex: ['Jag är trött idag.', 'I am tired today.'], tags: ['verbs'] },
+  { sv: 'vara', en: 'to be', pos: 'verb', verb: ['vara', 'är', 'var', 'varit'], ex: ['Jag är trött i dag.', 'I am tired today.'], tags: ['verbs'] },
   { sv: 'ha', en: 'to have', pos: 'verb', verb: ['ha', 'har', 'hade', 'haft'], ex: ['Jag har två bröder.', 'I have two brothers.'], tags: ['verbs', 'family'] },
   { sv: 'heta', en: 'to be called', pos: 'verb', verb: ['heta', 'heter', 'hette', 'hetat'], ex: ['Vad heter du?', 'What is your name?'], tags: ['verbs', 'greetings'] },
   { sv: 'bo', en: 'to live (reside)', pos: 'verb', verb: ['bo', 'bor', 'bodde', 'bott'], ex: ['Var bor du?', 'Where do you live?'], tags: ['verbs', 'home'] },
@@ -38,6 +38,15 @@ const WORDS: Seed[] = [
 ];
 
 export const SEED_DECK_NAME = 'Lesson 00 – Starter words';
+
+/** Raise this number whenever the starter files in seed/ change (grammar cards refresh in place). */
+export const STARTER_REVISION = 3;
+/**
+ * Raise this number whenever any built-in card changes: a seed file edit, or an
+ * id added to REMOVED_SEED_IDS. Editing a seed file alone does not reach a
+ * device that already loaded it; this does.
+ */
+export const BUILT_IN_REVISION = 1;
 
 let seeding: Promise<void> | null = null;
 
@@ -77,11 +86,14 @@ export function ensureSeeded(): Promise<void> {
       await loadStarterLessons();
       await setKV('starterLoaded', true);
     }
-    // Raise this number whenever the files in seed/ change.
-    const STARTER_REVISION = 2;
     if (((await getKV<number>('starterRevision')) ?? 1) < STARTER_REVISION) {
       await refreshStarterCards();
       await setKV('starterRevision', STARTER_REVISION);
+    }
+    // The same for every built-in card, words included (see refreshBuiltIn).
+    if (((await getKV<number>('builtInRevision')) ?? 0) < BUILT_IN_REVISION) {
+      await refreshBuiltIn();
+      await setKV('builtInRevision', BUILT_IN_REVISION);
     }
     // Lesson 3 onwards: each seed/lesson-NN-*.txt file is loaded once per device.
     const loaded = (await getKV<string[]>('builtInLessons')) ?? [];

@@ -1,0 +1,107 @@
+# Starter lessons 01-02. Loaded by the "Load starter lessons" button.
+# Grammar lines:  type | prompt | answer | explanation | tags
+# Vocab lines:    Swedish | English | forms | example = translation | tags
+# Reorder prompts end with the English meaning in brackets, so it is clear which sentence to build.
+# A "### Heading" line starts a section. Lines starting with # are comments.
+
+### Grammar – Past tense & word order (rule cards)
+rule | How do you form the past tense of an -ar verb? | Drop the final -a and add -ade: arbeta → arbetade. | Same form for every person: jag, du, hon, vi, de arbetade. | past-tense, -ade, lesson-01
+rule | Does the past tense verb change with the person (jag, hon, vi)? | No. One form for everyone: jag arbetade, hon arbetade, vi arbetade. | Unlike English, no extra endings for the person. | past-tense, lesson-01
+rule | What word order do you use when a sentence starts with a time word like igår? | Verb second, subject third: Igår arbetade jag. | Verb second rule: whatever goes first, the verb takes seat 2. | word-order, verb-second, lesson-01
+rule | Which stem endings take -te in the past tense? | k, p, t, s, x (and ck counts as k): köp→köpte, läs→läste, åk→åkte. | These are hard sounds made without your voice, so a hard t follows them. | past-tense, -te, lesson-02
+rule | What ending do the other stems take in the past tense? | -de: ring→ringde, hör→hörde, lev→levde, bygg→byggde. | Check the last sound of the stem after dropping -a. | past-tense, -de, lesson-02
+rule | What is the past tense of bo and tro? | bodde and trodde (double d). | Verbs ending in a vowel double the d. | past-tense, -de, lesson-02
+rule | What is the past tense of känna (to feel, to know)? | kände | It loses one n. | past-tense, -de, lesson-02
+rule | How do you make a yes/no question in Swedish? | Put the verb first: Köpte du boken? | No extra word like "did". | questions, lesson-02
+rule | Where does the verb go after a question word (vad, var, när, hur)? | Seat 2: Vad köpte du? Var bodde du? | Same verb-second rule. | questions, verb-second, lesson-02
+rule | What form of the verb follows kan, vill, ska, måste, får? | The infinitive: Jag kan prata svenska. | Never add -r after a modal. | modals, infinitive
+rule | What does "så att" do? | It gives a purpose, "so that": Jag lär mig svenska så att jag kan prata med min svärmor. | Don't drop "att". | connectors
+rule | What does "som" do in "en vän som bor i Sverige"? | It replaces the subject. Don't add han/hon after it. | Relative clause. | connectors
+rule | Where does "inte" go in a subordinate clause (after att, som, om)? | Before the verb: Jag vet att han inte kommer. | In main clauses it comes after the verb: Han kommer inte. | negation, word-order
+rule | What is the difference between hem and hemma? | hem = direction (going home): Jag går hem. hemma = location (at home): Jag är hemma. | Movement vs place. | vocabulary, grammar
+rule | What is the plural of "barn" and how do you say "my children"? | barn (unchanged), mina barn. | Plural possessive is mina. | plural
+rule | When do you capitalize in Swedish? | Only the first word of a sentence and names. Days, months, and languages are lowercase: lördag, november, svenska. | Don't capitalize mid-sentence: "Jag lagade middag", not "Jag Lagade". | spelling
+rule | How is k pronounced before ö, ä, e, i, y? | A soft "sh"-like sound: köpte ≈ SHERP-teh. | Stress the first syllable. ö is like "er" without the r. | pronunciation
+
+### Grammar – My mistakes (fix-the-error cards, from my own work)
+fix | Igår jag arbetade. | Igår arbetade jag. | Verb in seat 2 after a time word. | my-mistake, verb-second
+fix | Igår jag arbeta. | Igår arbetade jag. | Past needs -ade and verb in seat 2. | my-mistake, past-tense, verb-second
+fix | Igår arbetar jag. (yesterday) | Igår arbetade jag. | Present tense means now. Past needs -ade. | my-mistake, past-tense
+fix | Vi städa igår. | Vi städade igår. | Add -ade for the past, not the infinitive. | my-mistake, past-tense
+fix | Hon lagar mat igår. | Hon lagade mat igår. | Past tense for yesterday. | my-mistake, past-tense
+fix | Jag köpedde en bok. | Jag köpte en bok. | Stem köp ends in p, so -te, not -de. | my-mistake, -te
+fix | Jag kan pratar svenska. | Jag kan prata svenska. | Infinitive after a modal. | my-mistake, modals
+fix | Jag lär mig svenska så jag kan prata. | Jag lär mig svenska så att jag kan prata. | så att gives a purpose. | my-mistake, connectors
+fix | Jag har en vän som han bor i Sverige. | Jag har en vän som bor i Sverige. | som replaces the subject. | my-mistake, connectors
+fix | min barnet | mina barn | Plural possessive is mina, and barn doesn't change. | my-mistake, plural
+fix | Jag vet att han kommer inte. | Jag vet att han inte kommer. | inte goes before the verb in a subordinate clause. | my-mistake, negation
+fix | Jag är hem. | Jag är hemma. | hemma = at home (location). | my-mistake, hem-hemma
+fix | Jag går hemma. | Jag går hem. | hem = going home (direction). | my-mistake, hem-hemma
+fix | Vi lyssnade på music. | Vi lyssnade på musik. | The Swedish spelling is musik. | my-mistake, spelling
+fix | Vi lysnade på musik. | Vi lyssnade på musik. | Lyssna has a double s. | my-mistake, spelling, watch-spelling
+fix | Ikväll var det en bra kväll. (about last night) | Igår kväll var det en bra kväll. | ikväll = tonight. Use igår kväll for last night. | my-mistake, time-words
+fix | Igår kväll vart det en bra kväll. | Igår kväll var det en bra kväll. | var = was. vart = where to. | my-mistake, spelling
+fix | Jag var off igår. | Jag var ledig igår. | "Off" isn't Swedish. ledig = off, free from work. | my-mistake, vocabulary
+fix | Jag Lagade middag och Vi åt. | Jag lagade middag och vi åt. | No capitals mid-sentence. | my-mistake, spelling
+fix | Jag alskar min svarmor. | Jag älskar min svärmor. | Always type å, ä, ö. | my-mistake, spelling
+
+### Reorder cards
+reorder | arbetade / jag / igår / i butiken (Yesterday I worked at the store.) | Igår arbetade jag i butiken. // Jag arbetade i butiken igår. | Verb second after the time word. | word-order, lesson-01
+reorder | städade / hon / förra veckan (Last week she cleaned.) | Förra veckan städade hon. // Hon städade förra veckan. | Verb second. | word-order, lesson-01
+reorder | lagade / vi / middag / i lördags (Last Saturday we cooked dinner.) | I lördags lagade vi middag. // Vi lagade middag i lördags. | Verb second. | word-order, lesson-01
+reorder | du / boken / läste (Did you read the book?) | Läste du boken? | Yes/no question: verb first. | questions, lesson-02
+reorder | köpte / vad / du (What did you buy?) | Vad köpte du? | Question word + verb. | questions, lesson-02
+reorder | bodde / var / du (Where did you live?) | Var bodde du? | Question word + verb. | questions, lesson-02
+
+### Translate cards
+translate | Yesterday I worked at the store. | Igår arbetade jag i butiken. // Jag arbetade i butiken igår. | Past tense + verb second. | translate, lesson-01
+translate | We cleaned yesterday. (start with the time word) | Igår städade vi. | Verb second. | translate, lesson-01
+translate | I asked and he answered. | Jag frågade och han svarade. | -ade verbs. | translate, lesson-01
+translate | Did you read the book? | Läste du boken? | Question order + -te. | translate, lesson-02
+translate | Where did you live? | Var bodde du? | bo → bodde. | translate, lesson-02
+translate | What did you do yesterday? | Vad gjorde du igår? | Learn this as a ready-made phrase. gjorde is irregular, coming in Lesson 3. | translate, phrases
+
+### Time words & phrases
+igår | yesterday | | Igår arbetade jag. = Yesterday I worked. | time-words
+i förrgår | the day before yesterday | | I förrgår handlade vi. = The day before yesterday we shopped. | time-words
+igår kväll | last night | | Igår kväll var det en bra kväll. = Last night was a good evening. | time-words
+ikväll | tonight | | Ikväll lagar vi middag. = Tonight we're cooking dinner. | time-words
+i morse | this morning | | I morse duschade jag. = This morning I showered. | time-words
+i morgon | tomorrow | | I morgon arbetar jag. = Tomorrow I work. | time-words
+nyss | just now | | Han tvättade nyss. = He washed just now. | time-words
+förra veckan | last week | | Förra veckan reste de till Sverige. = Last week they traveled to Sweden. | time-words
+i lördags | last Saturday | | I lördags bakade vi. = Last Saturday we baked. | time-words
+i helgen | this weekend / last weekend | | Vad gjorde du i helgen? = What did you do over the weekend? | time-words
+fortfarande | still | | Jag lär mig fortfarande svenska. = I'm still learning Swedish. | vocabulary, my-mistake
+förstå | understand | förstår, förstod | Jag förstår lite svenska. = I understand a little Swedish. | vocabulary, my-mistake
+först | first | | Först duschade jag. = First I showered. | vocabulary, my-mistake
+
+### Conversation phrases (with my mother-in-law)
+Vad gjorde du igår? | What did you do yesterday? | | Learn as a ready-made question. | phrases, conversation
+Igår arbetade jag i butiken. | Yesterday I worked at the store. | | | phrases, conversation
+Jag städade och jag pratade med kunder. | I cleaned and I talked with customers. | | | phrases, conversation
+Och sedan? | And then? | | | phrases, conversation
+Sedan handlade jag mat och lagade middag. | Then I shopped for food and cooked dinner. | | | phrases, conversation
+Vad bra! | How nice! / That's great! | | | phrases, conversation
+Vad lagade du? | What did you cook? | | | phrases, conversation
+Jag lagade pasta. | I cooked pasta. | | | phrases, conversation
+
+### Coming soon – irregular & modal verbs (create suspended; unlock with one tap per deck)
+gå | go, walk | går, gick | | irregular, lesson-03
+äta | eat | äter, åt | | irregular, lesson-03
+se | see | ser, såg | | irregular, lesson-03
+vara | be | är, var | | irregular, lesson-03
+göra | do, make | gör, gjorde | | irregular, lesson-03
+komma | come | kommer, kom | | irregular, lesson-03
+ha | have | har, hade | | irregular, lesson-03
+få | get, may | får, fick | | irregular, lesson-03
+ta | take | tar, tog | | irregular, lesson-03
+skriva | write | skriver, skrev | | irregular, lesson-03
+sitta | sit | sitter, satt | | irregular, lesson-03
+stå | stand | står, stod | | irregular, lesson-03
+ligga | lie, be located | ligger, låg | | irregular, lesson-03
+säga | say | säger, sa | | irregular, lesson-03
+kunna | can, be able to | kan, kunde | | modals, lesson-03
+vilja | want | vill, ville | | modals, lesson-03
+skola | shall, will | ska, skulle | | modals, lesson-03
+måste | must | måste, var tvungen | | modals, lesson-03

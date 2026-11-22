@@ -40,7 +40,8 @@ import { say, stopSpeaking } from '../lib/speech';
 import { topicFor, topicTitle } from '../lib/topics';
 import { computeWeakSpots, weakSpotCardIds } from '../lib/weakspots';
 import { GrammarPageView } from './Grammar';
-import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, type Answer } from '../study/CardView';
+import { buildReasonContext } from '../lib/reasons';
+import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, withReason, type Answer } from '../study/CardView';
 
 // ---------- the session ----------
 
@@ -141,11 +142,15 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
     requestAnimationFrame(() => cardEl.current?.focus({ preventScroll: true }));
   }, []);
 
-  const reveal = useCallback((a: Answer | null) => {
-    setAnswer(a);
-    setRevealed(true);
-    requestAnimationFrame(() => rateEl.current?.focus({ preventScroll: true }));
-  }, []);
+  const reasons = useMemo(() => (data ? buildReasonContext(data.pool) : null), [data]);
+  const reveal = useCallback(
+    (a: Answer | null) => {
+      setAnswer(a && withReason(a, reasons));
+      setRevealed(true);
+      requestAnimationFrame(() => rateEl.current?.focus({ preventScroll: true }));
+    },
+    [reasons],
+  );
 
   const rate = useCallback(
     (grade: Grade) => {

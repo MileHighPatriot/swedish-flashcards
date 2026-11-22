@@ -1,0 +1,43 @@
+# Lesson 04 – Mixed past tense and seven irregular verbs
+# My Lesson 4 content. Same formats as grammar-lessons-01-02.txt.
+# Loaded as a built-in lesson: the title line above names the decks.
+
+### Vocab
+skriva | write | skriver, skrev, skrivit | I går skrev jag en lista. = Yesterday I wrote a list. | verbs, irregular
+sitta | sit | sitter, satt, suttit | Vi satt i soffan och såg en film. = We sat on the sofa and watched a movie. | verbs, irregular
+stå | stand | står, stod, stått | Jag stod i köket klockan sex. = I was standing in the kitchen at six. | verbs, irregular
+ligga | lie, be lying | ligger, låg, legat | Barnen låg på golvet. = The children were lying on the floor. | verbs, irregular
+säga | say | säger, sa, sagt | Hon sa att hon var trött. = She said that she was tired. | verbs, irregular
+bli | become, get | blir, blev, blivit | Efter middagen blev jag trött. = After dinner I got tired. | verbs, irregular
+dricka | drink | dricker, drack, druckit | I lördags drack vi kaffe. = Last Saturday we drank coffee. | verbs, irregular
+vakna | wake up | vaknar, vaknade, vaknat | I lördags vaknade jag klockan åtta. = Last Saturday I woke up at eight. | verbs, -ade
+en soffa | sofa | en soffa, soffan, soffor | Jag satt i soffan. = I was sitting on the sofa. | home
+ett golv | floor | ett golv, golvet, golv | Barnen låg på golvet. = The children were lying on the floor. | home
+ett kök | kitchen | ett kök, köket, kök | Jag stod i köket. = I was standing in the kitchen. | home
+en lista | list | en lista, listan, listor | Sedan skrev jag en lista. = Then I wrote a list. | home
+en eftermiddag | afternoon | en eftermiddag, eftermiddagen, eftermiddagar | På eftermiddagen ringde min svärmor. = In the afternoon my mother-in-law called. | time-words
+
+### Grammar rules
+rule | What comes right after sedan at the start of a sentence? | The verb, then the subject: Sedan lagade jag middag. | Sedan takes seat 1, so the verb takes seat 2. | verb-second, word-order
+rule | What is the difference between var and vart? | var = was (past of vara), and also where for a place: Var bor du? vart = where to, a direction: Vart ska du? | I går var jag hemma. | var-vart
+rule | What is the difference between var trött and blev trött? | var trött = was tired; blev trött = got tired. | blev is a change of state. | irregular, chunks
+
+### Fix the error
+fix | Sedan jag lagade middag. | Sedan lagade jag middag. | After sedan the verb takes seat 2. | verb-second
+fix | I går jag blev trött. | I går blev jag trött. | The verb takes seat 2 after a time word. | verb-second
+fix | I går skrivde jag ett mail. | I går skrev jag ett mail. | skriva is irregular: skrev. | irregular
+fix | Hon sagde att hon var trött. | Hon sa att hon var trött. | The past of säga is just sa. | irregular
+fix | Jag skrivit en lista i går. | Jag skrev en lista i går. | skrivit is the third form, used after har; the past is skrev. | irregular
+
+### Reorder
+reorder | satt / jag / i soffan / sedan (Then I sat on the sofa.) | Sedan satt jag i soffan. | Verb second after sedan. | word-order, verb-second
+reorder | lagade / sedan / middag / jag (Then I made dinner.) | Sedan lagade jag middag. | Verb second after sedan. | word-order, verb-second
+reorder | kaffe / drack / sedan / vi (Then we drank coffee.) | Sedan drack vi kaffe. | Verb second after sedan. | word-order, verb-second
+reorder | en lista / hon / sedan / skrev (Then she wrote a list.) | Sedan skrev hon en lista. | Verb second after sedan. | word-order, verb-second
+
+### Translate
+translate | Where do you live? | Var bor du? | var = where, for a place. | var-vart, questions
+translate | Where are you going? | Vart ska du? // Vart går du? | vart = where to, a direction. | var-vart, questions
+translate | Yesterday I was at home. | I går var jag hemma. // Jag var hemma i går. | var = was. | var-vart, verb-second
+translate | Where were you yesterday? | Var var du i går? | The first var = where, the second var = was. | var-vart, questions
+translate | Where did you travel last Saturday? | Vart åkte du i lördags? | vart = where to; åka = travel by vehicle. | var-vart, questions

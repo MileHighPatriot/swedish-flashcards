@@ -6,11 +6,11 @@
 kunna | can, be able to, know (a skill) | kan, kunde, kunnat | Jag kan lite svenska. = I know a little Swedish. | verbs, modals
 vilja | want to | vill, ville, velat | Vi vill äta pizza. = We want to eat pizza. | verbs, modals
 måste | must, have to | måste, måste, måst | Hon måste arbeta. = She has to work. | verbs, modals
-skola | shall, be going to | ska, skulle | Imorgon ska jag ringa henne. = Tomorrow I am going to call her. | verbs, modals
+skola | shall, be going to | ska, skulle | I morgon ska jag ringa henne. = Tomorrow I am going to call her. | verbs, modals
 få | may, be allowed to, get | får, fick, fått | Får jag sitta här? = May I sit here? | verbs, modals
 böra | ought to, should | bör, borde | Du borde sova mer. = You should sleep more. | verbs, modals
 behöva | need to | behöver, behövde, behövt | Jag behöver hjälp. = I need help. | verbs, modals
-tänka | intend to, think | tänker, tänkte, tänkt | Jag tänker ringa henne imorgon. = I intend to call her tomorrow. | verbs, modals
+tänka | intend to, think | tänker, tänkte, tänkt | Jag tänker ringa henne i morgon. = I intend to call her tomorrow. | verbs, modals
 bruka | usually do, tend to | brukar, brukade, brukat | Jag brukar äta frukost klockan sju. = I usually eat breakfast at seven. | verbs, modals
 hjälpa | help | hjälper, hjälpte, hjälpt | Kan du hjälpa mig? = Can you help me? | verbs
 vänta | wait | väntar, väntade, väntat | Jag kan vänta här. = I can wait here. | verbs
@@ -23,9 +23,9 @@ ta med | bring, take along | tar med, tog med, tagit med | Kan du ta med kaffe? 
 jag, mig | I, me | jag, mig, min, mitt, mina | Kan du ringa mig? = Can you call me? | pronouns
 du, dig | you | du, dig, din, ditt, dina | Jag ser dig. = I see you. | pronouns
 han, honom | he, him | han, honom, hans | Vi träffar honom. = We meet him. | pronouns
-hon, henne | she, her | hon, henne, hennes | Jag ringde henne igår. = I called her yesterday. | pronouns
+hon, henne | she, her | hon, henne, hennes | Jag ringde henne i går. = I called her yesterday. | pronouns
 vi, oss | we, us | vi, oss, vår, vårt, våra | Kan du hjälpa oss? = Can you help us? | pronouns
-ni, er | you (plural) | ni, er, er, ert, era | Kom med oss! = Come with us! | pronouns
+ni, er | you (plural) | ni, er, er, ert, era | Kan jag hjälpa er? = Can I help you (all)? | pronouns
 de, dem | they, them | de, dem, deras | Jag såg dem i parken. = I saw them in the park. | pronouns
 min, mitt, mina | my | min (en-word), mitt (ett-word), mina (plural) | Mitt barn är trött. Mina barn är trötta. = My child is tired. My children are tired. | pronouns
 en familj | family | en familj, familjen, familjer | Min familj är stor. = My family is big. | family
@@ -36,7 +36,7 @@ en man | husband, man | en man, mannen, män | Min man arbetar. = My husband wor
 en son | son | en son, sonen, söner | Vår son leker i parken. = Our son plays in the park. | family
 en dotter | daughter | en dotter, dottern, döttrar | Hennes dotter är trött. = Her daughter is tired. | family
 en bror | brother | en bror, brodern, bröder | Jag ska träffa min bror. = I am going to meet my brother. | family
-en syster | sister | en syster, systern, systrar | Imorgon ska jag träffa min syster. = Tomorrow I am going to meet my sister. | family
+en syster | sister | en syster, systern, systrar | I morgon ska jag träffa min syster. = Tomorrow I am going to meet my sister. | family
 ett syskon | sibling | ett syskon, syskonet, syskon | Hon har ett syskon. = She has one sibling. | family
 föräldrar | parents | föräldrar, föräldrarna | Mina föräldrar bor här. = My parents live here. | family
 en svärmor | mother-in-law | en svärmor, svärmodern, svärmödrar | Jag vill träffa min svärmor. = I want to meet my mother-in-law. | family
@@ -54,7 +54,7 @@ bara | only, just | | Jag vill bara sova. = I just want to sleep. | adverbs
 lite | a little | | Jag kan lite svenska. = I know a little Swedish. | adverbs
 nu | now | | Vi måste gå nu. = We have to go now. | time-words
 snart | soon | | Jag ska snart ringa dig. = I will call you soon. | time-words
-imorgon | tomorrow | | Imorgon ska jag ringa. = Tomorrow I am going to call. | time-words
+i morgon | tomorrow | | I morgon ska jag ringa. = Tomorrow I am going to call. | time-words
 tidigt | early | | Vi måste komma tidigt. = We have to come early. | time-words
 varje dag | every day | | Jag måste öva varje dag. = I have to practice every day. | time-words
 hela dagen | all day, the whole day | | Vi var hemma hela dagen. = We were home all day. | time-words
@@ -91,16 +91,16 @@ Vi ses på söndag! | See you Sunday! | | Vi ses på söndag! = See you Sunday! 
 rule | What follows a modal verb? | The infinitive with no att: Jag vill äta middag. | Never add att and never change the second verb. | modals, verbs
 rule | Do modal verbs change for different persons? | No: jag kan, du kan, hon kan | One form for every person, with no -r for han or hon. | modals
 rule | What are the past forms of kan, vill, måste, ska and får? | kunde, ville, måste, skulle, fick: Jag kunde inte komma. | Måste does not change in the past. | modals, irregular
-rule | Where do the modal and the second verb go in a main clause? | Modal in seat 2, infinitive last: Imorgon ska jag träffa min syster. | The verb-second rule applies to the modal. | verb-second, modals, word-order
+rule | Where do the modal and the second verb go in a main clause? | Modal in seat 2, infinitive last: I morgon ska jag träffa min syster. | The verb-second rule applies to the modal. | verb-second, modals, word-order
 rule | How do you ask a yes/no question with a modal? | Put the modal first: Kan du komma på söndag? | Yes/no question: verb first. | questions, modals
-rule | Where does inte go with a modal in a main clause? | After the modal, and after the subject if it follows: Jag kan inte komma. Idag kan jag inte komma. | Adverbs follow the finite verb. | negation, modals, word-order
+rule | Where does inte go with a modal in a main clause? | After the modal, and after the subject if it follows: Jag kan inte komma. I dag kan jag inte komma. | Adverbs follow the finite verb. | negation, modals, word-order
 rule | Where does inte go after att in a subordinate clause? | Before the verb: Jag vet att hon inte kan komma. | In subordinate clauses the adverb comes before the verb. | negation, connectors, word-order
 rule | What is the difference between måste inte and får inte? | Du måste inte komma = you do not have to. Du får inte komma = you are not allowed to. | Use får inte for must not. | modals, negation
 rule | What does kan mean when there is no second verb? | Know a skill: Jag kan lite svenska. | Kunna can mean know, so you do not need tala. | modals
 rule | When do you use vill ha instead of vill? | Before a noun: Jag vill ha kaffe, not Jag vill kaffe. | Swedish needs a verb: vill ha. | modals
-rule | How do ska and kommer att differ? | Ska is a plan: Imorgon ska jag ringa. Kommer att is a prediction: Det kommer att regna. | Ska = going to by plan; kommer att = will happen. | modals
+rule | How do ska and kommer att differ? | Ska is a plan: I morgon ska jag ringa. Kommer att is a prediction: Det kommer att regna. | Ska = going to by plan; kommer att = will happen. | modals
 rule | Which phrases do you use to order politely? | Kan jag få...? and Jag skulle vilja ha... | Both are polite in shops and cafés. | modals, phrases
-rule | In the past with a modal, which verb changes? | Only the modal: Igår kunde jag inte komma. | The second verb stays in the infinitive. | modals, verbs
+rule | In the past with a modal, which verb changes? | Only the modal: I går kunde jag inte komma. | The second verb stays in the infinitive. | modals, verbs
 rule | Which verbs can you drop after a modal? | Motion verbs and sometimes ha: Jag måste hem. Jag ska till affären. | Meaning makes the verb obvious. | modals
 rule | How do you choose the past pattern of a regular verb? | Present -ar gives -ade; present -er gives -te (stem ends in k p t s x) or -de | Check the present tense before you write the past. | -ade, -te, -de, verbs
 rule | What are the subject and object forms of hon and han? | hon, henne and han, honom: Jag ringde henne. Vi träffar honom. | Use the object form after a verb or preposition. | pronouns
@@ -113,8 +113,8 @@ rule | Where does a capital letter go in a Swedish sentence? | Only the first wo
 
 ### Fix the error
 fix | Vi borde i Denver. | Vi bodde i Denver. | bo takes -dde; borde means should. | my-mistake, -de, spelling
-fix | Igår läsade jag en bok. | Igår läste jag en bok. | The stem läs ends in s, so -te, never -ade. | my-mistake, -te
-fix | Jag ringade henne igår. | Jag ringde henne igår. | Ringer ends in -er and the stem ring takes -de, never -ade. | my-mistake, -de
+fix | I går läsade jag en bok. | I går läste jag en bok. | The stem läs ends in s, so -te, never -ade. | my-mistake, -te
+fix | Jag ringade henne i går. | Jag ringde henne i går. | Ringer ends in -er and the stem ring takes -de, never -ade. | my-mistake, -de
 fix | Barnen lekade i parken. | Barnen lekte i parken. | The stem lek ends in k, so -te. | my-mistake, -te
 fix | Jag köpte en bok och läste det. | Jag köpte en bok och läste den. | Bok is an en-word, so den. | my-mistake, pronouns
 fix | Hon sa det hon var trött. | Hon sa att hon var trött. | Att joins a clause after säga. | my-mistake, connectors
@@ -122,8 +122,7 @@ fix | Vad sa honom? | Vad sa hon? | Hon is the subject; honom is the object. | m
 fix | Hon vara hemma. | Hon var hemma. | The past of vara is var, not the infinitive. | my-mistake, irregular
 fix | Barnet vara ligga på golvet. | Barnen låg på golvet. | Use the past låg, the plural barnen and golvet. | my-mistake, irregular
 fix | Förra veckan gjorde jag en present. | Förra veckan fick jag en present. | Få means get; göra means do or make. | my-mistake, irregular
-fix | Igår vart jag hemma. | Igår var jag hemma. | Var means was; vart means where to. | my-mistake
-fix | Vi såg på film. | Vi såg en film. | Use en film, not på film. | my-mistake
+fix | I går vart jag hemma. | I går var jag hemma. | Var means was; vart means where to. | my-mistake
 fix | Förra veckan gick de på Sverige. | Förra veckan åkte de till Sverige. | Till goes with places; åka is for vehicles. | my-mistake
 fix | Jag lekte med min barn. | Jag lekte med mina barn. | Barn is an ett-word: mitt barn for one, mina barn for more. | my-mistake, pronouns
 fix | Sedan vi tog tåget hem. | Sedan tog vi tåget hem. | The verb takes seat 2 after sedan. | my-mistake, verb-second, word-order
@@ -133,20 +132,20 @@ fix | Stod du på kitchen? | Stod du i köket? | Use the Swedish word and i kök
 fix | Efter middag jag gjorde trött. | Efter middagen blev jag trött. | Blev means got, and the verb takes seat 2. | my-mistake, verb-second
 fix | Sedan satt jag soffan. | Sedan satt jag i soffan. | The preposition i is needed. | my-mistake
 fix | Hon gjörde middag. | Hon gjorde middag. | Gjorde has o, no ö. | my-mistake, spelling, watch-spelling
-fix | Du blev trött igår? | Blev du trött igår? | A yes/no question puts the verb first. | my-mistake, questions
+fix | Du blev trött i går? | Blev du trött i går? | A yes/no question puts the verb first. | my-mistake, questions
 fix | Jag ska ringde på eftermiddagen. | Jag ska ringa på eftermiddagen. | After a modal, use the infinitive. | my-mistake, modals
 fix | Vi åt Lunch. | Vi åt lunch. | No capital letter in the middle of a sentence. | my-mistake, spelling
-fix | Igår vi drick vatten. | Igår drack vi vatten. | The past of dricka is drack, and the verb takes seat 2. | my-mistake, irregular, verb-second
+fix | I går vi drick vatten. | I går drack vi vatten. | The past of dricka is drack, and the verb takes seat 2. | my-mistake, irregular, verb-second
 fix | Jag vaknade på sju. | Jag vaknade klockan sju. | Use klockan for clock times. | my-mistake, time-words
 fix | Vi tog tågen hem. | Vi tog tåget hem. | Tåg is an ett-word, so tåget. | my-mistake, spelling
 fix | Vi åkte talback hem. | Vi åkte tillbaka hem. | Tillbaka has ill and ends in -a. | my-mistake, spelling, watch-spelling
-fix | Igår gjorde jag till en match. | Igår gick jag på en match. | Gå på means go to an event; göra means do or make. | my-mistake
+fix | I går gjorde jag till en match. | I går gick jag på en match. | Gå på means go to an event; göra means do or make. | my-mistake
 fix | Jag vill kaffe. | Jag vill ha kaffe. | Use vill ha before a noun. | modals
-fix | Imorgon jag kan inte komma. | Imorgon kan jag inte komma. | The modal takes seat 2 after a time word. | modals, verb-second, negation
+fix | I morgon jag kan inte komma. | I morgon kan jag inte komma. | The modal takes seat 2 after a time word. | modals, verb-second, negation
 
 ### Reorder
-reorder | ringa / vill / jag / henne / imorgon (Tomorrow I want to call her.) | Imorgon vill jag ringa henne. // Jag vill ringa henne imorgon. | Modal in seat 2, infinitive last. | word-order, modals, pronouns
-reorder | inte / kan / jag / komma / idag (I cannot come today.) | Jag kan inte komma idag. // Idag kan jag inte komma. | Inte follows the modal. | word-order, negation, modals
+reorder | ringa / vill / jag / henne / i morgon (Tomorrow I want to call her.) | I morgon vill jag ringa henne. // Jag vill ringa henne i morgon. | Modal in seat 2, infinitive last. | word-order, modals, pronouns
+reorder | inte / kan / jag / komma / i dag (I cannot come today.) | Jag kan inte komma i dag. // I dag kan jag inte komma. | Inte follows the modal. | word-order, negation, modals
 reorder | du / hjälpa / kan / mig (Can you help me?) | Kan du hjälpa mig? | Yes/no question: modal first. | word-order, questions, modals
 reorder | måste / vi / gå / nu / hem (We have to go home now.) | Vi måste gå hem nu. // Nu måste vi gå hem. | Modal in seat 2. | word-order, verb-second, modals
 reorder | sedan / tog / vi / tåget / hem (Then we took the train home.) | Sedan tog vi tåget hem. | Verb second after sedan. | word-order, verb-second
@@ -154,11 +153,11 @@ reorder | sedan / tog / vi / tåget / hem (Then we took the train home.) | Sedan
 ### Translate
 translate | I know a little Swedish. | Jag kan lite svenska. | Kunna can mean know a skill. | modals
 translate | Can I have a cinnamon bun too? | Kan jag få en kanelbulle också? | Kan jag få is the everyday request. | modals, questions
-translate | She wants to meet him tomorrow. | Hon vill träffa honom imorgon. // Imorgon vill hon träffa honom. | Object form honom after the infinitive. | modals, pronouns
-translate | We could not come yesterday. | Vi kunde inte komma igår. // Igår kunde vi inte komma. | Only the modal goes in the past. | modals, negation
+translate | She wants to meet him tomorrow. | Hon vill träffa honom i morgon. // I morgon vill hon träffa honom. | Object form honom after the infinitive. | modals, pronouns
+translate | We could not come yesterday. | Vi kunde inte komma i går. // I går kunde vi inte komma. | Only the modal goes in the past. | modals, negation
 translate | My children want to call grandma. | Mina barn vill ringa mormor. | Mina barn is plural. | modals, pronouns
 translate | He gave me a present. | Han gav mig en present. | The person comes first: gav mig en present. | pronouns, irregular
-translate | Yesterday I slept all day. | Igår sov jag hela dagen. // Jag sov hela dagen igår. | Sova is irregular: sov. | irregular, time-words
+translate | Yesterday I slept all day. | I går sov jag hela dagen. // Jag sov hela dagen i går. | Sova is irregular: sov. | irregular, time-words
 translate | Did you take the train home? | Tog du tåget hem? | Yes/no question: verb first. | questions, irregular
 translate | I would like a coffee, please. | Jag skulle vilja ha en kaffe, tack. | Skulle vilja ha is the polite form. | modals, phrases
 translate | Can I pay by card? | Kan jag betala med kort? | Kan jag plus the infinitive. | modals, questions

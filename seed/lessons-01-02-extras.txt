@@ -3,10 +3,10 @@
 # Same formats as grammar-lessons-01-02.txt. Loaded by "Load starter lessons".
 
 ### Lesson 01 – -ade verbs
-arbeta | work | arbetar, arbetade | Igår arbetade jag i butiken. = Yesterday I worked at the store. | verbs, -ade, lesson-01
+arbeta | work | arbetar, arbetade | I går arbetade jag i butiken. = Yesterday I worked at the store. | verbs, -ade, lesson-01
 jobba | work (casual) | jobbar, jobbade | | verbs, -ade, lesson-01
 laga | cook, fix | lagar, lagade | Hon lagade middag. = She cooked dinner. | verbs, -ade, lesson-01
-städa | clean | städar, städade | Igår städade vi. = We cleaned yesterday. | verbs, -ade, lesson-01
+städa | clean | städar, städade | I går städade vi. = We cleaned yesterday. | verbs, -ade, lesson-01
 diska | do the dishes | diskar, diskade | De diskade. = They did the dishes. | verbs, -ade, lesson-01
 tvätta | wash | tvättar, tvättade | Han tvättade kläderna. = He washed the clothes. | verbs, -ade, lesson-01
 handla | shop | handlar, handlade | I förrgår handlade vi. = The day before yesterday we shopped. | verbs, -ade, lesson-01
@@ -28,7 +28,7 @@ vänta | wait | väntar, väntade | Jag väntade på bussen. = I waited for the 
 köpa | buy | köper, köpte | Jag köpte en bok. = I bought a book. | verbs, -te, lesson-02
 läsa | read | läser, läste | Hon läste tidningen. = She read the newspaper. | verbs, -te, lesson-02
 resa | travel | reser, reste | Förra veckan reste de till Sverige. = Last week they traveled to Sweden. | verbs, -te, lesson-02
-åka | go, ride | åker, åkte | Igår åkte vi till bergen. = Yesterday we went to the mountains. | verbs, -te, lesson-02
+åka | go, ride | åker, åkte | I går åkte vi till bergen. = Yesterday we went to the mountains. | verbs, -te, lesson-02
 tänka | think | tänker, tänkte | Jag tänkte på dig. = I thought of you. | verbs, -te, lesson-02
 tycka | think, find | tycker, tyckte | Hon tyckte om pizza. = She liked pizza. | verbs, -te, lesson-02
 leka | play | leker, lekte | | verbs, -te, lesson-02
@@ -51,11 +51,11 @@ middag | dinner | | Jag lagade middag. = I cooked dinner. | watch-spelling, less
 fotboll | football (soccer) | | Förra veckan spelade de fotboll. = Last week they played football. | watch-spelling, lesson-01
 affären | the store | | | watch-spelling, lesson-02
 musik | music | | Vi lyssnade på musik. = We listened to music. | watch-spelling, lesson-01
-ledig | off, free from work | | Jag var ledig igår. = I was off yesterday. | watch-spelling, vocabulary
+ledig | off, free from work | | Jag var ledig i går. = I was off yesterday. | watch-spelling, vocabulary
 och | and | | Jag frågade och han svarade. = I asked and he answered. | watch-spelling, lesson-01
 
 ### Grammar – Past tense & word order
-fix | Igår köpade jag en bok. | Igår köpte jag en bok. | Köpa is a -te verb, not an -ade verb. | -te, past-tense, lesson-02
+fix | I går köpade jag en bok. | I går köpte jag en bok. | Köpa is a -te verb, not an -ade verb. | -te, past-tense, lesson-02
 fix | Hon läsde tidningen. | Hon läste tidningen. | The stem läs ends in s, so -te. | -te, past-tense, lesson-02
 fix | Jag ringte min mamma. | Jag ringde min mamma. | The stem ring ends in g, so -de. | -de, past-tense, lesson-02
 fix | Vi boade i Sverige. | Vi bodde i Sverige. | bo → bodde (double d). | -de, past-tense, lesson-02
@@ -65,8 +65,8 @@ translate | We listened to music. | Vi lyssnade på musik. | -ade verb. Lyssna h
 translate | Last week they played football. | Förra veckan spelade de fotboll. // De spelade fotboll förra veckan. | Verb second after the time word. | translate, verb-second, lesson-01
 translate | The day before yesterday we shopped. | I förrgår handlade vi. // Vi handlade i förrgår. | Verb second after the time word. | translate, verb-second, lesson-01
 translate | Last week he listened to music. | Förra veckan lyssnade han på musik. // Han lyssnade på musik förra veckan. | Verb second. Watch han vs hon. | translate, verb-second, lesson-01
-translate | Yesterday I read a book. | Igår läste jag en bok. // Jag läste en bok igår. | -te verb + verb second. | translate, -te, lesson-02
-translate | She called yesterday. | Hon ringde igår. // Igår ringde hon. | -de verb: the stem ring ends in g. | translate, -de, lesson-02
+translate | Yesterday I read a book. | I går läste jag en bok. // Jag läste en bok i går. | -te verb + verb second. | translate, -te, lesson-02
+translate | She called yesterday. | Hon ringde i går. // I går ringde hon. | -de verb: the stem ring ends in g. | translate, -de, lesson-02
 translate | We lived in Denver. | Vi bodde i Denver. | bo → bodde. | translate, -de, lesson-02
 translate | Last week they traveled to Sweden. | Förra veckan reste de till Sverige. // De reste till Sverige förra veckan. | -te verb + verb second. | translate, -te, lesson-02
 translate | I bought a book and read it. | Jag köpte en bok och läste den. | Two -te verbs. | translate, -te, lesson-02

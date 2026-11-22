@@ -69,7 +69,7 @@ A finished line looks like this:
 ```
 hund | dog | en hund, hunden, hundar | Hunden springer i parken. = The dog runs in the park. | animals
 äta | eat | äter, åt, ätit | Vi äter middag klockan sex. = We eat dinner at six. | verbs, food
-fix | Igår jag arbetade. | Igår arbetade jag. | Verb in seat 2 after a time word. | my-mistake, verb-second
+fix | I går jag arbetade. | I går arbetade jag. | Verb in seat 2 after a time word. | my-mistake, verb-second
 reorder | köpte / jag / en bok / i lördags (Last Saturday I bought a book.) | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order
 ```
 

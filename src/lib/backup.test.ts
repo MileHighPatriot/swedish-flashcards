@@ -77,7 +77,7 @@ describe('JSON backup', () => {
 
   it('merge keeps whichever side changed a card last', async () => {
     await loadStarterLessons([seed('grammar-lessons-01-02.txt')]);
-    const note = (await listNotes()).find((n) => n.swedish === 'igår')!;
+    const note = (await listNotes()).find((n) => n.swedish === 'i går')!;
     const file = JSON.parse(JSON.stringify(await exportBackup()));
 
     await new Promise((r) => setTimeout(r, 5));

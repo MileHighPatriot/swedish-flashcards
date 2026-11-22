@@ -26,7 +26,8 @@ import { shuffled } from '../lib/queue';
 import { TOPICS, topicFor, topicTitle } from '../lib/topics';
 import { VERB_FORM_LABELS, drillVerbs, lessonLabel, pastRule, type DrillVerb, type VerbForm } from '../lib/verbdrill';
 import { computeWeakSpots, exportForClaude, weakSpotCardIds } from '../lib/weakspots';
-import { TypedInput, VerdictBox, type Answer } from '../study/CardView';
+import { buildReasonContext } from '../lib/reasons';
+import { TypedInput, VerdictBox, withReason, type Answer } from '../study/CardView';
 
 // ---------- a notes page ----------
 
@@ -480,11 +481,12 @@ interface DrillResult {
 }
 
 export function VerbDrill() {
-  const verbs = useLiveQuery(async () => {
+  const loaded = useLiveQuery(async () => {
     const [notes, cards] = await Promise.all([listNotes(), listCards()]);
     const active = new Set(cards.filter((c) => !c.suspended).map((c) => c.noteId));
-    return drillVerbs(notes, new Set(notes.filter((n) => !active.has(n.id)).map((n) => n.id)));
+    return { verbs: drillVerbs(notes, new Set(notes.filter((n) => !active.has(n.id)).map((n) => n.id))), reasons: buildReasonContext(notes) };
   }, []);
+  const verbs = loaded?.verbs;
   const lessons = useMemo(() => [...new Set((verbs ?? []).map((v) => v.lesson))].sort(), [verbs]);
   const [picked, setPicked] = useState<string[] | null>(null);
   const [size, setSize] = useState(10);
@@ -584,7 +586,7 @@ export function VerbDrill() {
   const formName = VERB_FORM_LABELS[form].replace(/ \(.*$/, '');
   const submit = (typed: string, skipped = false) => {
     const check = checkAnswer(typed, [target]);
-    const a: Answer = { typed, check: skipped ? { ...check, verdict: 'wrong' } : check };
+    const a: Answer = withReason({ typed, check: skipped ? { ...check, verdict: 'wrong' } : check }, loaded?.reasons ?? null);
     setAnswer(a);
     setResults((r) => [...r, { verb, answer: a }]);
     if (a.check?.verdict === 'wrong')

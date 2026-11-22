@@ -8,7 +8,7 @@ import { parseLesson } from '../lib/parser';
 import { dateKey, journalForClaude } from '../lib/practice';
 
 // Questions from my own lessons, to get a first sentence going.
-const STARTERS = ['Vad gjorde du igår?', 'Hur var din dag?', 'Vad gjorde du i helgen?'];
+const STARTERS = ['Vad gjorde du i går?', 'Hur var din dag?', 'Vad gjorde du i helgen?'];
 
 const longDate = (key: string) => new Date(`${key}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -122,7 +122,7 @@ export function Journal() {
             className="paste-box"
             rows={5}
             value={feedback}
-            placeholder={'Paste the whole reply here. Lines like\nfix | Igår jag gick hem. | Igår gick jag hem. | Verb in seat 2. | my-mistake, verb-second\nbecome cards.'}
+            placeholder={'Paste the whole reply here. Lines like\nfix | I går jag gick hem. | I går gick jag hem. | Verb in seat 2. | my-mistake, verb-second\nbecome cards.'}
             onChange={(e) => setFeedback(e.target.value)}
           />
         </label>

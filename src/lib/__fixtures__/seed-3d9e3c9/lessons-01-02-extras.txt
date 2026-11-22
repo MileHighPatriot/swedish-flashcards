@@ -1,0 +1,93 @@
+# Extra starter content taken from the Lesson 1 and Lesson 2 printables
+# (verb tables, dialogue, worksheet parts and answer keys).
+# Same formats as grammar-lessons-01-02.txt. Loaded by "Load starter lessons".
+
+### Lesson 01 – -ade verbs
+arbeta | work | arbetar, arbetade | Igår arbetade jag i butiken. = Yesterday I worked at the store. | verbs, -ade, lesson-01
+jobba | work (casual) | jobbar, jobbade | | verbs, -ade, lesson-01
+laga | cook, fix | lagar, lagade | Hon lagade middag. = She cooked dinner. | verbs, -ade, lesson-01
+städa | clean | städar, städade | Igår städade vi. = We cleaned yesterday. | verbs, -ade, lesson-01
+diska | do the dishes | diskar, diskade | De diskade. = They did the dishes. | verbs, -ade, lesson-01
+tvätta | wash | tvättar, tvättade | Han tvättade kläderna. = He washed the clothes. | verbs, -ade, lesson-01
+handla | shop | handlar, handlade | I förrgår handlade vi. = The day before yesterday we shopped. | verbs, -ade, lesson-01
+titta | look, watch | tittar, tittade | Du tittade på tv. = You watched TV. | verbs, -ade, lesson-01
+lyssna | listen | lyssnar, lyssnade | Vi lyssnade på musik. = We listened to music. | verbs, -ade, lesson-01, watch-spelling
+prata | talk | pratar, pratade | Jag städade och jag pratade med kunder. = I cleaned and I talked with customers. | verbs, -ade, lesson-01
+fråga | ask | frågar, frågade | Jag frågade och han svarade. = I asked and he answered. | verbs, -ade, lesson-01
+svara | answer | svarar, svarade | | verbs, -ade, lesson-01
+öppna | open | öppnar, öppnade | Jag öppnade dörren. = I opened the door. | verbs, -ade, lesson-01
+träna | work out | tränar, tränade | | verbs, -ade, lesson-01
+duscha | shower | duschar, duschade | I morse duschade jag. = This morning I showered. | verbs, -ade, lesson-01
+baka | bake | bakar, bakade | Vi bakade kanelbullar i lördags. = We baked cinnamon buns last Saturday. | verbs, -ade, lesson-01
+vila | rest | vilar, vilade | Hon vilade hela dagen. = She rested all day. | verbs, -ade, lesson-01
+älska | love | älskar, älskade | | verbs, -ade, lesson-01
+spela | play | spelar, spelade | Förra veckan spelade de fotboll. = Last week they played football. | verbs, -ade, lesson-01
+vänta | wait | väntar, väntade | Jag väntade på bussen. = I waited for the bus. | verbs, -ade, lesson-01
+
+### Lesson 02 – -te and -de verbs
+köpa | buy | köper, köpte | Jag köpte en bok. = I bought a book. | verbs, -te, lesson-02
+läsa | read | läser, läste | Hon läste tidningen. = She read the newspaper. | verbs, -te, lesson-02
+resa | travel | reser, reste | Förra veckan reste de till Sverige. = Last week they traveled to Sweden. | verbs, -te, lesson-02
+åka | go, ride | åker, åkte | Igår åkte vi till bergen. = Yesterday we went to the mountains. | verbs, -te, lesson-02
+tänka | think | tänker, tänkte | Jag tänkte på dig. = I thought of you. | verbs, -te, lesson-02
+tycka | think, find | tycker, tyckte | Hon tyckte om pizza. = She liked pizza. | verbs, -te, lesson-02
+leka | play | leker, lekte | | verbs, -te, lesson-02
+försöka | try | försöker, försökte | | verbs, -te, lesson-02
+väcka | wake (someone) | väcker, väckte | | verbs, -te, lesson-02
+röka | smoke | röker, rökte | Jag rökte en cigarr. = I smoked a cigar. | verbs, -te, lesson-02
+ringa | call | ringer, ringde | Jag ringde min mamma. = I called my mom. | verbs, -de, lesson-02
+höra | hear | hör, hörde | Hörde du mig? = Did you hear me? | verbs, -de, lesson-02
+köra | drive | kör, körde | Han körde bilen. = He drove the car. | verbs, -de, lesson-02
+leva | live (be alive) | lever, levde | | verbs, -de, lesson-02
+bygga | build | bygger, byggde | Förra veckan byggde de ett hus. = Last week they built a house. | verbs, -de, lesson-02
+stänga | close | stänger, stängde | Hon stängde dörren. = She closed the door. | verbs, -de, lesson-02
+hyra | rent | hyr, hyrde | Vi hyrde en lägenhet i Sverige. = We rented an apartment in Sweden. | verbs, -de, lesson-02
+känna | feel, know | känner, kände | | verbs, -de, lesson-02
+bo | live (reside) | bor, bodde | Vi bodde i Denver. = We lived in Denver. | verbs, -de, lesson-02
+tro | believe | tror, trodde | | verbs, -de, lesson-02
+
+### Spelling watch-list
+middag | dinner | | Jag lagade middag. = I cooked dinner. | watch-spelling, lesson-01
+fotboll | football (soccer) | | Förra veckan spelade de fotboll. = Last week they played football. | watch-spelling, lesson-01
+affären | the store | | | watch-spelling, lesson-02
+musik | music | | Vi lyssnade på musik. = We listened to music. | watch-spelling, lesson-01
+ledig | off, free from work | | Jag var ledig igår. = I was off yesterday. | watch-spelling, vocabulary
+och | and | | Jag frågade och han svarade. = I asked and he answered. | watch-spelling, lesson-01
+
+### Grammar – Past tense & word order
+fix | Igår köpade jag en bok. | Igår köpte jag en bok. | Köpa is a -te verb, not an -ade verb. | -te, past-tense, lesson-02
+fix | Hon läsde tidningen. | Hon läste tidningen. | The stem läs ends in s, so -te. | -te, past-tense, lesson-02
+fix | Jag ringte min mamma. | Jag ringde min mamma. | The stem ring ends in g, so -de. | -de, past-tense, lesson-02
+fix | Vi boade i Sverige. | Vi bodde i Sverige. | bo → bodde (double d). | -de, past-tense, lesson-02
+fix | I lördags jag åkte hem. | I lördags åkte jag hem. | Verb in seat 2 after a time word. | verb-second, word-order, lesson-02
+translate | She cooked dinner. | Hon lagade middag. | -ade verb. Watch hon vs han and the double d in middag. | translate, lesson-01
+translate | We listened to music. | Vi lyssnade på musik. | -ade verb. Lyssna has a double s. | translate, lesson-01, watch-spelling
+translate | Last week they played football. | Förra veckan spelade de fotboll. // De spelade fotboll förra veckan. | Verb second after the time word. | translate, verb-second, lesson-01
+translate | The day before yesterday we shopped. | I förrgår handlade vi. // Vi handlade i förrgår. | Verb second after the time word. | translate, verb-second, lesson-01
+translate | Last week he listened to music. | Förra veckan lyssnade han på musik. // Han lyssnade på musik förra veckan. | Verb second. Watch han vs hon. | translate, verb-second, lesson-01
+translate | Yesterday I read a book. | Igår läste jag en bok. // Jag läste en bok igår. | -te verb + verb second. | translate, -te, lesson-02
+translate | She called yesterday. | Hon ringde igår. // Igår ringde hon. | -de verb: the stem ring ends in g. | translate, -de, lesson-02
+translate | We lived in Denver. | Vi bodde i Denver. | bo → bodde. | translate, -de, lesson-02
+translate | Last week they traveled to Sweden. | Förra veckan reste de till Sverige. // De reste till Sverige förra veckan. | -te verb + verb second. | translate, -te, lesson-02
+translate | I bought a book and read it. | Jag köpte en bok och läste den. | Two -te verbs. | translate, -te, lesson-02
+reorder | lagade / vi / middag / i förrgår (The day before yesterday we cooked dinner.) | I förrgår lagade vi middag. // Vi lagade middag i förrgår. | Verb second. | word-order, lesson-01
+reorder | köpte / jag / en bok / i lördags (Last Saturday I bought a book.) | I lördags köpte jag en bok. // Jag köpte en bok i lördags. | Verb second. | word-order, lesson-02
+reorder | reste / vi / till Sverige / förra året (Last year we traveled to Sweden.) | Förra året reste vi till Sverige. // Vi reste till Sverige förra året. | Verb second. | word-order, lesson-02
+reorder | åkte / ni / till bergen (Did you go to the mountains?) | Åkte ni till bergen? | Yes/no question: verb first. | questions, lesson-02
+
+### Grammar – My mistakes
+fix | gåt | gick | Irregular past of gå. Comes in Lesson 3. | my-mistake, irregular, lesson-03
+
+### Time words & phrases
+förra året | last year | | Förra året reste vi till Sverige. = Last year we traveled to Sweden. | time-words
+i söndags | last Sunday | | Vi åkte till bergen i söndags. = We went to the mountains last Sunday. | time-words
+
+### Conversation phrases
+Vad gjorde du i helgen? | What did you do this past weekend? | | Learn as a ready-made question. | phrases, conversation, lesson-02
+I lördags köpte jag en bok och läste den på kvällen. | Last Saturday I bought a book and read it in the evening. | | | phrases, conversation, lesson-02
+Vad handlade den om? | What was it about? | | | phrases, conversation, lesson-02
+Den handlade om Sverige. | It was about Sweden. | | | phrases, conversation, lesson-02
+Jag tänkte på dig! | I thought of you! | | | phrases, conversation, lesson-02
+Åh, vad fint! | Oh, how sweet! | | | phrases, conversation, lesson-02
+Åkte ni någonstans? | Did you go anywhere? | | | phrases, conversation, lesson-02
+Ja, vi åkte till bergen i söndags. | Yes, we went to the mountains last Sunday. | | | phrases, conversation, lesson-02

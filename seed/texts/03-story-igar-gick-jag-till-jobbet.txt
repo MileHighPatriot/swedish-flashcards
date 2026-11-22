@@ -1,7 +1,7 @@
-# Lesson 03 – Igår gick jag till jobbet
+# Lesson 03 – I går gick jag till jobbet
 # The model paragraph from the Lesson 3 printable.
 # Lines:  Swedish | English
-Igår gick jag till jobbet. | Yesterday I went to work.
+I går gick jag till jobbet. | Yesterday I went to work.
 Jag åt lunch med en kollega. | I ate lunch with a colleague.
 Efter jobbet såg jag en film. | After work I saw a movie.
 Sedan kom jag hem klockan nio och tog en dusch. | Then I got home at nine and took a shower.

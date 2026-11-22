@@ -51,13 +51,13 @@ hund | dog | en hund, hundar | Hunden springer i parken. = The dog runs in the p
 Vad bra! | How nice! | | | conversation
 
 ### Grammar rules
-rule | Where does the verb go after a time word? | Seat 2: Igår arbetade jag. | Verb second. | verb-second
+rule | Where does the verb go after a time word? | Seat 2: I går arbetade jag. | Verb second. | verb-second
 
 ### Fix the error
-fix | Igår jag arbetade. | Igår arbetade jag. | Verb in seat 2. | verb-second
+fix | I går jag arbetade. | I går arbetade jag. | Verb in seat 2. | verb-second
 
 ### Reorder
-reorder | arbetade / jag / igår | Igår arbetade jag. // Jag arbetade igår. | Verb second. | word-order
+reorder | arbetade / jag / i går | I går arbetade jag. // Jag arbetade i går. | Verb second. | word-order
 
 ### Translate
 translate | Did you read the book? | Läste du boken? | Verb first. | questions`;

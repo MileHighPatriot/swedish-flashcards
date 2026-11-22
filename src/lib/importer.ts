@@ -6,7 +6,9 @@ import extrasText from '../../seed/lessons-01-02-extras.txt?raw';
 import { db } from '../db/db';
 import { SEED_TIME, alive, createDeck, createNotes, emptyNoteInput, findDeckByName, setNoteSuspended, updateNote, type NoteInput } from '../db/repo';
 import type { Deck, DeckCategory, Draft, ID, Note, VocabCardType } from '../db/types';
+import { SEED_ID_ALIASES } from '../data/seedIdAliases';
 import { parseLesson, splitHint, type ParseResult, type ParsedItem } from './parser';
+import { twoWordTime } from './timewords';
 
 export interface DeckSpec {
   name: string;
@@ -59,13 +61,31 @@ export interface ImportResult {
 
 const norm = (s: string) => s.normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
 
-/** Two cards with the same key are the same card. */
-export function dupKey(d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): string {
+/** The key exactly as the text is written. Built-in ids are made from this one. */
+function rawKey(d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): string {
   if (d.kind === 'vocab') return `vocab:${norm(d.swedish)}`;
   // The English hint on a reorder prompt is not part of the card's identity.
   const prompt = d.grammar?.prompt ?? '';
   return `${d.kind}:${norm(d.kind === 'reorder' ? splitHint(prompt).text : prompt)}`;
 }
+
+/** Two cards with the same key are the same card. "Igår" and "I går" count as the same spelling. */
+export function dupKey(d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): string {
+  return twoWordTime(rawKey(d));
+}
+
+/**
+ * The fixed id of a built-in card. Ids were first handed out when the seed
+ * files still wrote "igår" as one word; the alias table keeps those ids now
+ * that the files say "i går", so no device ever sees a card change identity.
+ */
+export function seedNoteId(deckName: string, d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): ID {
+  const id = seedNoteIdRaw(deckName, d);
+  return SEED_ID_ALIASES[id] ?? id;
+}
+
+/** The id straight from the text, before the alias table. Only the alias generator needs this. */
+export const seedNoteIdRaw = (deckName: string, d: Pick<Draft, 'kind' | 'swedish' | 'grammar'>): ID => `seed:${norm(deckName)}:${rawKey(d)}`;
 
 export const pad2 = (n: number) => String(n).padStart(2, '0');
 
@@ -240,7 +260,7 @@ export async function applyPlan(groups: PlanGroup[], opts: ImportOptions): Promi
     }
     // Built-in rows that already exist under their fixed id are left alone, so count what was really made.
     if (toAdd.length)
-      result.added += (await createNotes(toAdd, opts.seed ? { idFor: (n) => `seed:${norm(deck.name)}:${dupKey(n)}`, at: SEED_TIME } : {})).length;
+      result.added += (await createNotes(toAdd, opts.seed ? { idFor: (n) => seedNoteId(deck.name, n), at: SEED_TIME } : {})).length;
     result.perDeck[deck.name] = (result.perDeck[deck.name] ?? 0) + active.length;
   }
   return result;
@@ -296,6 +316,9 @@ export const STARTER_TEXTS: string[] = [starterText, extrasText];
 
 /** Built-in rows are stamped inside this window; anything later was edited by me. */
 const SEED_WINDOW = 1_000_000;
+/** The stamp of a built-in row that a revision changed: still inside the window, so it never uploads. */
+const REFRESH_STAMP = SEED_TIME + SEED_WINDOW - 1;
+const untouched = (row: { updatedAt: number }) => row.updatedAt < SEED_TIME + SEED_WINDOW;
 
 /**
  * Bring built-in grammar cards up to date when the starter files change (for
@@ -309,11 +332,11 @@ export async function refreshStarterCards(texts: string[] = STARTER_TEXTS): Prom
     for (const group of groupStarter(parseLesson(text))) {
       for (const { draft } of group.items) {
         if (!draft.grammar) continue;
-        const note = await db.notes.get(`seed:${norm(group.deck.name)}:${dupKey(draft)}`);
+        const note = await db.notes.get(seedNoteId(group.deck.name, draft));
         if (!note?.grammar || note.deletedAt != null || note.updatedAt >= SEED_TIME + SEED_WINDOW) continue;
         const { prompt, answer, explanation } = draft.grammar;
         if (note.grammar.prompt === prompt && note.grammar.answer === answer && note.grammar.explanation === explanation) continue;
-        await db.notes.update(note.id, { grammar: { ...note.grammar, prompt, answer, explanation }, updatedAt: SEED_TIME + SEED_WINDOW - 1 });
+        await db.notes.update(note.id, { grammar: { ...note.grammar, prompt, answer, explanation }, updatedAt: REFRESH_STAMP });
         changed++;
       }
     }
@@ -430,4 +453,99 @@ export async function loadBuiltInLesson(lesson: BuiltInLesson): Promise<LessonRe
 
   const result = await applyPlan(plan, opts);
   return { ...result, merged: result.merged + merged, skipped: result.skipped - moved - merged, moved, errors: parsed.errors };
+}
+
+// ---------- revisions of built-in content ----------
+
+/**
+ * Built-in cards that were wrong and are taken out again. A card is only ever
+ * removed by being listed here; one that is merely missing from a file is left alone.
+ */
+export const REMOVED_SEED_IDS: ID[] = [
+  // "Vi såg på film" is correct Swedish, so this fix card taught a mistake.
+  'seed:grammar – my mistakes:fix:vi såg på film.',
+];
+
+const VOCAB_FIELDS = ['swedish', 'english', 'pos', 'exampleSv', 'exampleEn', 'notes', 'noun', 'verb', 'adjective'] as const;
+
+/** Every built-in card as the seed files describe it now, with its fixed id. */
+export function builtInDrafts(starter: string[] = STARTER_TEXTS, lessons: BuiltInLesson[] = BUILT_IN_LESSONS): { id: ID; draft: Draft }[] {
+  const groups = [
+    ...starter.flatMap((text) => groupStarter(parseLesson(text))),
+    ...lessons.flatMap((l) => groupLesson(parseLesson(l.text), l.number, l.name)),
+  ];
+  // Two files can hold the same card (a mistake repeated in a later lesson). The
+  // first file wins, exactly as it does when the lessons are loaded in order.
+  const seen = new Set<ID>();
+  return groups.flatMap((g) =>
+    g.items.flatMap(({ draft }) => {
+      const id = seedNoteId(g.deck.name, draft);
+      if (seen.has(id)) return [];
+      seen.add(id);
+      return [{ id, draft }];
+    }),
+  );
+}
+
+/**
+ * Bring the built-in cards on this device up to the current seed files.
+ *   - A card I have never edited gets the new wording in place (words and grammar
+ *     alike). Its id, its sibling cards and its review history stay as they are,
+ *     and the new stamp is fixed, so every device ends up identical and nothing uploads.
+ *   - Cards on the removal list are soft-deleted.
+ *   - Every built-in card, edited or not, gets "igår" style time words written as
+ *     two words. That is a spelling change only, so my own edits survive it.
+ * Returns how many cards changed.
+ */
+export async function refreshBuiltIn(starter: string[] = STARTER_TEXTS, lessons: BuiltInLesson[] = BUILT_IN_LESSONS): Promise<number> {
+  let changed = 0;
+  await db.transaction('rw', db.notes, db.cards, async () => {
+    for (const { id, draft } of builtInDrafts(starter, lessons)) {
+      const note = await db.notes.get(id);
+      if (!note || note.deletedAt != null || !untouched(note) || note.kind !== draft.kind) continue;
+      const patch: Partial<Note> = {};
+      if (draft.kind === 'vocab') {
+        for (const f of VOCAB_FIELDS) if (JSON.stringify(note[f]) !== JSON.stringify(draft[f])) (patch as Record<string, unknown>)[f] = draft[f];
+      } else if (note.grammar && draft.grammar) {
+        const { prompt, answer, explanation } = draft.grammar;
+        if (note.grammar.prompt !== prompt || note.grammar.answer !== answer || note.grammar.explanation !== explanation)
+          patch.grammar = { ...note.grammar, prompt, answer, explanation };
+      }
+      if (Object.keys(patch).length === 0) continue;
+      await db.notes.update(id, { ...patch, updatedAt: REFRESH_STAMP });
+      changed++;
+    }
+
+    for (const id of REMOVED_SEED_IDS) {
+      const note = await db.notes.get(id);
+      if (!note || note.deletedAt != null) continue;
+      const now = Date.now();
+      // An untouched row keeps a seed stamp; one with history is deleted like any other row, so the delete syncs.
+      const stamp = (row: { updatedAt: number }) => (untouched(row) ? REFRESH_STAMP : now);
+      await db.notes.update(id, { deletedAt: stamp(note), updatedAt: stamp(note) });
+      await db.cards.where('noteId').equals(id).modify((c) => {
+        if (c.deletedAt != null) return;
+        c.deletedAt = c.updatedAt = stamp(c);
+      });
+      changed++;
+    }
+
+    // Built-in cards that a later lesson moved or merged carry a newer stamp, so
+    // the pass above skips them. Their time words are still brought into line.
+    await db.notes
+      .where('id')
+      .startsWith('seed:')
+      .modify((n) => {
+        if (n.deletedAt != null) return;
+        const before = JSON.stringify([n.swedish, n.exampleSv, n.notes, n.grammar]);
+        n.swedish = twoWordTime(n.swedish);
+        n.exampleSv = twoWordTime(n.exampleSv);
+        n.notes = twoWordTime(n.notes);
+        if (n.grammar) n.grammar = { ...n.grammar, prompt: twoWordTime(n.grammar.prompt), answer: twoWordTime(n.grammar.answer), explanation: twoWordTime(n.grammar.explanation) };
+        if (JSON.stringify([n.swedish, n.exampleSv, n.notes, n.grammar]) === before) return;
+        if (untouched(n)) n.updatedAt = REFRESH_STAMP;
+        changed++;
+      });
+  });
+  return changed;
 }

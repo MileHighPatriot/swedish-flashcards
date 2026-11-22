@@ -1838,3 +1838,11 @@ a.pill-btn {
 .scene p + p {
   margin-top: 0.4rem;
 }
+
+/* ---------- why an answer was wrong ---------- */
+.verdict-reason {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}

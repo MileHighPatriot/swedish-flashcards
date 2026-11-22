@@ -3,6 +3,7 @@
 
 import type { Note } from '../db/types';
 import { splitAlternatives, splitHint } from './parser';
+import { twoWordTimeTyped as twoWordTime } from './timewords';
 
 export { splitHint };
 
@@ -28,9 +29,12 @@ export interface CheckResult {
 
 const PUNCT = /[.,!?;:"“”„'’()…¿¡]/g;
 
-/** Trim, tidy spaces, drop punctuation, and ignore the case of the first letter. */
+/**
+ * Trim, tidy spaces, drop punctuation, and ignore the case of the first letter.
+ * "igår" and "i går" (and idag, imorgon, ikväll) are the same answer.
+ */
 export function canon(s: string): string {
-  const t = s.normalize('NFC').replace(PUNCT, '').replace(/\s+/g, ' ').trim();
+  const t = twoWordTime(s.normalize('NFC')).replace(PUNCT, '').replace(/\s+/g, ' ').trim();
   return t.charAt(0).toLowerCase() + t.slice(1);
 }
 
@@ -104,17 +108,34 @@ function toSegs(tokens: string[], ok: boolean[], joiner: string): Seg[] {
 export function diffAnswer(typed: string, expected: string): { typed: Seg[]; expected: Seg[] } {
   const t = typed.normalize('NFC').replace(/\s+/g, ' ').trim();
   const e = expected.normalize('NFC').replace(/\s+/g, ' ').trim();
-  if (/\s/.test(e)) {
+  if (/\s/.test(twoWordTime(e))) {
     const tw = t ? t.split(' ') : [];
     const ew = e.split(' ');
-    const key = (w: string, i: number) => {
-      const k = w.replace(PUNCT, '');
-      return i === 0 ? k.charAt(0).toLowerCase() + k.slice(1) : k;
+    // "igår" counts as the two words "i går", so either spelling lines up with the
+    // other. The marks are folded back onto the words as they were written.
+    const spread = (words: string[]) => {
+      const keys: string[] = [];
+      const from: number[] = [];
+      words.forEach((w, i) => {
+        for (const part of twoWordTime(w).split(' ')) {
+          const k = part.replace(PUNCT, '');
+          keys.push(keys.length === 0 ? k.charAt(0).toLowerCase() + k.slice(1) : k);
+          from.push(i);
+        }
+      });
+      return { keys, from };
     };
-    const tk = tw.map(key);
-    const ek = ew.map(key);
-    const [inT, inE] = lcsMarks(tk, ek, (x, y) => x === y);
-    return { typed: toSegs(tw, inT, ' '), expected: toSegs(ew, inE, ' ') };
+    const a = spread(tw);
+    const b = spread(ew);
+    const [inT, inE] = lcsMarks(a.keys, b.keys, (x, y) => x === y);
+    const fold = (count: number, from: number[], marks: boolean[]) => {
+      const ok = new Array<boolean>(count).fill(true);
+      marks.forEach((m, i) => {
+        if (!m) ok[from[i]] = false;
+      });
+      return ok;
+    };
+    return { typed: toSegs(tw, fold(tw.length, a.from, inT), ' '), expected: toSegs(ew, fold(ew.length, b.from, inE), ' ') };
   }
   const tc = [...t];
   const ec = [...e];

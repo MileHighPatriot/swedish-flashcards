@@ -4,6 +4,7 @@ import { GenderTag, formsSummary } from '../components/GenderTag';
 import { CARD_TYPE_LABELS, type Card, type Note } from '../db/types';
 import { checkAnswer, checkMeaning, checkVocab, diffAnswer, splitHint, type CheckResult, type Seg } from '../lib/check';
 import { makeCloze } from '../lib/cloze';
+import { explainError, type Reason, type ReasonContext } from '../lib/reasons';
 import { splitAlternatives, splitChunks } from '../lib/parser';
 import { shuffled } from '../lib/queue';
 import { say, speechSupported } from '../lib/speech';
@@ -14,6 +15,14 @@ import { topicFor, topicTitle } from '../lib/topics';
 export interface Answer {
   typed: string;
   check: CheckResult | null;
+  /** Why it was wrong, when the mistake is one the app can name (see lib/reasons). */
+  reason?: Reason | null;
+}
+
+/** Attach the reason for a wrong typed answer. Right and close answers pass through. */
+export function withReason(answer: Answer, ctx: ReasonContext | null): Answer {
+  if (!ctx || answer.check?.verdict !== 'wrong' || !answer.typed.trim() || answer.reason !== undefined) return answer;
+  return { ...answer, reason: explainError(answer.typed, answer.check.expected, ctx) };
 }
 
 interface FaceProps {
@@ -129,6 +138,11 @@ export function VerdictBox({ answer }: { answer: Answer | null }) {
       <p className="verdict-line" lang="sv">
         <span className="verdict-label">Correct</span> <Segs segs={c.expectedDiff} badClass="seg-miss" />
       </p>
+      {answer.reason && (
+        <p className="verdict-reason">
+          <span className="verdict-label">Why</span> {answer.reason.text}
+        </p>
+      )}
     </div>
   );
 }
