@@ -611,6 +611,40 @@ export async function seedMistakeItems(rows: SeedMistake[]): Promise<number> {
   return fresh.length;
 }
 
+// ---------- sentence builder ----------
+
+/**
+ * The translate note behind a Sentence builder sentence that is not a translate
+ * card yet (a reorder card, an example, a text line). Made on the first answer,
+ * in the "Sentence builder" grammar deck, under an id worked out from the
+ * sentence itself, so answering it again (here or on another device) never
+ * makes a second one. Returns its card, or undefined if I deleted the note.
+ */
+export async function ensureBuilderCard(input: { noteId: ID; deckId: ID; deckName: string; en: string; sv: string; explanation: string; lesson: number | null; tags: string[] }): Promise<Card | undefined> {
+  const existing = await db.notes.get(input.noteId);
+  if (!existing) {
+    const deck = await db.decks.get(input.deckId);
+    const now = Date.now();
+    if (!deck) await db.decks.add({ ...meta(now, input.deckId), name: input.deckName, category: 'grammar', lessonNumber: null, lessonName: '', description: 'Sentences I have built from English. Made by the Sentence builder.', locked: false });
+    else if (deck.deletedAt != null) await db.decks.update(deck.id, { deletedAt: null, updatedAt: now });
+    await createNotes(
+      [
+        {
+          ...emptyNoteInput(input.deckId),
+          kind: 'translate',
+          grammar: { prompt: input.en, answer: input.sv, explanation: input.explanation, topic: null },
+          tags: input.tags,
+          lessonNumber: input.lesson,
+          cardTypes: ['translate'],
+        },
+      ],
+      { idFor: () => input.noteId },
+    );
+  } else if (existing.deletedAt != null) return undefined;
+  const card = (await db.cards.where('noteId').equals(input.noteId).toArray()).find((c) => c.deletedAt == null && c.type === 'translate');
+  return card;
+}
+
 // ---------- imported lessons ----------
 
 export async function listLessons(): Promise<Lesson[]> {
