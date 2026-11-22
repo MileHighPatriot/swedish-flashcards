@@ -18,6 +18,8 @@ export interface Scope {
   deckId?: ID;
   category?: DeckCategory;
   tag?: string;
+  /** Any of these tags (e.g. every lesson of the current plan week). */
+  tags?: string[];
 }
 
 export interface QueueOptions extends Scope {
@@ -65,6 +67,7 @@ export function cardsInScope(input: Pick<QueueInput, 'cards' | 'notes' | 'decks'
   const notes = new Map(input.notes.filter((n) => n.deletedAt == null).map((n) => [n.id, n]));
   const decks = new Map(input.decks.filter((d) => d.deletedAt == null).map((d) => [d.id, d]));
   const tag = scope.tag?.toLowerCase();
+  const anyOf = scope.tags ? new Set(scope.tags.map((t) => t.toLowerCase())) : null;
   return input.cards.filter((c) => {
     if (c.deletedAt != null || c.suspended) return false;
     const note = notes.get(c.noteId);
@@ -73,6 +76,7 @@ export function cardsInScope(input: Pick<QueueInput, 'cards' | 'notes' | 'decks'
     if (scope.deckId && c.deckId !== scope.deckId) return false;
     if (scope.category && (deck.category ?? 'vocab') !== scope.category) return false;
     if (tag && !note.tags.some((t) => t.toLowerCase() === tag)) return false;
+    if (anyOf && !note.tags.some((t) => anyOf.has(t.toLowerCase()))) return false;
     return true;
   });
 }

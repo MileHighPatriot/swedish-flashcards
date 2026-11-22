@@ -1846,3 +1846,12 @@ a.pill-btn {
   border-top: 1px solid var(--border);
   color: var(--text);
 }
+
+/* ---------- B2 plan line, my mistakes ---------- */
+.plan-line {
+  margin: 0 0 0.75rem;
+}
+.mistake-line {
+  margin-top: 0.25rem;
+  overflow-wrap: anywhere;
+}

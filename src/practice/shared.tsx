@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { listCards, listNotes, listTexts } from '../db/repo';
 import { sentencePool, type Sentence } from '../lib/practice';
+import { buildReasonContext, type ReasonContext } from '../lib/reasons';
 import { recorderSupported, useRecorder } from '../lib/recorder';
 import { BUILT_IN_TEXTS, parseText, type ReadingText } from '../lib/texts';
 import { lessonLabel } from '../lib/verbdrill';
@@ -12,6 +13,11 @@ export function useNotes() {
     const active = new Set(cards.filter((c) => !c.suspended).map((c) => c.noteId));
     return { notes, resting: new Set(notes.filter((n) => !active.has(n.id)).map((n) => n.id)) };
   }, []);
+}
+
+/** Verb forms and noun genders from my cards, for naming why a typed answer was wrong. */
+export function useReasons(): ReasonContext | undefined {
+  return useLiveQuery(async () => buildReasonContext(await listNotes()), []);
 }
 
 export function useSentences(): Sentence[] | undefined {

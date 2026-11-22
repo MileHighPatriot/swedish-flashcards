@@ -9,7 +9,7 @@ import { SEED_TIME } from '../db/repo';
 import type { SyncMeta } from '../db/types';
 
 /** Tables that sync. Recordings (media) stay on the device they were added on. */
-export const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes', 'texts', 'journal'] as const;
+export const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes', 'texts', 'journal', 'mistakeItems', 'checkpoints', 'lessons', 'hours'] as const;
 /** The one key/value row that syncs: settings. Everything else in kv is per device. */
 const KV_STORE = 'kv';
 const SYNCED_KV = ['settings'];

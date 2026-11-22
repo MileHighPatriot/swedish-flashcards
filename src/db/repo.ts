@@ -8,13 +8,18 @@ import {
   DEFAULT_SETTINGS,
   type Card,
   type CardType,
+  type Checkpoint,
   type Deck,
   type Grade,
   type GrammarPage,
+  type HoursCategory,
+  type HoursEntry,
   type ID,
   type JournalEntry,
+  type Lesson,
   type Media,
   type Mistake,
+  type MistakeItem,
   type Note,
   type NoteKind,
   type VocabCardType,
@@ -24,6 +29,7 @@ import {
   type SyncMeta,
   type TextDoc,
 } from './types';
+import { applyCorrect, applyWrong, isActive, mistakeKey, type SeedMistake, type WrongInput } from '../lib/mistakeItems';
 import { newSchedState, studyDayEnd, studyDayStart } from '../lib/scheduler';
 import { DEFAULT_PAGES } from '../data/grammarPages';
 
@@ -477,7 +483,7 @@ export async function listJournal(): Promise<JournalEntry[]> {
 }
 
 /** One entry per day: its id is the date, so two devices writing the same day share a row. */
-export async function saveJournal(date: string, patch: Partial<Pick<JournalEntry, 'text' | 'feedback'>>): Promise<JournalEntry> {
+export async function saveJournal(date: string, patch: Partial<Pick<JournalEntry, 'text' | 'feedback' | 'prompt' | 'promptEn' | 'lessonNumber' | 'audioIds'>>): Promise<JournalEntry> {
   const now = Date.now();
   const id = `journal:${date}`;
   const existing = await db.journal.get(id);
@@ -520,6 +526,175 @@ export async function removeMistake(id: ID): Promise<void> {
 
 export async function listMistakes(): Promise<Mistake[]> {
   return alive(await db.mistakes.toArray()).sort((a, b) => b.at - a.at);
+}
+
+// ---------- my mistakes: things to fix ----------
+
+export async function listMistakeItems(): Promise<MistakeItem[]> {
+  return alive(await db.mistakeItems.toArray()).sort((a, b) => b.lastWrongAt - a.lastWrongAt);
+}
+
+/** A wrong typed answer: start an item, or send the existing one back to zero days. */
+export async function recordWrong(input: WrongInput, now = Date.now()): Promise<MistakeItem> {
+  return db.transaction('rw', db.mistakeItems, async () => {
+    const key = mistakeKey(input.correct, input.cardId, input.prompt);
+    const existing = (await db.mistakeItems.where('key').equals(key).toArray())[0];
+    const item = applyWrong(existing, input, now, newId);
+    await db.mistakeItems.put(item);
+    return item;
+  });
+}
+
+/** A right answer to an item: one more day, and retirement on the third. */
+export async function recordCorrect(id: ID, now = Date.now()): Promise<MistakeItem | undefined> {
+  const { dayStartHour } = await getSettings();
+  return db.transaction('rw', db.mistakeItems, async () => {
+    const item = await db.mistakeItems.get(id);
+    if (!item || item.deletedAt != null) return undefined;
+    const next = applyCorrect(item, now, dayStartHour);
+    if (next !== item) await db.mistakeItems.put(next);
+    return next;
+  });
+}
+
+/**
+ * Every typed answer goes through here. Wrong: it becomes (or revives) an item.
+ * Right: if this very thing is on my list, today counts for it. Close: nothing.
+ */
+export async function recordTyped(verdict: 'correct' | 'close' | 'wrong', input: WrongInput, now = Date.now()): Promise<void> {
+  if (verdict === 'wrong') {
+    if (input.typed.trim() && input.correct.trim()) await recordWrong(input, now);
+    return;
+  }
+  if (verdict !== 'correct') return;
+  const key = mistakeKey(input.correct, input.cardId, input.prompt);
+  const item = (await db.mistakeItems.where('key').equals(key).toArray()).find(isActive);
+  if (item) await recordCorrect(item.id, now);
+}
+
+export async function removeMistakeItem(id: ID): Promise<void> {
+  const now = Date.now();
+  await db.mistakeItems.update(id, { deletedAt: now, updatedAt: now });
+}
+
+/**
+ * Load my real worksheet mistakes, once. Fixed ids and seed stamps, so every
+ * device makes the same rows and none of them uploads until I answer one.
+ */
+export async function seedMistakeItems(rows: SeedMistake[]): Promise<number> {
+  const items = rows.map((r, i): MistakeItem => {
+    const key = mistakeKey(r.correct, null, r.prompt);
+    return {
+      id: `seed:mistake:${key}`,
+      createdAt: SEED_TIME + i,
+      updatedAt: SEED_TIME + i,
+      deletedAt: null,
+      key,
+      prompt: r.prompt,
+      typed: r.typed,
+      correct: r.correct,
+      reason: r.reason,
+      tags: r.tags,
+      cardId: null,
+      noteId: null,
+      source: 'seed',
+      firstWrongAt: SEED_TIME + i,
+      lastWrongAt: SEED_TIME + i,
+      timesWrong: r.timesWrong,
+      correctDays: [],
+      retiredAt: null,
+    };
+  });
+  const have = new Set((await db.mistakeItems.bulkGet(items.map((i) => i.id))).filter(Boolean).map((i) => i!.id));
+  const fresh = items.filter((i) => !have.has(i.id));
+  if (fresh.length) await db.mistakeItems.bulkAdd(fresh);
+  return fresh.length;
+}
+
+// ---------- imported lessons ----------
+
+export async function listLessons(): Promise<Lesson[]> {
+  return alive(await db.lessons.toArray()).sort((a, b) => a.number - b.number);
+}
+
+/** One row per lesson number: importing a lesson again updates it. */
+export async function saveLesson(input: Omit<Lesson, keyof SyncMeta>): Promise<Lesson> {
+  const now = Date.now();
+  const id = `lesson:${input.number}`;
+  const existing = await db.lessons.get(id);
+  const row: Lesson = { ...(existing ?? meta(now, id)), ...input, updatedAt: now, deletedAt: null };
+  await db.lessons.put(row);
+  return row;
+}
+
+// ---------- checkpoints ----------
+
+export async function listCheckpoints(): Promise<Checkpoint[]> {
+  return alive(await db.checkpoints.toArray()).sort((a, b) => a.at - b.at);
+}
+
+export async function saveCheckpoint(input: Omit<Checkpoint, keyof SyncMeta>, seed: SeedOptions = {}): Promise<Checkpoint> {
+  const row: Checkpoint = { ...meta(seed.at, seed.id), ...input };
+  if (seed.id && (await db.checkpoints.get(seed.id))) return (await db.checkpoints.get(seed.id))!;
+  await db.checkpoints.put(row);
+  return row;
+}
+
+export async function updateCheckpoint(id: ID, patch: Partial<Omit<Checkpoint, keyof SyncMeta>>): Promise<void> {
+  await db.checkpoints.update(id, { ...patch, updatedAt: Date.now() });
+}
+
+export async function deleteCheckpoint(id: ID): Promise<void> {
+  const now = Date.now();
+  await db.checkpoints.update(id, { deletedAt: now, updatedAt: now });
+}
+
+// ---------- hours log ----------
+
+/** Kept on the device, never synced or backed up: it names this device's own auto-logged rows. */
+export const DEVICE_KV = 'deviceId';
+
+export async function getDeviceId(): Promise<string> {
+  const have = await getKV<string>(DEVICE_KV);
+  if (have) return have;
+  const id = newId().slice(0, 8);
+  await setKV(DEVICE_KV, id);
+  return id;
+}
+
+export async function listHours(): Promise<HoursEntry[]> {
+  return alive(await db.hours.toArray()).sort((a, b) => a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+}
+
+export async function addHours(input: { date: string; category: HoursCategory; minutes: number; note?: string }): Promise<HoursEntry> {
+  const row: HoursEntry = { ...meta(), date: input.date, category: input.category, minutes: Math.max(0, Math.round(input.minutes)), auto: false, note: input.note ?? '' };
+  await db.hours.add(row);
+  return row;
+}
+
+export async function updateHours(id: ID, patch: Partial<Pick<HoursEntry, 'date' | 'category' | 'minutes' | 'note'>>): Promise<void> {
+  await db.hours.update(id, { ...patch, updatedAt: Date.now() });
+}
+
+export async function deleteHours(id: ID): Promise<void> {
+  const now = Date.now();
+  await db.hours.update(id, { deletedAt: now, updatedAt: now });
+}
+
+/** `auto:{deviceId}:{date}:{category}`: one row per day, category and device, so two devices never overwrite each other. */
+export const autoHoursId = (deviceId: string, date: string, category: HoursCategory) => `auto:${deviceId}:${date}:${category}`;
+
+/** Add active time a practice tool measured to this device's row for the day. */
+export async function addAutoHours(date: string, category: HoursCategory, ms: number): Promise<void> {
+  if (ms <= 0) return;
+  const id = autoHoursId(await getDeviceId(), date, category);
+  await db.transaction('rw', db.hours, async () => {
+    const now = Date.now();
+    const existing = await db.hours.get(id);
+    const total = (existing && existing.deletedAt == null ? (existing.ms ?? existing.minutes * 60000) : 0) + ms;
+    const row: HoursEntry = { ...(existing ?? meta(now, id)), date, category, minutes: Math.round((total / 60000) * 100) / 100, ms: total, auto: true, note: '', updatedAt: now, deletedAt: null };
+    await db.hours.put(row);
+  });
 }
 
 // ---------- today's workload ----------

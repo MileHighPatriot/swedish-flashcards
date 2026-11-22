@@ -345,6 +345,33 @@ export function SettingsPage() {
           {num('Daily goal (reviews)', 'dailyGoal', 1, 1000)}
           {num('Leech after this many lapses (0 = off)', 'leechThreshold', 0, 50)}
         </div>
+        <label className="check">
+          <input type="checkbox" checked={s.typeReverse} onChange={(e) => set({ typeReverse: e.target.checked })} />
+          Type English to Swedish answers
+        </label>
+        <p className="muted small">
+          On: English → Swedish cards ask you to type the Swedish and check it. Off: they flip, except verbs and anything on your mistakes list.
+        </p>
+      </div>
+
+      <div className="card">
+        <h2>B2 plan</h2>
+        <label className="field">
+          <span className="field-label">Current lesson</span>
+          <input
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={160}
+            value={s.currentLesson ?? ''}
+            placeholder="Newest lesson you have"
+            aria-describedby="lesson-help"
+            onChange={(e) => set({ currentLesson: e.target.value.trim() === '' ? null : clampInt(e.target.value, 1, 160, 1) })}
+          />
+          <span id="lesson-help" className="muted small">
+            Leave empty to follow your lessons: the newest lesson you have loaded sets the week. The week comes from the plan’s Week Map.
+          </span>
+        </label>
       </div>
 
       <div className="card">

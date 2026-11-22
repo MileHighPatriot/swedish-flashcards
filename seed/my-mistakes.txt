@@ -1,0 +1,22 @@
+# My real mistakes from the Lesson 2 to 5 worksheets. Loaded once into "My mistakes".
+# English prompt | what I wrote | correct | reason | tags | times wrong
+We lived in Denver. | Vi borde i Denver. | Vi bodde i Denver. | bo is irregular: bor, bodde. Borde means should. | -de, irregular | 3
+Yesterday I read a book. | I går läsade jag en bok. | I går läste jag en bok. // Jag läste en bok i går. | Läser ends in -er, so never -ade. The stem läs ends in s, so -te. | -te | 3
+I called her yesterday. | Jag ringade henne i går. | Jag ringde henne i går. // I går ringde jag henne. | Ringer ends in -er, so never -ade. The stem ring ends in g, so -de. | -de | 2
+The children played in the park. | Barnen lekade i parken. | Barnen lekte i parken. | Leker ends in -er, so never -ade. The stem lek ends in k, so -te. | -te | 2
+She made dinner. | Hon görade middag. | Hon gjorde middag. | göra is irregular: gör, gjorde. | irregular, watch-spelling | 2
+This morning I slept until nine o'clock. | I morse sovade jag på klockan nio. | I morse sov jag till klockan nio. | sova is irregular: sov. Till means until. | irregular | 2
+Last night I was at home. | I går kväll vart jag hemma. | I går kväll var jag hemma. | var means was; vart means where to. | var-vart | 2
+Then we took the train home. | Sedan vi tog tåget hem. | Sedan tog vi tåget hem. | After sedan the verb takes seat 2. | verb-second | 1
+After dinner I got tired. | Efter middag jag gjorde trött. | Efter middagen blev jag trött. | Learn the chunk blev trött (got tired), and the verb takes seat 2. | verb-second, chunks | 1
+Did you get tired yesterday? | I går blev du trött. | Blev du trött i går? | A yes/no question starts with the verb. | questions | 1
+I can speak Swedish. | Jag kan pratar svenska. | Jag kan prata svenska. | After a modal, use the infinitive. | modals | 1
+I am going to call in the afternoon. | Jag ska ringde på eftermiddagen. | Jag ska ringa på eftermiddagen. | After a modal, use the infinitive. | modals | 1
+I played with my children. | Jag lekte med min barn. | Jag lekte med mina barn. | Barn is an ett-word: mitt barn for one, mina barn for more. | pronouns | 3
+What did she say? | Vad sa honom? | Vad sa hon? | Hon is the subject; honom is the object. | pronouns | 1
+I bought a book and read it. | Jag köpte en bok och läste det. | Jag köpte en bok och läste den. | Bok is an en-word, so it is den. | en-ett, pronouns | 3
+She said that she was tired. | Hon sa det hon var trött. | Hon sa att hon var trött. | Att joins a clause after säga. | connectors | 2
+Last week they traveled to Sweden. | Förra veckan gick de på Sverige. | Förra veckan åkte de till Sverige. | Åka is for travel by vehicle; till goes with a place. | chunks | 2
+Last week he listened to music. | Förrgår vecken lyssnade han musik. | Förra veckan lyssnade han på musik. | Last week is förra veckan, and it is lyssna på. | time-words, chunks | 1
+My name is Kohlton. | Jag heter är Kohlton. | Jag heter Kohlton. | Heta already means be called, so no extra är. | verbs | 2
+We also watch football. | Vi också tittar på fotboll. | Vi tittar också på fotboll. | Också goes after the verb. | word-order | 1

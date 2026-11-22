@@ -140,3 +140,22 @@ describe('syncOnce', () => {
     expect((await syncOnce(mac, other, T + 2000)).pushed).toBe(1);
   });
 });
+
+describe('the version 4 tables', () => {
+  it('sync like the rest, and my seeded worksheet mistakes stay home until I answer one', async () => {
+    const { SYNCED_TABLES } = await import('./engine');
+    expect(SYNCED_TABLES).toEqual(expect.arrayContaining(['mistakeItems', 'checkpoints', 'lessons', 'hours']));
+    const { db } = await import('../db/db');
+    await Promise.all(db.tables.map((t) => t.clear()));
+    const { addHours, recordWrong, seedMistakeItems } = await import('../db/repo');
+    await seedMistakeItems([{ prompt: 'We lived in Denver.', typed: 'Vi borde i Denver.', correct: 'Vi bodde i Denver.', reason: '', tags: [], cardId: null, noteId: null, source: 'seed', timesWrong: 3 }]);
+    const sent: { store: string; id: string }[] = [];
+    const remote = { push: async (rows: { store: string; id: string }[]) => void sent.push(...rows), pull: async () => [] };
+    await syncOnce(db, remote);
+    expect(sent).toEqual([]);
+    await recordWrong({ prompt: 'We lived in Denver.', typed: 'Vi bode i Denver.', correct: 'Vi bodde i Denver.', reason: '', tags: [], cardId: null, noteId: null, source: 'study' });
+    await addHours({ date: '2026-11-23', category: 'speaking', minutes: 40 });
+    await syncOnce(db, remote);
+    expect(sent.map((r) => r.store).sort()).toEqual(['hours', 'mistakeItems']);
+  });
+});

@@ -3,7 +3,7 @@
 import { CHAT_KV } from './chat';
 import { NEURAL_KV } from './neural';
 import { db } from '../db/db';
-import { alive, setKV } from '../db/repo';
+import { DEVICE_KV, alive, setKV } from '../db/repo';
 import {
   DECK_CATEGORIES,
   GRAMMAR_KINDS,
@@ -251,7 +251,7 @@ export function csvToGroups(text: string, fallbackDeck: string): CsvImport {
 
 export const BACKUP_APP = 'svenska-kort';
 export const BACKUP_VERSION = 1;
-const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes', 'texts', 'journal'] as const;
+const SYNCED_TABLES = ['decks', 'notes', 'cards', 'reviews', 'grammarPages', 'mistakes', 'texts', 'journal', 'mistakeItems', 'checkpoints', 'lessons', 'hours'] as const;
 
 type MediaJSON = Omit<Media, 'blob'> & { data: string };
 
@@ -284,7 +284,7 @@ export async function exportBackup(): Promise<Backup> {
     (await db.media.toArray()).map(async ({ blob, ...rest }) => ({ ...rest, data: await blobToBase64(blob) })),
   );
   // Sign-in tokens, sync bookkeeping, the speech key and the chat key never go into a backup file.
-  tables.kv = (await db.kv.toArray()).filter((r) => !r.key.startsWith('sync') && r.key !== NEURAL_KV && r.key !== CHAT_KV);
+  tables.kv = (await db.kv.toArray()).filter((r) => !r.key.startsWith('sync') && r.key !== NEURAL_KV && r.key !== CHAT_KV && r.key !== DEVICE_KV);
   return { app: BACKUP_APP, version: BACKUP_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 
@@ -318,9 +318,11 @@ export async function restoreBackup(data: unknown, mode: 'replace' | 'merge'): P
       // The speech key, the chat key and the saved voice clips belong to this device, not to the backup.
       const speech = await db.kv.get(NEURAL_KV);
       const chatKey = await db.kv.get(CHAT_KV);
+      const device = await db.kv.get(DEVICE_KV);
       await Promise.all(db.tables.filter((t) => t.name !== 'tts').map((t) => t.clear()));
       if (speech) await db.kv.put(speech);
       if (chatKey) await db.kv.put(chatKey);
+      if (device) await db.kv.put(device);
     }
     const put = async (name: string, rows: SyncMeta[]) => {
       const table = db.table(name);
@@ -333,7 +335,7 @@ export async function restoreBackup(data: unknown, mode: 'replace' | 'merge'): P
     for (const t of SYNCED_TABLES) await put(t, backup.tables[t] ?? []);
     await put('media', media);
     for (const row of backup.tables.kv ?? []) {
-      if (row.key === NEURAL_KV || row.key === CHAT_KV) continue;
+      if (row.key === NEURAL_KV || row.key === CHAT_KV || row.key === DEVICE_KV) continue;
       const mine = await db.kv.get(row.key);
       if (mode === 'replace' || !mine || row.updatedAt > mine.updatedAt) await db.kv.put(row);
     }

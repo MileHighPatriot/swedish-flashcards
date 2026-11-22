@@ -272,6 +272,128 @@ export interface JournalEntry extends SyncMeta {
   text: string;
   /** The corrections pasted back from Claude, kept for reference. */
   feedback: string;
+  /** Today's question that the entry answers (Swedish), if one was shown. */
+  prompt?: string;
+  promptEn?: string;
+  /** The lesson the question came from. */
+  lessonNumber?: number | null;
+  /** Spoken answers: rows in the media table. Recordings stay on this device. */
+  audioIds?: ID[];
+}
+
+/**
+ * One thing to fix. The mistake log above records every miss as an event; an
+ * item is the mistake itself, kept until I have typed it right on three
+ * different days.
+ */
+export interface MistakeItem extends SyncMeta {
+  /** Dedupe key: the canonical right answer plus the card (or the prompt when there is no card). */
+  key: string;
+  /** What was asked, in English where there is one. */
+  prompt: string;
+  /** My latest wrong answer. */
+  typed: string;
+  /** The right answer; may hold alternatives separated by " // ". */
+  correct: string;
+  reason: string;
+  tags: string[];
+  cardId: ID | null;
+  noteId: ID | null;
+  /** Where it was caught: 'study', 'verb-drill', 'dictation', 'en-ett', 'builder', 'story', 'checkpoint', 'marked-worksheet', 'seed'. */
+  source: string;
+  firstWrongAt: number;
+  lastWrongAt: number;
+  timesWrong: number;
+  /** Study-day keys ("YYYY-MM-DD") on which I typed it right, since the last wrong answer. */
+  correctDays: string[];
+  retiredAt: number | null;
+}
+
+export type CheckpointResult = 'pass' | 'close' | 'repeat';
+
+export interface CheckpointItem {
+  section: 'recall' | 'production';
+  prompt: string;
+  typed: string;
+  expected: string;
+  verdict: 'correct' | 'close' | 'wrong';
+  noteId: ID | null;
+  reason: string;
+}
+
+/** One checkpoint sitting, a paper score entered by hand, or a checkpoint I dismissed. */
+export interface Checkpoint extends SyncMeta {
+  /** "CP1" … "CP14", "Final", or '' for a score that is not one of the plan's checkpoints. */
+  cp: string;
+  kind: 'app' | 'paper' | 'old-plan-paper' | 'dismissed';
+  label: string;
+  week: number | null;
+  /** The day it was taken, "YYYY-MM-DD". */
+  date: string;
+  at: number;
+  /** A practice run: saved for the record, never counted as a result. */
+  practice: boolean;
+  /** Scores from 0 to 1; null when that part was not done. */
+  recall: number | null;
+  production: number | null;
+  writing: number | null;
+  writingSelfScored: boolean;
+  /** "Did you carry it without switching to English?" */
+  speakingWithoutEnglish: boolean | null;
+  result: CheckpointResult | null;
+  items: CheckpointItem[];
+  /** Tag put on the cards I missed ("review-cp1") when the result was Close. */
+  reviewTag: string | null;
+  writingTask?: string;
+  writingText?: string;
+  speakingQuestions?: string[];
+  speakingNotes?: string;
+  audioIds?: ID[];
+}
+
+export interface LessonReport {
+  title: string;
+  paragraphs: string[];
+  table: { header: string[]; rows: string[][] } | null;
+  patterns: { n: number; title: string; text: string }[];
+}
+
+/** What an imported lesson printable leaves behind besides its cards. One row per lesson number. */
+export interface Lesson extends SyncMeta {
+  number: number;
+  /** Plan week, from the Week Map. */
+  week: number;
+  title: string;
+  checklist: string[];
+  speakingPrompt: string;
+  writingTask: string;
+  /** Conversation questions from the lesson's dialogue and reading. */
+  questions: { sv: string; en: string }[];
+  report: LessonReport | null;
+}
+
+export type HoursCategory = 'lessons' | 'speaking' | 'reading-writing' | 'flashcards' | 'listening';
+/** In the column order of the Hours Log tab. */
+export const HOURS_CATEGORIES: HoursCategory[] = ['lessons', 'speaking', 'reading-writing', 'flashcards', 'listening'];
+export const HOURS_LABELS: Record<HoursCategory, string> = {
+  lessons: 'Lessons and review',
+  speaking: 'Speaking',
+  'reading-writing': 'Reading and writing',
+  flashcards: 'Flashcards',
+  listening: 'Own listening',
+};
+
+/** Minutes of study on one day. Flashcard time is not stored here: it is worked out from the reviews. */
+export interface HoursEntry extends SyncMeta {
+  /** Local date, "YYYY-MM-DD". */
+  date: string;
+  category: HoursCategory;
+  minutes: number;
+  /** Logged by the app while a practice tool was in use, as opposed to typed in by me. */
+  auto: boolean;
+  /** Auto rows only: the exact active time, so many short stretches add up without rounding away. */
+  ms?: number;
+  note: string;
 }
 
 export type ThemeSetting = 'system' | 'light' | 'dark';
@@ -300,6 +422,14 @@ export interface Settings {
   reminderTime: string;
   /** Card types created for new words by default. */
   defaultCardTypes: VocabCardType[];
+  /** English → Swedish cards ask me to type the Swedish instead of flipping. */
+  typeReverse: boolean;
+  /** My current lesson, when I set it myself. null = the newest lesson I have. */
+  currentLesson: number | null;
+  /** Sentences in a Sentence builder session. */
+  builderSize: number;
+  /** Count the time the app logged by itself in the weekly hours totals. */
+  hoursCountAuto: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -319,6 +449,10 @@ export const DEFAULT_SETTINGS: Settings = {
   reminderEnabled: false,
   reminderTime: '19:00',
   defaultCardTypes: ['basic', 'reverse'],
+  typeReverse: true,
+  currentLesson: null,
+  builderSize: 10,
+  hoursCountAuto: true,
 };
 
 export interface KeyValue {

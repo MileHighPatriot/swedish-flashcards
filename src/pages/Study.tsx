@@ -7,11 +7,14 @@ import {
   getNote,
   getSettings,
   listCards,
+  listCheckpoints,
   listDecks,
+  listMistakeItems,
   listMistakes,
   listNotes,
   listReviews,
   listTags,
+  recordTyped,
   removeMistake,
   removeReview,
   saveCramReview,
@@ -28,6 +31,7 @@ import {
   type Grade,
   type ID,
   type Mistake,
+  type MistakeItem,
   type Note,
   type ReviewLog,
   type Settings,
@@ -41,7 +45,10 @@ import { topicFor, topicTitle } from '../lib/topics';
 import { computeWeakSpots, weakSpotCardIds } from '../lib/weakspots';
 import { GrammarPageView } from './Grammar';
 import { buildReasonContext } from '../lib/reasons';
-import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, withReason, type Answer } from '../study/CardView';
+import { dueItems, isActive } from '../lib/mistakeItems';
+import { planPosition, weekSessionTags } from '../lib/plan';
+import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, mistakeInputFor, reverseIsTyped, withReason, type Answer } from '../study/CardView';
+import { MistakeRound, type RoundSummary } from '../study/MistakeRound';
 
 // ---------- the session ----------
 
@@ -57,6 +64,8 @@ interface Loaded {
   notes: Map<ID, Note>;
   pool: Note[];
   settings: Settings;
+  /** Notes with something on my mistakes list: their English → Swedish card is always typed. */
+  mistakeNotes: Set<ID>;
 }
 
 const SWIPE_PX = 90;
@@ -64,6 +73,9 @@ const SWIPE_PX = 90;
 function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
   const [data, setData] = useState<Loaded | null>(null);
   const [session, setSession] = useState<SessionState | null>(null);
+  // My mistakes come first in every scheduled session; null once they are done (or there were none).
+  const [round, setRound] = useState<MistakeItem[] | null>(null);
+  const [roundResult, setRoundResult] = useState<RoundSummary | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [undo, setUndo] = useState<UndoEntry[]>([]);
@@ -95,12 +107,14 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
     void (async () => {
       const settings = await getSettings();
       const now = Date.now();
-      const [cards, notes, decks, logs] = await Promise.all([listCards(), listNotes(), listDecks(), listReviews(studyDayStart(now, settings.dayStartHour))]);
+      const [cards, notes, decks, logs, items] = await Promise.all([listCards(), listNotes(), listDecks(), listReviews(studyDayStart(now, settings.dayStartHour)), listMistakeItems()]);
       if (!live) return;
+      const due = opts.mode === 'normal' ? dueItems(items, now, settings.dayStartHour) : [];
+      setRound(due.length ? due : null);
       const queue = buildQueue({ cards, notes, decks, logsToday: logs, settings, now }, opts);
       const cardMap = new Map(cards.map((c) => [c.id, c]));
       total.current = queue.learning.length + queue.main.length;
-      setData({ cards: cardMap, notes: new Map(notes.map((n) => [n.id, n])), pool: notes, settings });
+      setData({ cards: cardMap, notes: new Map(notes.map((n) => [n.id, n])), pool: notes, settings, mistakeNotes: new Set(items.filter(isActive).flatMap((i) => (i.noteId ? [i.noteId] : []))) });
       setSession(startSession(queue, opts.mode, (id) => cardMap.get(id)?.due ?? 0, now));
       shownAt.current = startedAt.current = Date.now();
     })();
@@ -113,6 +127,7 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
   const card = session?.current && data ? data.cards.get(session.current) : undefined;
   const note = card && data ? data.notes.get(card.noteId) : undefined;
   const cram = opts.mode === 'cram';
+  const typedReverse = !!card && !!note && !!data && card.type === 'reverse' && reverseIsTyped(note, data.settings.typeReverse, data.mistakeNotes);
 
   // Auto-play: say the Swedish when it appears (front of a Swedish card, or the answer).
   const autoPlay = data?.settings.autoPlayAudio ?? false;
@@ -145,11 +160,20 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
   const reasons = useMemo(() => (data ? buildReasonContext(data.pool) : null), [data]);
   const reveal = useCallback(
     (a: Answer | null) => {
-      setAnswer(a && withReason(a, reasons));
+      const checked = a && withReason(a, reasons);
+      setAnswer(checked);
       setRevealed(true);
       requestAnimationFrame(() => rateEl.current?.focus({ preventScroll: true }));
+      // Every typed answer feeds "My mistakes": a wrong one is kept until it is really fixed.
+      if (checked?.check && card && note && card.type !== 'listening')
+        void recordTyped(checked.check.verdict, {
+          ...mistakeInputFor(card, note),
+          typed: checked.typed,
+          reason: checked.reason?.text ?? note.grammar?.explanation ?? '',
+          source: 'study',
+        });
     },
-    [reasons],
+    [reasons, card, note],
   );
 
   const rate = useCallback(
@@ -259,7 +283,7 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
   // Keyboard: Space flips (then rates Good), 1-4 rate, Z undoes, E edits.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (editing || rule !== null || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (editing || rule !== null || round || e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target as HTMLElement;
       if (target.closest('input, textarea, select')) return;
       const k = e.key.toLowerCase();
@@ -267,7 +291,7 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
         if (target.closest('button, a, summary')) return; // let the focused control act
         e.preventDefault();
         if (!revealed) {
-          if (card && isFlipCard(card)) reveal(null);
+          if (card && isFlipCard(card, typedReverse)) reveal(null);
           else (cardEl.current?.querySelector('input') as HTMLInputElement | null)?.focus();
         } else rate(3);
       } else if (revealed && k >= '1' && k <= '4') {
@@ -283,20 +307,58 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [editing, rule, revealed, card, cram, reveal, rate, undoLast]);
+  }, [editing, rule, round, revealed, card, typedReverse, cram, reveal, rate, undoLast]);
 
   if (!data || !session) return <p className="muted">Loading…</p>;
 
+  if (round)
+    return (
+      <section className="session">
+        <h1 className="sr-only">My mistakes</h1>
+        <header className="session-head">
+          <button type="button" className="btn btn-small" onClick={onExit} aria-label="End session">
+            ✕
+          </button>
+          <div className="session-progress">First, the things you are fixing</div>
+          <div className="session-tools">
+            <button type="button" className="btn btn-small" onClick={() => setRound(null)}>
+              Skip to the cards
+            </button>
+          </div>
+        </header>
+        <MistakeRound
+          items={round}
+          notes={data.notes}
+          reasons={reasons}
+          rate={data.settings.ttsRate}
+          slowRate={data.settings.ttsSlowRate}
+          onDone={(summary) => {
+            setRoundResult(summary);
+            setRound(null);
+            shownAt.current = Date.now();
+          }}
+        />
+      </section>
+    );
+
   if (!card || !note) {
     const minutes = Math.max(1, Math.round((Date.now() - startedAt.current) / 60000));
+    const fixed = roundResult ? roundResult.right + roundResult.wrong : 0;
     return (
       <section className="done-screen">
-        <h1>{session.done > 0 ? 'Bra jobbat!' : 'Nothing to study here'}</h1>
+        <h1>{session.done > 0 || fixed > 0 ? 'Bra jobbat!' : 'Nothing to study here'}</h1>
+        {fixed > 0 && (
+          <p>
+            My mistakes: {roundResult!.right} right, {roundResult!.wrong} to see again. <Link to="/mistakes">See the list</Link>
+          </p>
+        )}
         {session.done > 0 ? (
           <p>
             {session.done} review{session.done === 1 ? '' : 's'} in about {minutes} min
             {session.again > 0 ? `, ${session.again} to see again` : ''}.
           </p>
+        ) : fixed > 0 ? (
+          <p className="muted">No cards are due in this selection right now.</p>
         ) : (
           <p className="muted">No cards are due in this selection right now. Cram mode shows them anyway.</p>
         )}
@@ -319,7 +381,7 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
 
   const suggested = answer?.check ? suggestedGrade(answer.check.verdict) : null;
   const left = remaining(session);
-  const flip = isFlipCard(card);
+  const flip = isFlipCard(card, typedReverse);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (!revealed || (e.target as HTMLElement).closest('button, a, input')) return;
@@ -416,6 +478,7 @@ function Session({ opts, onExit }: { opts: QueueOptions; onExit: () => void }) {
           onReveal={reveal}
           rate={data.settings.ttsRate}
           slowRate={data.settings.ttsSlowRate}
+          typedReverse={typedReverse}
         />
         </RuleContext.Provider>
       </div>
@@ -515,8 +578,8 @@ export function Study() {
 
   const dayStart = studyDayStart(now, settings.dayStartHour);
   const data = useLiveQuery(async () => {
-    const [cards, notes, decks, logsToday, tags] = await Promise.all([listCards(), listNotes(), listDecks(), listReviews(dayStart), listTags()]);
-    return { cards, notes, decks, logsToday, tags };
+    const [cards, notes, decks, logsToday, tags, items] = await Promise.all([listCards(), listNotes(), listDecks(), listReviews(dayStart), listTags(), listMistakeItems()]);
+    return { cards, notes, decks, logsToday, tags, items };
   }, [dayStart]);
 
   const counts = useMemo(() => {
@@ -527,12 +590,26 @@ export function Study() {
     return { ...q.counts, cram: inScope.length, more };
   }, [data, settings, now, scope]);
 
+  // My mistakes left for today open every scheduled session, so they count as something to study.
+  const fixes = data ? dueItems(data.items, now, settings.dayStartHour).length : 0;
+
   // "Start studying" on the home screen goes straight in.
   useEffect(() => {
     if (autoStarted.current || !counts || params.get('start') !== '1') return;
     autoStarted.current = true;
-    if (counts.learning + counts.review + counts.new > 0) setRun({ mode: 'normal', shuffle: false });
-  }, [counts, params]);
+    if (counts.learning + counts.review + counts.new + fixes > 0) setRun({ mode: 'normal', shuffle: false });
+  }, [counts, params, fixes]);
+
+  // "This week's lesson" on the home screen: my mistakes, then the cards of every lesson in my current plan week.
+  const week = params.get('week') === '1';
+  useEffect(() => {
+    if (autoStarted.current || !data || !week) return;
+    autoStarted.current = true;
+    void listCheckpoints().then((checkpoints) => {
+      const { week: w } = planPosition(data.decks, settings, Date.now());
+      setRun({ mode: 'normal', shuffle: false, tags: weekSessionTags(w, checkpoints) });
+    });
+  }, [data, week, settings]);
 
   // Links from the Grammar tab: /study?weak=1 and /study?topic=verb-second.
   const weak = params.get('weak') === '1';
@@ -648,9 +725,14 @@ export function Study() {
         </div>
       </div>
 
-      <button type="button" className="btn btn-primary btn-big" disabled={!counts || due + counts.new === 0} onClick={() => setRun({ ...scope, mode: 'normal', shuffle })}>
-        {counts && due + counts.new === 0 ? 'All done for today' : 'Start studying'}
+      <button type="button" className="btn btn-primary btn-big" disabled={!counts || due + counts.new + fixes === 0} onClick={() => setRun({ ...scope, mode: 'normal', shuffle })}>
+        {counts && due + counts.new + fixes === 0 ? 'All done for today' : 'Start studying'}
       </button>
+      {fixes > 0 && (
+        <p className="muted small">
+          The session starts with {fixes} of <Link to="/mistakes">your mistakes</Link>, then the cards.
+        </p>
+      )}
 
       <div className="actions">
         <button type="button" className="btn" disabled={!counts || counts.cram === 0} onClick={() => setRun({ ...scope, mode: 'cram', shuffle })}>

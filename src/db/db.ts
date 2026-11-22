@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable, type Table } from 'dexie';
-import type { Card, Deck, GrammarPage, JournalEntry, KeyValue, Media, Mistake, Note, ReviewLog, TextDoc, TtsClip } from './types';
+import type { Card, Checkpoint, Deck, GrammarPage, HoursEntry, JournalEntry, KeyValue, Lesson, Media, Mistake, MistakeItem, Note, ReviewLog, TextDoc, TtsClip } from './types';
 
 // The Dexie schema. Only `repo.ts` (and backup/import code) should touch these
 // tables directly, so that every write gets stamped and a sync layer has one
@@ -14,6 +14,10 @@ export class FlashcardDB extends Dexie {
   mistakes!: EntityTable<Mistake, 'id'>;
   texts!: EntityTable<TextDoc, 'id'>;
   journal!: EntityTable<JournalEntry, 'id'>;
+  mistakeItems!: EntityTable<MistakeItem, 'id'>;
+  checkpoints!: EntityTable<Checkpoint, 'id'>;
+  lessons!: EntityTable<Lesson, 'id'>;
+  hours!: EntityTable<HoursEntry, 'id'>;
   kv!: Table<KeyValue, string>;
   /** Saved clips of the natural voice. Per device: never synced or backed up. */
   tts!: Table<TtsClip, string>;
@@ -33,6 +37,14 @@ export class FlashcardDB extends Dexie {
     this.version(2).stores({ tts: 'key' });
     // Practice tools: my own reading texts and the daily journal.
     this.version(3).stores({ texts: 'id, updatedAt', journal: 'id, date, updatedAt' });
+    // The B2 plan: things to fix, checkpoint results, imported lessons and the hours log.
+    // Only new tables: nothing that already exists is touched, so no upgrade step is needed.
+    this.version(4).stores({
+      mistakeItems: 'id, key, updatedAt',
+      checkpoints: 'id, cp, at, updatedAt',
+      lessons: 'id, number, updatedAt',
+      hours: 'id, date, updatedAt',
+    });
   }
 }
 

@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { addMistake } from '../db/repo';
+import { addMistake, recordTyped } from '../db/repo';
 import { checkAnswer } from '../lib/check';
 import { useSettings } from '../lib/hooks';
 import type { Sentence } from '../lib/practice';
 import { shuffled } from '../lib/queue';
 import { say } from '../lib/speech';
-import { SpeakButton, TypedInput, VerdictBox, type Answer } from '../study/CardView';
-import { ALL, LessonSelect, inLesson, useSentences } from './shared';
+import { SpeakButton, TypedInput, VerdictBox, withReason, type Answer } from '../study/CardView';
+import { ALL, LessonSelect, inLesson, useReasons, useSentences } from './shared';
 
 export function Dictation() {
   const settings = useSettings();
   const sentences = useSentences();
+  const reasons = useReasons();
   const [lesson, setLesson] = useState(ALL);
   const [size, setSize] = useState(10);
   const [queue, setQueue] = useState<Sentence[] | null>(null);
@@ -92,9 +93,20 @@ export function Dictation() {
   const item = queue[index];
   const submit = (typed: string, skipped = false) => {
     const check = checkAnswer(typed, [item.sv]);
-    const a: Answer = { typed, check: skipped ? { ...check, verdict: 'wrong' } : check };
+    const a: Answer = withReason({ typed, check: skipped ? { ...check, verdict: 'wrong' } : check }, reasons ?? null);
     setAnswer(a);
     setResults((r) => [...r, { item, answer: a }]);
+    if (a.check)
+      void recordTyped(a.check.verdict, {
+        prompt: item.en || 'Listen and type',
+        typed,
+        correct: item.sv,
+        reason: a.reason?.text ?? '',
+        tags: [...new Set([...item.tags, 'dictation'])],
+        cardId: null,
+        noteId: item.noteId,
+        source: 'dictation',
+      });
     if (a.check?.verdict === 'wrong')
       void addMistake({
         at: Date.now(),

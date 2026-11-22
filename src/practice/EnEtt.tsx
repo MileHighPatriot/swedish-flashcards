@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { addMistake } from '../db/repo';
+import { addMistake, recordTyped } from '../db/repo';
 import { drillNouns, type DrillNoun } from '../lib/practice';
 import { shuffled } from '../lib/queue';
 import { ALL, LessonSelect, inLesson, useNotes } from './shared';
@@ -71,6 +71,16 @@ export function EnEtt() {
   const choose = (g: 'en' | 'ett') => {
     if (picked) return;
     setPicked(g);
+    void recordTyped(g === noun.gender ? 'correct' : 'wrong', {
+      prompt: `en or ett: ${noun.word} (${noun.english})`,
+      typed: `${g} ${noun.word}`,
+      correct: `${noun.gender} ${noun.word}`,
+      reason: `${noun.word} is an ${noun.gender}-word.`,
+      tags: [...new Set([...noun.tags, 'en-ett'])],
+      cardId: null,
+      noteId: noun.noteId,
+      source: 'en-ett',
+    });
     if (g !== noun.gender) {
       setMisses((m) => [...m, noun]);
       void addMistake({

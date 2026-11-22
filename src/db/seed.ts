@@ -1,5 +1,7 @@
 import { db } from './db';
-import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, setKV, type NoteInput } from './repo';
+import mistakesText from '../../seed/my-mistakes.txt?raw';
+import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, seedMistakeItems, setKV, type NoteInput } from './repo';
+import { parseMistakeSeed } from '../lib/mistakeItems';
 import type { PartOfSpeech } from './types';
 import { BUILT_IN_LESSONS, loadBuiltInLesson, loadStarterLessons, refreshBuiltIn, refreshStarterCards } from '../lib/importer';
 
@@ -102,6 +104,11 @@ export function ensureSeeded(): Promise<void> {
       await loadBuiltInLesson(lesson);
       loaded.push(lesson.key);
       await setKV('builtInLessons', [...loaded]);
+    }
+    // My worksheet mistakes from lessons 2 to 5 start the "My mistakes" list, once.
+    if (!(await getKV<boolean>('mistakeSeedLoaded'))) {
+      await seedMistakeItems(parseMistakeSeed(mistakesText));
+      await setKV('mistakeSeedLoaded', true);
     }
   })();
   return seeding;

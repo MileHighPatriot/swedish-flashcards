@@ -35,6 +35,8 @@ interface FaceProps {
   onReveal: (answer: Answer | null) => void;
   rate: number;
   slowRate: number;
+  /** English → Swedish card answered by typing instead of flipping. */
+  typedReverse?: boolean;
 }
 
 /**
@@ -314,12 +316,24 @@ function Basic({ note, revealed, rate, slowRate }: FaceProps) {
   );
 }
 
-function Reverse({ note, revealed, rate, slowRate }: FaceProps) {
+function Reverse({ note, revealed, answer, onReveal, rate, slowRate, typedReverse }: FaceProps) {
   return (
     <>
       <p className="face-main">{note.english}</p>
-      <p className="muted small">{note.pos !== 'other' ? `${note.pos} · ` : ''}say it in Swedish</p>
-      {revealed ? <VocabBack note={note} rate={rate} slowRate={slowRate} /> : <FlipHint />}
+      <p className="muted small">
+        {note.pos !== 'other' ? `${note.pos} · ` : ''}
+        {typedReverse ? 'type it in Swedish' : 'say it in Swedish'}
+      </p>
+      {revealed ? (
+        <>
+          <VerdictBox answer={answer} />
+          <VocabBack note={note} rate={rate} slowRate={slowRate} />
+        </>
+      ) : typedReverse ? (
+        <TypedInput label="Type the Swedish" onSubmit={(typed) => onReveal({ typed, check: checkVocab(typed, note) })} onSkip={() => onReveal(null)} />
+      ) : (
+        <FlipHint />
+      )}
     </>
   );
 }
@@ -594,8 +608,31 @@ function Translate({ note, revealed, answer, onReveal, rate, slowRate }: FacePro
 }
 
 /** Card types that are answered by flipping rather than by typing or picking. */
-export function isFlipCard(card: Card): boolean {
-  return card.type === 'basic' || card.type === 'reverse' || card.type === 'rule';
+export function isFlipCard(card: Card, typedReverse = false): boolean {
+  return card.type === 'basic' || (card.type === 'reverse' && !typedReverse) || card.type === 'rule';
+}
+
+/**
+ * Does this English → Swedish card ask for a typed answer? Always when the
+ * setting is on. With it off, verbs and anything on my mistakes list still do.
+ */
+export function reverseIsTyped(note: Pick<Note, 'id' | 'pos' | 'verb'>, typeReverse: boolean, mistakeNotes: ReadonlySet<ID>): boolean {
+  return typeReverse || note.pos === 'verb' || !!note.verb || mistakeNotes.has(note.id);
+}
+
+/** A typed answer on a card, as "My mistakes" stores it: what was asked and what is right. */
+export function mistakeInputFor(card: Card, note: Note): { prompt: string; correct: string; cardId: ID; noteId: ID; tags: string[] } {
+  const base = { cardId: card.id, noteId: note.id, tags: note.tags };
+  if (note.grammar) {
+    const { text, hint } = splitHint(note.grammar.prompt);
+    const prompt = note.kind === 'fix' ? `Fix this sentence: ${text}` : note.kind === 'reorder' ? (hint ?? `Put in order: ${text}`) : text;
+    return { ...base, prompt, correct: note.grammar.answer };
+  }
+  if (card.type === 'cloze') {
+    const c = makeCloze(note);
+    if (c) return { ...base, prompt: `${c.before}____${c.after}${note.exampleEn ? ` (${note.exampleEn})` : ''}`, correct: c.answer };
+  }
+  return { ...base, prompt: note.english, correct: note.swedish };
 }
 
 export function CardView(props: FaceProps) {

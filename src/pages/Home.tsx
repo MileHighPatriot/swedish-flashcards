@@ -1,10 +1,13 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Link } from 'react-router-dom';
-import { countToday, getKV, listCards, listDecks, listReviews } from '../db/repo';
+import { countToday, getKV, listCards, listDecks, listMistakeItems, listReviews } from '../db/repo';
 import { downloadBackup } from '../lib/backup';
 import { computeStreak, dayCounts } from '../lib/stats';
 import { CATEGORY_LABELS, DECK_CATEGORIES } from '../db/types';
 import { useNow, useSettings } from '../lib/hooks';
+import { MIN_FLASHCARD_MINUTES, flashcardMs } from '../lib/hours';
+import { dueItems, isActive } from '../lib/mistakeItems';
+import { planPosition } from '../lib/plan';
 import { DAY_MS, studyDayKey, studyDayStart } from '../lib/scheduler';
 
 export function Home() {
@@ -13,8 +16,8 @@ export function Home() {
   const dayStart = studyDayStart(now, settings.dayStartHour);
 
   const data = useLiveQuery(async () => {
-    const [decks, cards, all, lastBackupAt] = await Promise.all([listDecks(), listCards(), listReviews(0), getKV<number>('lastBackupAt')]);
-    return { decks, cards, all, logs: all.filter((l) => l.reviewedAt >= dayStart), lastBackupAt };
+    const [decks, cards, all, lastBackupAt, items] = await Promise.all([listDecks(), listCards(), listReviews(0), getKV<number>('lastBackupAt'), listMistakeItems()]);
+    return { decks, cards, all, logs: all.filter((l) => l.reviewedAt >= dayStart), lastBackupAt, items };
   }, [dayStart]);
 
   if (!data) return null;
@@ -24,6 +27,10 @@ export function Home() {
   const goalPct = Math.round((goalDone / Math.max(1, settings.dailyGoal)) * 100);
   const streak = computeStreak(new Set(dayCounts(data.all, settings.dayStartHour).keys()), studyDayKey(now, settings.dayStartHour));
   const backupDue = data.all.length >= 30 && (!data.lastBackupAt || now - data.lastBackupAt > 14 * DAY_MS);
+  const plan = planPosition(data.decks, settings, now);
+  const toFix = data.items.filter(isActive).length;
+  const fixToday = dueItems(data.items, now, settings.dayStartHour, Infinity).length;
+  const minutes = Math.floor(flashcardMs(data.logs) / 60000);
 
   return (
     <section>
@@ -33,6 +40,14 @@ export function Home() {
           {toStudy > 0 ? `${toStudy} cards waiting for you today.` : 'Nothing due right now. Bra jobbat!'}
         </p>
       </header>
+
+      <p className="plan-line">
+        <strong>
+          Week {plan.week}, Lesson {plan.lesson}
+        </strong>
+        {plan.phase ? ` · Phase ${plan.phase.phase}: ${plan.phase.name}` : ' · before the plan'}
+        {plan.weekByDate !== plan.week && <span className="muted"> · Plan week by date: {plan.weekByDate}</span>}
+      </p>
 
       <div className="stat-row">
         <div className="stat">
@@ -60,11 +75,18 @@ export function Home() {
         <div className="progress-bar" style={{ width: `${goalPct}%` }} />
       </div>
       <p className="muted small">
-        Daily goal: {goalDone} of {settings.dailyGoal} reviews
+        Daily goal: {goalDone} of {settings.dailyGoal} reviews · Flashcards today: {minutes} of {MIN_FLASHCARD_MINUTES} min
+        {minutes >= MIN_FLASHCARD_MINUTES ? ' ✓ minimum day done' : ''}
       </p>
 
       <Link className="btn btn-primary btn-big" to="/study?start=1">
         Start studying
+      </Link>
+      <Link className="btn btn-big" to="/study?week=1">
+        This week’s lesson (week {plan.week})
+      </Link>
+      <Link className="btn btn-big" to="/mistakes">
+        My mistakes: {toFix} to fix{toFix > 0 ? (fixToday > 0 ? `, ${fixToday} left today` : ', done for today') : ''}
       </Link>
       <Link className="btn btn-big" to="/practice">
         Practice: listen, speak, write, read

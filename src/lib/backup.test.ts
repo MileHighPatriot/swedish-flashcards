@@ -92,3 +92,57 @@ describe('JSON backup', () => {
     await expect(restoreBackup(null, 'merge')).rejects.toThrow();
   });
 });
+
+describe('backups across the version 4 update', () => {
+  it('a backup made before the update (no new tables) still restores, in both modes', async () => {
+    await loadStarterLessons([seed('grammar-lessons-01-02.txt')]);
+    await updateSettings({ newPerDay: 7 });
+    const now = JSON.parse(JSON.stringify(await exportBackup()));
+    // The file as the old app wrote it: eight tables, media and kv.
+    const old = { ...now, tables: { ...now.tables } };
+    for (const t of ['mistakeItems', 'checkpoints', 'lessons', 'hours']) delete old.tables[t];
+    expect(Object.keys(old.tables).sort()).toEqual(['cards', 'decks', 'grammarPages', 'journal', 'kv', 'media', 'mistakes', 'notes', 'reviews', 'texts']);
+    const notes = await db.notes.toArray();
+    const cards = await db.cards.toArray();
+
+    await wipe();
+    const { recordWrong } = await import('../db/repo');
+    await recordWrong({ prompt: 'p', typed: 't', correct: 'c', reason: '', tags: [], cardId: null, noteId: null, source: 'study' });
+    const summary = await restoreBackup(old, 'replace');
+    expect(summary.notes).toBe(notes.length);
+    expect(await db.notes.toArray()).toEqual(notes);
+    expect(await db.cards.toArray()).toEqual(cards);
+    expect((await getSettings()).newPerDay).toBe(7);
+    // Replace means replace: what the old file did not know about is empty, not broken.
+    for (const t of ['mistakeItems', 'checkpoints', 'lessons', 'hours']) expect(await db.table(t).count(), t).toBe(0);
+
+    // Merge keeps what this device has added since.
+    const mine = await recordWrong({ prompt: 'p', typed: 't', correct: 'c', reason: '', tags: [], cardId: null, noteId: null, source: 'study' });
+    await restoreBackup(old, 'merge');
+    expect(await db.mistakeItems.get(mine.id)).toEqual(mine);
+    expect(await db.notes.count()).toBe(notes.length);
+  });
+
+  it('a new backup carries the new tables, journal fields and recordings, but not the device id', async () => {
+    const { addHours, getDeviceId, recordWrong, saveCheckpoint, saveJournal, saveLesson, saveMedia } = await import('../db/repo');
+    const item = await recordWrong({ prompt: 'p', typed: 't', correct: 'c', reason: 'r', tags: ['x'], cardId: null, noteId: null, source: 'study' });
+    const audio = await saveMedia('audio', new Blob([new Uint8Array([1, 2, 3])], { type: 'audio/webm' }));
+    await saveJournal('2026-11-23', { text: 'Hej', prompt: 'Hur var din dag?', promptEn: 'How was your day?', lessonNumber: 1, audioIds: [audio.id] });
+    await saveLesson({ number: 6, week: 1, title: 'Negation', checklist: ['a'], speakingPrompt: 'p', writingTask: '', questions: [{ sv: 'Hur var din dag?', en: 'How was your day?' }], report: null });
+    await saveCheckpoint({ cp: 'CP1', kind: 'paper', label: 'Checkpoint 1', week: 4, date: '2026-12-20', at: 1, practice: false, recall: 0.9, production: 0.8, writing: 0.7, writingSelfScored: true, speakingWithoutEnglish: true, result: 'pass', items: [], reviewTag: null });
+    const hours = await addHours({ date: '2026-11-23', category: 'speaking', minutes: 40 });
+    const device = await getDeviceId();
+
+    const file = JSON.parse(JSON.stringify(await exportBackup()));
+    expect(file.tables.kv.some((r: { key: string }) => r.key === 'deviceId')).toBe(false);
+    await wipe();
+    await restoreBackup(file, 'replace');
+    expect(await db.mistakeItems.get(item.id)).toEqual(item);
+    expect((await db.journal.get('journal:2026-11-23'))!).toMatchObject({ prompt: 'Hur var din dag?', lessonNumber: 1, audioIds: [audio.id] });
+    expect((await db.lessons.get('lesson:6'))!.questions).toEqual([{ sv: 'Hur var din dag?', en: 'How was your day?' }]);
+    expect((await db.checkpoints.toArray())[0]).toMatchObject({ cp: 'CP1', production: 0.8, result: 'pass' });
+    expect(await db.hours.get(hours.id)).toEqual(hours);
+    expect((await db.media.get(audio.id))!.mime).toBe('audio/webm');
+    expect(await getDeviceId()).not.toBe(device);
+  });
+});

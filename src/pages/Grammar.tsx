@@ -15,6 +15,7 @@ import {
   listMistakes,
   listNotes,
   listReviews,
+  recordTyped,
   removeMistake,
   unlockDeck,
   updateGrammarPage,
@@ -589,6 +590,17 @@ export function VerbDrill() {
     const a: Answer = withReason({ typed, check: skipped ? { ...check, verdict: 'wrong' } : check }, loaded?.reasons ?? null);
     setAnswer(a);
     setResults((r) => [...r, { verb, answer: a }]);
+    if (a.check)
+      void recordTyped(a.check.verdict, {
+        prompt: `${formName} of ${verb.infinitive} (${verb.english})`,
+        typed,
+        correct: target,
+        reason: a.reason?.text ?? rule?.text ?? '',
+        tags: verb.tags,
+        cardId: null,
+        noteId: verb.noteId,
+        source: 'verb-drill',
+      });
     if (a.check?.verdict === 'wrong')
       void addMistake({
         at: Date.now(),

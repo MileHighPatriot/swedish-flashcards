@@ -10,6 +10,7 @@ import { Study } from './pages/Study';
 import { Grammar } from './pages/Grammar';
 import { Practice } from './pages/Practice';
 import { Stats } from './pages/Stats';
+import { Mistakes } from './pages/Mistakes';
 import { useReminder } from './lib/reminder';
 import { useAutoSync } from './sync/auto';
 import { useNeuralPrefetch } from './lib/neural';
@@ -69,6 +70,7 @@ export function App() {
             <Route path="/add" element={<Add />} />
             <Route path="/edit/:id" element={<EditNote />} />
             <Route path="/study" element={<Study />} />
+            <Route path="/mistakes" element={<Mistakes />} />
             <Route path="/practice/:tool?" element={<Practice />} />
             <Route path="/grammar/:slug?" element={<Grammar />} />
             <Route path="/stats" element={<Stats />} />
