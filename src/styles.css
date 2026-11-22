@@ -2055,3 +2055,15 @@ a.pill-btn {
   min-width: 0;
   flex: 1 1 200px;
 }
+
+/* ---------- journal: today's question ---------- */
+.journal-question {
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 8px;
+}
+.journal-question .face-question {
+  margin: 4px 0;
+}

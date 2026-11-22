@@ -140,7 +140,7 @@ Dialogues and reading texts live in `seed/texts/`, one file each. The first line
 
 Role-play situations that are not tied to a lesson (café, doctor, in-laws and so on) live in `seed/situations/`, one file each, in the same line format with four extra header lines: `# Category:` (Everyday, Social, Family, Practical, Travel, Work and home), `# English:`, `# Scene:` and `# Goal:`. Your own lines use the speaker name `Du`. The scene and goal are also what a live chat partner would be given as its brief.
 
-Recordings made in the Practice tab are never saved. The journal and your own texts are stored like cards: on the device, in backups, and in sync.
+Recordings in Record and compare and in Dialogue role-play are never saved. Recordings you make as a journal answer or in a checkpoint’s speaking part are saved on that device only: they are not synced, and they are included in a backup file. The journal and your own texts are stored like cards: on the device, in backups, and in sync.
 
 ## Sync between devices (optional)
 

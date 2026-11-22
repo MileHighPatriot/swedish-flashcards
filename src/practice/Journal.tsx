@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SwedishKeys } from '../components/SwedishKeys';
-import { deleteJournal, listJournal, saveJournal } from '../db/repo';
+import { deleteJournal, listDecks, listJournal, listLessons, removeMedia, saveJournal } from '../db/repo';
+import type { ID } from '../db/types';
+import { useActivity } from '../lib/activity';
+import { currentLesson } from '../lib/plan';
+import { allPrompts, journalForTutor, pickPrompt } from '../lib/prompts';
+import { SpeakButton } from '../study/CardView';
+import { SavedRecorder } from './shared';
 import { useSettings } from '../lib/hooks';
 import { applyPlan, buildPlan, groupLesson, MISTAKES_DECK } from '../lib/importer';
 import { parseLesson } from '../lib/parser';
 import { dateKey, journalForClaude } from '../lib/practice';
-
-// Questions from my own lessons, to get a first sentence going.
-const STARTERS = ['Vad gjorde du i går?', 'Hur var din dag?', 'Vad gjorde du i helgen?'];
 
 const longDate = (key: string) => new Date(`${key}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -24,6 +27,10 @@ export function fixLines(reply: string) {
 export function Journal() {
   const settings = useSettings();
   const entries = useLiveQuery(listJournal, []);
+  const plan = useLiveQuery(async () => ({ lessons: await listLessons(), decks: await listDecks() }), []);
+  const [audioIds, setAudioIds] = useState<ID[]>([]);
+  const [tutor, setTutor] = useState<string | null>(null);
+  useActivity('reading-writing');
   const today = dateKey();
   const [date, setDate] = useState(today);
   const [text, setText] = useState('');
@@ -39,16 +46,37 @@ export function Journal() {
     const e = entries.find((x) => x.date === date);
     setText(e?.text ?? '');
     setFeedback(e?.feedback ?? '');
+    setAudioIds(e?.audioIds ?? []);
+    setTutor(null);
     setLoaded(date);
     setStatus(null);
     setPrompt(null);
   }, [entries, date, loaded]);
 
-  if (!entries) return <p className="muted">Loading…</p>;
+  if (!entries || !plan) return <p className="muted">Loading…</p>;
   const saved = entries.find((x) => x.date === date);
   const dirty = text !== (saved?.text ?? '');
+  // The question an entry was written to stays with it; a new day gets the day's pick.
+  const lessonNow = currentLesson(plan.decks, settings);
+  const picked = saved?.prompt ? { sv: saved.prompt, en: saved.promptEn ?? '', lesson: saved.lessonNumber ?? null } : pickPrompt(date, allPrompts(plan.lessons), lessonNow, entries);
+  const asked = { prompt: picked?.sv ?? '', promptEn: picked?.en ?? '', lessonNumber: picked?.lesson ?? null };
   const save = async () => {
-    if (text.trim() || saved) await saveJournal(date, { text });
+    if (text.trim() || saved) await saveJournal(date, { text, ...asked });
+  };
+  const keepRecordings = async (ids: ID[]) => {
+    setAudioIds(ids);
+    await saveJournal(date, { text, ...asked, audioIds: ids });
+  };
+  const copyForTutor = async () => {
+    await save();
+    const t = journalForTutor({ date, lessonNumber: asked.lessonNumber, prompt: asked.prompt, promptEn: asked.promptEn, text, hasRecording: audioIds.length > 0 });
+    setTutor(t);
+    try {
+      await navigator.clipboard.writeText(t);
+      setStatus('Copied for your tutor.');
+    } catch {
+      setStatus('Could not copy automatically. Select the text below and copy it.');
+    }
   };
 
   const copy = async () => {
@@ -83,11 +111,17 @@ export function Journal() {
       <p className="muted">A few sentences a day in your own words. Claude corrects them, and each mistake comes back as a fix card.</p>
       <div className="card" ref={box}>
         <h2>{date === today ? `Today, ${longDate(date)}` : longDate(date)}</h2>
-        {!text.trim() && (
-          <p className="muted small" lang="sv">
-            {STARTERS[new Date(`${date}T12:00:00`).getDate() % STARTERS.length]}
-          </p>
+        {picked && (
+          <div className="journal-question">
+            <p className="face-type">{date === today ? 'Today’s question' : 'The question'}{picked.lesson != null ? ` · Lesson ${picked.lesson}` : ''}</p>
+            <p className="face-question" lang="sv">
+              {picked.sv} <SpeakButton text={picked.sv} rate={settings.ttsRate} slowRate={settings.ttsSlowRate} label="Hear the question" />
+            </p>
+            {picked.en && <p className="muted small">{picked.en}</p>}
+          </div>
         )}
+        <p className="muted small">Answer by typing, by recording yourself, or both.</p>
+        <SavedRecorder ids={audioIds} onChange={(ids) => void keepRecordings(ids)} what="answer" />
         <SwedishKeys container={box} />
         <label className="field">
           <span className="field-label">Three to five sentences in Swedish</span>
@@ -105,6 +139,9 @@ export function Journal() {
           <button type="button" className="btn btn-primary" disabled={!text.trim()} onClick={() => void copy()}>
             Copy for Claude
           </button>
+          <button type="button" className="btn" disabled={!text.trim() && audioIds.length === 0} onClick={() => void copyForTutor()}>
+            Copy for my tutor
+          </button>
           <button type="button" className="btn" disabled={!dirty} onClick={() => void save()}>
             {dirty ? 'Save' : 'Saved'}
           </button>
@@ -115,6 +152,7 @@ export function Journal() {
           )}
         </div>
         {prompt && <textarea className="paste-box" rows={6} readOnly value={prompt} aria-label="Text to paste into Claude" onFocus={(e) => e.target.select()} />}
+        {tutor && <textarea className="paste-box" rows={6} readOnly value={tutor} aria-label="Text copied for my tutor" onFocus={(e) => e.target.select()} />}
 
         <label className="field">
           <span className="field-label">Claude's reply</span>
@@ -145,6 +183,7 @@ export function Journal() {
             <div className="word-forms">
               {longDate(e.date)}
               {e.feedback.trim() ? ' · corrected' : ''}
+              {e.audioIds?.length ? ` · ${e.audioIds.length} recording${e.audioIds.length === 1 ? '' : 's'}` : ''}
             </div>
             <div className="word-example" lang="sv">
               {e.text.length > 160 ? `${e.text.slice(0, 160)}…` : e.text}
@@ -167,6 +206,8 @@ export function Journal() {
                   className="btn btn-small"
                   onClick={() => {
                     if (!window.confirm(`Delete the entry for ${longDate(e.date)}?`)) return;
+                    // The entry's recordings go with it.
+                    for (const id of e.audioIds ?? []) void removeMedia(id);
                     void deleteJournal(e.date).then(() => {
                       if (e.date === date) setLoaded(null);
                     });
