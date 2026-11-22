@@ -29,6 +29,7 @@ import { TOPICS, topicFor, topicTitle } from '../lib/topics';
 import { VERB_FORM_LABELS, drillVerbs, lessonLabel, pastRule, type DrillVerb, type VerbForm } from '../lib/verbdrill';
 import { pickForm, weightedPick } from '../lib/verbtable';
 import { VerbTable } from './VerbTable';
+import { LearnNav } from './Hubs';
 import { computeWeakSpots, exportForClaude, weakSpotCardIds } from '../lib/weakspots';
 import { buildReasonContext } from '../lib/reasons';
 import { TypedInput, VerdictBox, withReason, type Answer } from '../study/CardView';
@@ -723,6 +724,7 @@ export function Grammar() {
   const tab = TABS.find((t) => t.id === params.get('tab'))?.id ?? 'notes';
   return (
     <section>
+      <LearnNav />
       <header className="page-head">
         <h1>Grammar</h1>
       </header>

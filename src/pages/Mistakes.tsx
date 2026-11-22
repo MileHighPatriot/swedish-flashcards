@@ -8,6 +8,7 @@ import { dayCount, dueItems, isActive } from '../lib/mistakeItems';
 import { splitAlternatives } from '../lib/parser';
 import { buildReasonContext } from '../lib/reasons';
 import { MistakeRound, type RoundSummary } from '../study/MistakeRound';
+import { StudyNav } from '../study/StudyNav';
 
 const day = (t: number) => new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
 
@@ -107,10 +108,8 @@ export function Mistakes() {
 
   return (
     <section>
+      <StudyNav />
       <header className="page-head">
-        <Link to="/" className="back-link">
-          ← Home
-        </Link>
         <h1>My mistakes</h1>
         <p className="muted">
           Everything you typed wrong, kept here until you type it right on 3 different days. A wrong answer sends it back to 0.

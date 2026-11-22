@@ -4,6 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { GenderTag, formsSummary } from '../components/GenderTag';
 import { NoteForm } from '../components/NoteForm';
+import { LearnNav } from './Hubs';
 import { deleteDeck, listCards, listDecks, listNotes, listTags, unlockDeck, updateDeck } from '../db/repo';
 import { CARD_TYPE_LABELS, CATEGORY_LABELS, DECK_CATEGORIES, type Deck, type DeckCategory, type Note } from '../db/types';
 import { dateStamp, downloadBackup, downloadFile, notesToCSV } from '../lib/backup';
@@ -121,11 +122,17 @@ export function Words() {
 
   return (
     <section>
-      <header className="page-head">
-        <h1>Browse</h1>
-        <p className="muted" role="status">
-          {notes ? `${shown.length} of ${notes.length} cards` : 'Loading…'}
-        </p>
+      <LearnNav />
+      <header className="page-head decks-head">
+        <div>
+          <h1>Browse</h1>
+          <p className="muted" role="status">
+            {notes ? `${shown.length} of ${notes.length} cards` : 'Loading…'}
+          </p>
+        </div>
+        <Link className="btn btn-primary add-btn" to="/add" aria-label="Add cards">
+          <span aria-hidden="true">+</span>
+        </Link>
       </header>
 
       <div className="filters" ref={filtersRef}>

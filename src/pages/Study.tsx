@@ -49,6 +49,7 @@ import { dueItems, isActive } from '../lib/mistakeItems';
 import { planPosition, weekSessionTags } from '../lib/plan';
 import { CardView, RuleContext, autoSpeakFor, describeCard, isFlipCard, mistakeInputFor, reverseIsTyped, withReason, type Answer } from '../study/CardView';
 import { MistakeRound, type RoundSummary } from '../study/MistakeRound';
+import { StudyNav } from '../study/StudyNav';
 import { TodayNext } from '../study/TodayNext';
 
 // ---------- the session ----------
@@ -668,6 +669,7 @@ export function Study() {
 
   return (
     <section>
+      <StudyNav />
       <header className="page-head">
         <h1>Study</h1>
       </header>
