@@ -1,6 +1,7 @@
 import { db } from './db';
 import mistakesText from '../../seed/my-mistakes.txt?raw';
-import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, seedMistakeItems, setKV, type NoteInput } from './repo';
+import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, saveCheckpoint, seedMistakeItems, setKV, type NoteInput } from './repo';
+import { OLD_PLAN_SCORES } from '../lib/checkpoint';
 import { parseMistakeSeed } from '../lib/mistakeItems';
 import type { PartOfSpeech } from './types';
 import { BUILT_IN_LESSONS, loadBuiltInLesson, loadStarterLessons, refreshBuiltIn, refreshStarterCards } from '../lib/importer';
@@ -38,6 +39,15 @@ const WORDS: Seed[] = [
   { sv: 'liten', en: 'small, little', pos: 'adjective', adj: ['liten', 'litet', 'små'], ex: ['Jag har en liten lägenhet.', 'I have a small apartment.'], tags: ['adjectives', 'home'] },
   { sv: 'god', en: 'good, tasty', pos: 'adjective', adj: ['god', 'gott', 'goda'], ex: ['Maten är mycket god.', 'The food is very tasty.'], tags: ['adjectives', 'food'] },
 ];
+
+/** Fixed ids and seed stamps: every device makes the same three rows, and none of them uploads. */
+export async function seedOldPlanScores(): Promise<void> {
+  for (const [i, s] of OLD_PLAN_SCORES.entries())
+    await saveCheckpoint(
+      { cp: '', kind: 'old-plan-paper', label: s.label, week: 0, date: '', at: SEED_TIME + i, practice: false, recall: null, production: s.score, writing: null, writingSelfScored: false, speakingWithoutEnglish: null, result: null, items: [], reviewTag: null },
+      { id: s.id, at: SEED_TIME + i },
+    );
+}
 
 export const SEED_DECK_NAME = 'Lesson 00 – Starter words';
 
@@ -104,6 +114,11 @@ export function ensureSeeded(): Promise<void> {
       await loadBuiltInLesson(lesson);
       loaded.push(lesson.key);
       await setKV('builtInLessons', [...loaded]);
+    }
+    // My three old-plan worksheet scores open the checkpoint history, once.
+    if (!(await getKV<boolean>('checkpointSeedLoaded'))) {
+      await seedOldPlanScores();
+      await setKV('checkpointSeedLoaded', true);
     }
     // My worksheet mistakes from lessons 2 to 5 start the "My mistakes" list, once.
     if (!(await getKV<boolean>('mistakeSeedLoaded'))) {

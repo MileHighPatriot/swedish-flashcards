@@ -1,5 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { listCards, listNotes, listTexts } from '../db/repo';
+import { useEffect, useState } from 'react';
+import { listCards, listNotes, listTexts, removeMedia, saveMedia } from '../db/repo';
+import { db } from '../db/db';
+import type { ID } from '../db/types';
 import { sentencePool, type Sentence } from '../lib/practice';
 import { buildReasonContext, type ReasonContext } from '../lib/reasons';
 import { recorderSupported, useRecorder } from '../lib/recorder';
@@ -86,6 +89,83 @@ export function Recorder() {
           Could not start the microphone.
         </p>
       )}
+    </div>
+  );
+}
+
+/** Plays one saved recording from the media table. */
+function SavedClip({ id, label, onDelete }: { id: ID; label: string; onDelete: () => void }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let made: string | null = null;
+    void db.media.get(id).then((m) => {
+      if (!m || m.deletedAt != null || !m.blob.size) return;
+      made = URL.createObjectURL(m.blob);
+      setUrl(made);
+    });
+    return () => {
+      if (made) URL.revokeObjectURL(made);
+    };
+  }, [id]);
+  if (!url) return null;
+  return (
+    <li className="saved-clip">
+      <audio controls src={url} aria-label={label} />
+      <button type="button" className="btn btn-small" aria-label={`Delete ${label.toLowerCase()}`} onClick={onDelete}>
+        Delete
+      </button>
+    </li>
+  );
+}
+
+/**
+ * Record answers and keep them: each recording is saved in the media table on
+ * this device (never synced; it does go into a backup file). `ids` is the list
+ * the caller stores; `onChange` gets the new list after a recording or a delete.
+ */
+export function SavedRecorder({ ids, onChange, what = 'answer' }: { ids: ID[]; onChange: (ids: ID[]) => void; what?: string }) {
+  const rec = useRecorder((blob) => void saveMedia('audio', blob).then((m) => onChange([...ids, m.id])));
+  if (!recorderSupported())
+    return (
+      <p className="small notice" role="status">
+        This browser cannot record. Type your {what} instead; nothing else is lost.
+      </p>
+    );
+  const recording = rec.state === 'recording';
+  return (
+    <div className="recorder">
+      <div className="actions">
+        <button type="button" className={recording ? 'btn btn-rec is-recording' : 'btn btn-rec'} aria-pressed={recording} disabled={rec.state === 'starting'} onClick={() => (recording ? rec.stop() : void rec.start())}>
+          <span className="rec-dot" aria-hidden="true" />
+          {recording ? 'Stop and save' : rec.state === 'starting' ? 'Waiting for the microphone…' : ids.length ? `Record another ${what}` : `Record my ${what}`}
+        </button>
+      </div>
+      {rec.state === 'denied' && (
+        <p className="small notice" role="alert">
+          The microphone is blocked. Allow it for this site in your browser settings, or type your {what} instead.
+        </p>
+      )}
+      {rec.state === 'error' && (
+        <p className="small notice" role="alert">
+          Could not start the microphone. You can still type your {what}.
+        </p>
+      )}
+      {ids.length > 0 && (
+        <ul className="saved-clips" aria-label="Saved recordings">
+          {ids.map((id, i) => (
+            <SavedClip
+              key={id}
+              id={id}
+              label={`Recording ${i + 1}`}
+              onDelete={() => {
+                void removeMedia(id);
+                onChange(ids.filter((x) => x !== id));
+              }}
+            />
+          ))}
+        </ul>
+      )}
+      {ids.length > 0 && <p className="muted small">Saved on this device only. Recordings are not synced; they are included in a backup file.</p>}
     </div>
   );
 }

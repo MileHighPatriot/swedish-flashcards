@@ -611,6 +611,14 @@ export function Study() {
     });
   }, [data, week, settings]);
 
+  // A set of tags from a link, e.g. the lessons of a block to repeat: /study?tags=lesson-06,lesson-07.
+  const tagSet = params.get('tags');
+  useEffect(() => {
+    if (autoStarted.current || !data || !tagSet) return;
+    autoStarted.current = true;
+    setRun({ mode: 'normal', shuffle: false, tags: tagSet.split(',').filter(Boolean) });
+  }, [data, tagSet]);
+
   // Links from the Grammar tab: /study?weak=1 and /study?topic=verb-second.
   const weak = params.get('weak') === '1';
   const topic = params.get('topic');

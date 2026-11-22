@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Link } from 'react-router-dom';
-import { countToday, getKV, listCards, listDecks, listMistakeItems, listReviews } from '../db/repo';
+import { countToday, getKV, listCards, listCheckpoints, listDecks, listMistakeItems, listReviews } from '../db/repo';
+import { checkpointTitle, openCheckpoint } from '../lib/checkpoint';
 import { downloadBackup } from '../lib/backup';
 import { computeStreak, dayCounts } from '../lib/stats';
 import { CATEGORY_LABELS, DECK_CATEGORIES } from '../db/types';
@@ -16,8 +17,8 @@ export function Home() {
   const dayStart = studyDayStart(now, settings.dayStartHour);
 
   const data = useLiveQuery(async () => {
-    const [decks, cards, all, lastBackupAt, items] = await Promise.all([listDecks(), listCards(), listReviews(0), getKV<number>('lastBackupAt'), listMistakeItems()]);
-    return { decks, cards, all, logs: all.filter((l) => l.reviewedAt >= dayStart), lastBackupAt, items };
+    const [decks, cards, all, lastBackupAt, items, checkpoints] = await Promise.all([listDecks(), listCards(), listReviews(0), getKV<number>('lastBackupAt'), listMistakeItems(), listCheckpoints()]);
+    return { decks, cards, all, logs: all.filter((l) => l.reviewedAt >= dayStart), lastBackupAt, items, checkpoints };
   }, [dayStart]);
 
   if (!data) return null;
@@ -31,6 +32,7 @@ export function Home() {
   const toFix = data.items.filter(isActive).length;
   const fixToday = dueItems(data.items, now, settings.dayStartHour, Infinity).length;
   const minutes = Math.floor(flashcardMs(data.logs) / 60000);
+  const checkpoint = openCheckpoint(now, data.checkpoints);
 
   return (
     <section>
@@ -48,6 +50,15 @@ export function Home() {
         {plan.phase ? ` · Phase ${plan.phase.phase}: ${plan.phase.name}` : ' · before the plan'}
         {plan.weekByDate !== plan.week && <span className="muted"> · Plan week by date: {plan.weekByDate}</span>}
       </p>
+
+      {checkpoint && (
+        <p className="notice">
+          <strong>
+            {checkpointTitle(checkpoint.cp.cp)}: {checkpoint.state === 'due' ? 'due today' : checkpoint.state === 'not-taken' ? 'not taken yet' : `this week, on ${new Date(`${checkpoint.cp.date}T12:00:00`).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}`}
+          </strong>
+          {checkpoint.cp.gate ? ` · ${checkpoint.cp.gate}` : ''} <Link to="/checkpoints">Open checkpoints</Link>
+        </p>
+      )}
 
       <div className="stat-row">
         <div className="stat">
@@ -91,6 +102,14 @@ export function Home() {
       <Link className="btn btn-big" to="/practice">
         Practice: listen, speak, write, read
       </Link>
+      <div className="actions">
+        <Link className="btn" to="/checkpoints">
+          Checkpoints
+        </Link>
+        <Link className="btn" to="/hours">
+          Hours
+        </Link>
+      </div>
 
       {backupDue && (
         <div className="notice backup-nudge">

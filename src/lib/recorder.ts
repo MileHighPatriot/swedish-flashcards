@@ -1,5 +1,7 @@
 // Record my own voice with the microphone, to play back next to the Swedish
-// voice. Nothing is saved: the recording lives until the next one replaces it.
+// voice. By default nothing is saved: the recording lives until the next one
+// replaces it. A caller that wants to keep it (the journal, a checkpoint)
+// passes `onBlob` and stores the recording itself.
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { stopSpeaking } from './speech';
@@ -9,7 +11,9 @@ export type RecorderState = 'idle' | 'starting' | 'recording' | 'denied' | 'erro
 export const recorderSupported = (): boolean =>
   typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia && typeof MediaRecorder !== 'undefined';
 
-export function useRecorder() {
+export function useRecorder(onBlob?: (blob: Blob) => void) {
+  const keep = useRef(onBlob);
+  keep.current = onBlob;
   const [state, setState] = useState<RecorderState>('idle');
   const [url, setUrl] = useState<string | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
@@ -55,6 +59,7 @@ export function useRecorder() {
         if (blob.size) {
           urlRef.current = URL.createObjectURL(blob);
           setUrl(urlRef.current);
+          keep.current?.(blob);
         }
         setState('idle');
       };

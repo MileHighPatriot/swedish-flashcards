@@ -1,0 +1,14 @@
+# Conversation questions from my lessons, for "Today's question" in the journal
+# and the speaking part of a checkpoint.
+# lesson | Swedish | English
+1 | Vad gjorde du i går? | What did you do yesterday?
+1 | Hur var din dag? | How was your day?
+2 | Vad gjorde du i helgen? | What did you do at the weekend?
+3 | Tog du bussen? | Did you take the bus?
+4 | Vad gjorde du i lördags? | What did you do last Saturday?
+4 | Hur blev maten? | How did the food turn out?
+4 | Blev du trött i går? | Did you get tired yesterday?
+5 | Vill du ha något mer? | Do you want anything else?
+5 | Ska du sitta här eller ta med? | Are you going to sit here or take it with you?
+5 | Kan du komma på söndag? | Can you come on Sunday?
+5 | Hur gammal är din syster? | How old is your sister?

@@ -152,7 +152,21 @@ export function VerdictBox({ answer }: { answer: Answer | null }) {
 const SPECIAL = ['å', 'ä', 'ö'];
 
 /** Text box for Swedish, with å ä ö buttons. Enter checks; "Show answer" gives up. */
-export function TypedInput({ label, initial = '', onSubmit, onSkip }: { label: string; initial?: string; onSubmit: (v: string) => void; onSkip: () => void }) {
+export function TypedInput({
+  label,
+  initial = '',
+  onSubmit,
+  onSkip,
+  submitLabel = 'Check',
+  skipLabel = 'Show answer',
+}: {
+  label: string;
+  initial?: string;
+  onSubmit: (v: string) => void;
+  onSkip: () => void;
+  submitLabel?: string;
+  skipLabel?: string;
+}) {
   const [value, setValue] = useState(initial);
   const ref = useRef<HTMLInputElement>(null);
   const insert = (ch: string) => {
@@ -200,10 +214,10 @@ export function TypedInput({ label, initial = '', onSubmit, onSkip }: { label: s
           ))}
         </span>
         <button type="button" className="btn btn-small" onClick={onSkip}>
-          Show answer
+          {skipLabel}
         </button>
         <button type="submit" className="btn btn-small btn-primary">
-          Check
+          {submitLabel}
         </button>
       </div>
     </form>

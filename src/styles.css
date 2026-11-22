@@ -1932,3 +1932,126 @@ a.pill-btn {
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+/* ---------- checkpoints ---------- */
+.cp-clock {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.cp-clock-label {
+  font-weight: 700;
+}
+.cp-clock-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+.cp-clock .btn {
+  min-height: 44px;
+}
+.cp-gate {
+  font-weight: 700;
+}
+.cp-task {
+  white-space: pre-wrap;
+}
+.cp-scores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.cp-scores dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cp-scores dd {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.cp-questions li {
+  margin-bottom: 8px;
+}
+.cp-open {
+  border-color: var(--accent);
+}
+.cp-review {
+  padding-left: 0;
+  list-style: none;
+}
+.cp-trend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cp-trend li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.2em;
+  gap: 2px 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.cp-trend-label {
+  grid-column: 1 / -1;
+  font-size: 0.9rem;
+}
+.cp-trend-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--border);
+  overflow: hidden;
+  /* the 80% pass mark */
+  background-image: linear-gradient(to right, transparent calc(80% - 1px), var(--text) calc(80% - 1px), var(--text) calc(80% + 1px), transparent calc(80% + 1px));
+}
+.cp-trend-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.cp-trend-bar span.is-aside {
+  background: var(--muted);
+}
+.cp-trend-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.copy-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.copy-block textarea {
+  flex-basis: 100%;
+}
+.saved-clips {
+  list-style: none;
+  padding: 0;
+}
+.saved-clip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.saved-clip audio {
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 200px;
+}
