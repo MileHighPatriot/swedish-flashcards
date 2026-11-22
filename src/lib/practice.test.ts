@@ -26,7 +26,7 @@ async function loadAll() {
 }
 
 describe('built-in texts', () => {
-  it('has a dialogue and a story for each lesson', () => {
+  it('has a story for each lesson, and a dialogue where I have one', () => {
     expect(BUILT_IN_TEXTS.map((t) => [t.lesson, isDialogue(t)])).toEqual([
       [1, true],
       [1, false],
@@ -34,6 +34,8 @@ describe('built-in texts', () => {
       [2, false],
       [3, true],
       [3, false],
+      // Lesson 4 has its story; its dialogue was never pasted.
+      [4, false],
       [5, true],
       [5, false],
     ]);
