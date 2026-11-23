@@ -8,7 +8,7 @@
 // Tolerant of messy input: tabs, spaced dashes, "=", ":" or a comma instead of
 // pipes, bullets and numbering, markdown tables and bold markers.
 
-import { emptyDraft, type Draft, type GrammarKind, type PartOfSpeech } from '../db/types';
+import { emptyDraft, PARTS_OF_SPEECH, type Draft, type GrammarKind, type PartOfSpeech } from '../db/types';
 
 export type SectionHint = 'vocab' | 'phrases' | GrammarKind | null;
 
@@ -119,10 +119,18 @@ const list = (field: string): string[] =>
     .map((x) => x.trim())
     .filter(Boolean);
 
+const POS_LABELS: Record<string, PartOfSpeech> = Object.fromEntries(PARTS_OF_SPEECH.map((p) => [p, p]));
+
 /** Fill in the Swedish forms from the "forms" field. Never invents a form. */
 function applyForms(d: Draft, field: string, warnings: string[], tags: string[] = []): void {
   let items = list(field);
   if (items.length === 0) return;
+  // A bare label ("adverb", "pronoun", "phrase") names the word class; it is not a form.
+  const label = items.length === 1 ? POS_LABELS[items[0].toLowerCase()] : undefined;
+  if (label) {
+    d.pos = label;
+    return;
+  }
   // The tags say what the word is when the forms alone would mislead:
   // "måste, måste, måst" looks like an adjective, "han, honom, hans" like a verb.
   const taggedVerb = tags.some((t) => t === 'verbs' || t === 'verb' || t === 'modals');
@@ -168,7 +176,9 @@ function applyForms(d: Draft, field: string, warnings: string[], tags: string[] 
   // Verb: "present, past", "present, past, supine" or "infinitive, present, past, supine"
   // A list that only repeats the word ("föräldrar, föräldrarna") is not a verb.
   const repeatsWord = items.length === 2 && first === base;
-  if (items.length >= 2 && items.length <= 4 && (taggedVerb || !repeatsWord)) {
+  // Nor is a list of usage notes ("ingen with en-words and people, inget with ett-words").
+  const wordy = items.some((x) => x.split(/\s+/).length > 2);
+  if (items.length >= 2 && items.length <= 4 && !wordy && (taggedVerb || !repeatsWord)) {
     const [present, past, supine = ''] = items.length === 4 ? items.slice(1) : items;
     d.verb = { infinitive: items.length === 4 ? items[0] : d.swedish, present, past, supine };
     d.pos = 'verb';
@@ -256,7 +266,9 @@ export function parseLine(raw: string, hint: SectionHint = null): LineResult {
   const keyword = GRAMMAR_ALIASES[fields[0]?.toLowerCase() ?? ''];
   const vocabSection = hint === 'vocab' || hint === 'phrases';
   if (keyword && fields.length >= 2 && !vocabSection) return parseGrammarFields(keyword, fields.slice(1));
-  if (hint && !vocabSection) return parseGrammarFields(hint, fields);
+  // My lesson blocks open each rule with a short name ("jo | When do you answer jo…? | …"):
+  // five fields with no keyword. The name is a label, so the card starts at the question.
+  if (hint && !vocabSection) return parseGrammarFields(hint, fields.length === 5 ? fields.slice(1) : fields);
   return parseVocabFields(fields);
 }
 

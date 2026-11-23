@@ -15,8 +15,16 @@ it('a new device gets every lesson and the notes pages in order', async () => {
   expect(await names()).toEqual(expect.arrayContaining(['Lesson 01 – -ade verbs', 'Lesson 03 – Irregular verbs', 'Phrases – Lesson 03 – Irregular verbs', 'Grammar – Lesson 03 – Irregular verbs', 'Lesson 05 – Modals, pronouns and review', 'Phrases – Lesson 05 – Modals, pronouns and review', 'Grammar – Lesson 05 – Modals, pronouns and review']));
   expect((await listGrammarPages()).map((p) => p.slug).slice(0, 4)).toEqual(['past-ade', 'past-te-de', 'irregular', 'verb-second']);
   expect((await listGrammarPages()).map((p) => p.slug).slice(4, 8)).toEqual(['questions', 'modals', 'pronouns', 'connectors']);
-  expect(await getKV('builtInLessons')).toEqual(['lesson-03-irregular-verbs.txt', 'lesson-04-mixed-past-irregular.txt', 'lesson-05-modals-pronouns-review.txt']);
+  expect(await getKV('builtInLessons')).toEqual(['lesson-03-irregular-verbs.txt', 'lesson-04-mixed-past-irregular.txt', 'lesson-05-modals-pronouns-review.txt', 'lesson-06-negation-subordinate-clauses-review.txt']);
   const notes = await listNotes();
+  // Lesson 6: a rule's short name is dropped, a word-class label is not a form, usage notes are not verb forms.
+  const six = notes.filter((n) => n.lessonNumber === 6);
+  expect(six.filter((n) => n.kind === 'vocab').length).toBe(41);
+  expect(six.filter((n) => n.kind === 'rule').length).toBe(15);
+  expect(six.find((n) => n.grammar?.prompt === 'When do you answer jo instead of ja?')?.tags).toEqual(expect.arrayContaining(['conversation', 'negation']));
+  expect(six.find((n) => n.swedish === 'aldrig')).toMatchObject({ pos: 'adverb', notes: '' });
+  expect(six.find((n) => n.swedish === 'ingen')?.verb ?? null).toBeNull();
+  expect(six.find((n) => n.swedish === 'störa')?.verb?.past).toBe('störde');
   expect(notes.find((n) => n.swedish === 'måste' && n.lessonNumber === 5)?.pos).toBe('verb');
   expect(notes.find((n) => n.swedish === 'han, honom')?.verb ?? null).toBeNull();
 });
@@ -94,7 +102,7 @@ it('the Lesson 1 and 2 starter decks get their lesson number stored, and nothing
   expect(byName('Lesson 01 – -ade verbs').updatedAt).toBeLessThan(SEED_TIME + 1_000_000);
   // My current lesson is still the newest one, not changed by this.
   const { currentLesson } = await import('../lib/plan');
-  expect(currentLesson(decks, { currentLesson: null })).toBe(5);
+  expect(currentLesson(decks, { currentLesson: null })).toBe(6);
 
   // A device from before: the number missing, the flag not set. It is filled in on the next start, once.
   await db.decks.update(byName('Lesson 02 – -te and -de verbs').id, { lessonNumber: null });

@@ -1,0 +1,104 @@
+# Lesson 06 – Negation, subordinate clauses and review
+# My Lesson 6 file, as pasted. Same formats as grammar-lessons-01-02.txt.
+# Loaded as a built-in lesson: the title line above names the decks.
+
+### Vocab
+granne | neighbor | en granne, grannar | Min granne är snäll. = My neighbor is kind. | home, nouns
+lägenhet | apartment | en lägenhet, lägenheter | Vi bor i en liten lägenhet. = We live in a small apartment. | home, nouns
+dörr | door | en dörr, dörrar | Stäng dörren, tack. = Close the door, please. | home, nouns
+nyckel | key | en nyckel, nycklar | Jag har ingen nyckel. = I do not have a key. | home, nouns
+tvättstuga | laundry room | en tvättstuga, tvättstugor | Tvättstugan är i källaren. = The laundry room is in the basement. | home, nouns
+källare | basement | en källare, källare | Cykeln står i källaren. = The bike is in the basement. | home, nouns
+hiss | elevator | en hiss, hissar | Hissen är trasig. = The elevator is broken. | home, nouns
+hyresvärd | landlord | en hyresvärd, hyresvärdar | Hyresvärden ringer i morgon. = The landlord calls tomorrow. | home, nouns
+lapp | note | en lapp, lappar | Skriv en lapp på dörren. = Write a note on the door. | home, nouns
+sopor | trash | sopor (plural) | Jag kastar soporna. = I throw out the trash. | home, nouns
+störa | to disturb | stör, störde, stört | Jag vill inte störa dig. = I do not want to disturb you. | verbs, -de, home
+låna | to borrow, to lend | lånar, lånade, lånat | Kan jag låna din stege? = Can I borrow your ladder? | verbs, -ade, home
+stänga | to close | stänger, stängde, stängt | Jag stänger fönstret. = I close the window. | verbs, -de, home
+öppna | to open | öppnar, öppnade, öppnat | Hon öppnar dörren. = She opens the door. | verbs, -ade, home
+boka | to book | bokar, bokade, bokat | Jag bokar en tid. = I book a time. | verbs, -ade, home
+glömma | to forget | glömmer, glömde, glömt | Glöm inte nyckeln! = Do not forget the key! | verbs, -de, negation
+tyst | quiet | tyst, tyst, tysta | Det är tyst här. = It is quiet here. | adjectives, home
+hög | loud, high | hög, högt, höga | Musiken är för hög. = The music is too loud. | adjectives, home
+aldrig | never | adverb | Han har aldrig bråttom. = He is never in a hurry. | negation, time-words
+sällan | seldom | adverb | Vi åker sällan till Sverige. = We seldom go to Sweden. | time-words
+ibland | sometimes | adverb | Ibland sover jag länge. = Sometimes I sleep late. | time-words
+ofta | often | adverb | Hon ringer ofta. = She calls often. | time-words
+alltid | always | adverb | Jag dricker alltid kaffe. = I always drink coffee. | time-words
+ingen | no, nobody | ingen with en-words and people, inget with ett-words, inga with plurals | Jag har ingen bil. = I have no car. | negation, gender
+ingenting | nothing | pronoun | Jag vet ingenting. = I know nothing. | negation
+ingenstans | nowhere | adverb | Den finns ingenstans. = It is nowhere. | negation
+bara | only, just | adverb | Jag har bara en nyckel. = I only have one key. | time-words
+redan | already | adverb | Jag har redan ätit. = I have already eaten. | time-words
+fortfarande | still | adverb | Han är fortfarande hemma. = He is still at home. | time-words
+inte längre | no longer | phrase | Hon bor inte längre här. = She no longer lives here. | negation, time-words
+inte än | not yet | phrase | Jag har inte ätit än. = I have not eaten yet. | negation, time-words
+### Phrases
+Ingen fara | no worries |  | Förlåt! - Ingen fara. = Sorry! - No worries. | phrases, conversation
+Det gör inget | it does not matter |  | Jag glömde nyckeln. - Det gör inget. = I forgot the key. - It does not matter. | phrases, conversation
+Inget problem | no problem |  | Kan du hjälpa mig? - Inget problem. = Can you help me? - No problem. | phrases, conversation
+Jag förstår inte | I do not understand |  | Jag förstår inte, kan du säga det igen? = I do not understand, can you say it again? | phrases, conversation
+Jag vet inte | I do not know |  | Jag vet inte var hon bor. = I do not know where she lives. | phrases, conversation
+Jag har bråttom | I am in a hurry |  | Jag har bråttom, jag kan inte prata nu. = I am in a hurry, I cannot talk now. | phrases, conversation
+Det stämmer inte | that is not right |  | Nej, det stämmer inte. = No, that is not right. | phrases, conversation
+Tyvärr kan jag inte | unfortunately I cannot |  | Tyvärr kan jag inte komma i morgon. = Unfortunately I cannot come tomorrow. | phrases, conversation
+Glöm inte | do not forget |  | Glöm inte att stänga dörren. = Do not forget to close the door. | phrases, conversation
+Jag vill inte störa | I do not want to disturb |  | Jag vill inte störa, men har du en minut? = I do not want to disturb, but do you have a minute? | phrases, conversation
+### Grammar rules
+inte in a main clause | Where does inte go in a main clause? | Right after the finite verb: Jag kan inte komma. | If the subject comes after the verb, inte follows the subject: I dag kan jag inte komma. | negation, word-order
+inte in the perfect | Where does inte go in the perfect tense? | Between har and the supine: Jag har inte sett henne. | inte follows the finite verb har and comes before the supine | negation, word-order
+pronoun or noun object | Does a pronoun object come before or after inte? | Before: Jag hör dig inte. A noun object comes after: Jag hör inte bilen. | short pronoun objects normally come before inte | negation, pronouns, word-order
+ingen, inget, inga | When do you use ingen, inget and inga? | ingen with en-words, inget with ett-words, inga with plurals: ingen bil, inget hus, inga barn | they replace inte plus någon, något, några | negation, gender
+no double negative | Can you say inte ingen? | No: Jag har ingen bil or Jag har inte någon bil | Swedish does not stack two negatives | negation
+inte in a subordinate clause | Where does inte go in a subordinate clause? | Before the finite verb: Jag vet att hon inte kommer. | in a subordinate clause the sentence adverb comes before the verb | negation, word-order, connectors
+clause first | What comes right after a subordinate clause that starts the sentence? | The verb: Eftersom jag är sjuk kan jag inte komma. | the whole clause counts as the first element so the verb is second | verb-second, word-order, connectors
+sedan | What follows sedan when it means then? | The verb: Sedan tog vi tåget hem. | sedan as an adverb is position one so the verb comes next | verb-second, time-words
+jo | When do you answer jo instead of ja? | To say yes to a negative question: Kommer du inte? - Jo, det gör jag. | ja answers a positive question and jo answers a negative one | conversation, negation
+inte before an infinitive | Where does inte go before an infinitive after att? | Before the verb: Jag bestämde mig för att inte åka. | inte comes before the infinitive | negation
+hem or hemma | When do you use hem and when hemma? | hem for direction and hemma for place: Jag går hem. Jag är hemma. | motion takes the direction form and being takes the place form | hem-hemma
+för att | What does för att mean? | Because (spoken) or in order to plus an infinitive: Jag åker till Sverige för att träffa familjen. | för att starts a subordinate clause | connectors
+måste inte, får inte, kan inte | What is the difference between måste inte, får inte and kan inte? | måste inte or behöver inte means do not have to, får inte means not allowed, kan inte means cannot | the three negatives of the modals mean different things | modals, negation
+indirect question | What is the word order in an indirect question? | Subordinate order with no inversion: Jag vet inte var hon bor. | question words and om work like conjunctions here | questions, word-order
+past tense check | How do you choose -ade, -te or -de? | Present ends in -ar gives -ade, -er after k p t s gives -te, other -er or a vowel verb gives -de, the rest is irregular | check the present tense before you write the past | -ade, -te, -de, irregular
+### Fix the error
+fix | Jag ringade henne i går. | Jag ringde henne i går. | ringa has the past ringde, not ringade | -de, verbs, my-mistake
+fix | I går sovade jag hela dagen. | I går sov jag hela dagen. | sova is irregular and its past is sov | irregular, verbs, my-mistake
+fix | Jag vilkte ha kaffe. | Jag ville ha kaffe. | the past of vilja is ville | modals, irregular, my-mistake
+fix | I går skolade jag ringa henne. | I går skulle jag ringa henne. | the past of ska is skulle | modals, irregular, my-mistake
+fix | Jag älska henne. | Jag älskade henne. | älska is an -ade verb so the past is älskade | -ade, verbs, my-mistake
+fix | Sedan vi tog tåget hem. | Sedan tog vi tåget hem. | after sedan the verb comes second and then the subject | verb-second, word-order, my-mistake
+fix | I morgon vill ringa jag henne. | I morgon vill jag ringa henne. | verb second then the subject then the infinitive | verb-second, modals, word-order, my-mistake
+fix | Jag kan inte jag komma i dag. | Jag kan inte komma i dag. | the subject appears only once before inte | word-order, negation, my-mistake
+fix | Vi tog tåget hemma. | Vi tog tåget hem. | hem is the direction (going home) and hemma is the place (at home) | hem-hemma, my-mistake
+fix | Jag kan inte komma hemma tidigt. | Jag kan inte komma hem tidigt. | after komma you need the direction hem not the place hemma | hem-hemma, my-mistake
+fix | Vad sa honom? | Vad sa hon? | the subject of the verb is hon and henne or honom is the object | pronouns, my-mistake
+fix | Henne var vacker. | Hon var vacker. | use hon as the subject and henne only as the object | pronouns, spelling, my-mistake
+fix | Det är min hus. | Det är mitt hus. | hus is an ett-word so you need mitt | pronouns, my-mistake
+fix | Mina barnet vill ringa mormor. | Mina barn vill ringa mormor. | barn stays barn in the plural | my-mistake
+fix | Kan jag har en kanelbulle? | Kan jag få en kanelbulle? | after a modal the verb stays in the infinitive so få not har | modals, my-mistake
+fix | I går får inte vi komma. | I går kunde vi inte komma. | could is kunde and får inte means not allowed to | modals, verb-second, my-mistake
+fix | Jag skulle vilja ha en kafe. | Jag skulle vilja ha en kaffe. | spelling: kaffe has double f | spelling, watch-spelling, my-mistake
+fix | Jag har inte ingen nyckel. | Jag har ingen nyckel. | Swedish does not stack two negatives | negation
+fix | Jag tror att han kommer inte. | Jag tror att han inte kommer. | in a subordinate clause inte comes before the verb | negation, word-order, connectors
+fix | Eftersom jag är trött jag går hem. | Eftersom jag är trött går jag hem. | after a subordinate clause the verb comes next | verb-second, connectors
+fix | Gå hem inte! | Gå inte hem! | in a command inte follows the verb | negation, word-order
+### Reorder
+reorder | sedan / vi / tog / tåget / hem (Then we took the train home.) | Sedan tog vi tåget hem. | verb second after sedan | verb-second, word-order, my-mistake
+reorder | i morgon / jag / vill / ringa / henne (Tomorrow I want to call her.) | I morgon vill jag ringa henne. // Jag vill ringa henne i morgon. | verb second after a time word | verb-second, modals, word-order, my-mistake
+reorder | i går / kunde / inte / vi / komma (We could not come yesterday.) | I går kunde vi inte komma. // Vi kunde inte komma i går. | verb second then subject then inte | verb-second, negation, my-mistake
+reorder | vet / jag / att / hon / inte / kommer (I know that she is not coming.) | Jag vet att hon inte kommer. | inte comes before the verb in a subordinate clause | negation, connectors, word-order
+reorder | eftersom / jag / är / sjuk / kan / jag / inte / komma (Because I am sick, I cannot come.) | Eftersom jag är sjuk kan jag inte komma. | the verb comes right after the opening clause | connectors, verb-second, word-order
+reorder | om / du / inte / bokar / kan / någon / annan / ta / tiden (If you do not book, someone else can take the slot.) | Om du inte bokar kan någon annan ta tiden. | subordinate order in the clause and verb next after it | connectors, negation, word-order
+### Translate
+translate | I do not know if she is home. | Jag vet inte om hon är hemma. | om starts a subordinate clause and hemma is the place | connectors, hem-hemma, negation
+translate | I think that he never has time. | Jag tror att han aldrig har tid. | aldrig comes before the verb in a subordinate clause | negation, connectors
+translate | Because it is late, we cannot come. | Eftersom det är sent kan vi inte komma. // Vi kan inte komma eftersom det är sent. | the verb comes next after an opening clause | connectors, verb-second
+translate | Do not forget the key. | Glöm inte nyckeln. | in a command inte follows the verb | negation, phrases
+translate | I do not have a key yet. | Jag har ingen nyckel än. // Jag har inte någon nyckel än. | ingen or inte någon but never inte ingen | negation, time-words
+translate | She wants to meet him tomorrow. | Hon vill träffa honom i morgon. // I morgon vill hon träffa honom. | honom is the object and the verb is second after i morgon | pronouns, verb-second, my-mistake
+translate | We could not come yesterday. | Vi kunde inte komma i går. // I går kunde vi inte komma. | could is kunde and inte comes after the subject | modals, negation, my-mistake
+translate | Can I have a cinnamon bun too? | Kan jag få en kanelbulle också? | after a modal use the infinitive få | modals, my-mistake
+translate | Did you take the train home? | Tog du tåget hem? | past of ta is tog and hem is the direction | irregular, hem-hemma, my-mistake
+translate | My children want to call grandma. | Mina barn vill ringa mormor. | barn stays barn in the plural | my-mistake
+translate | Yesterday I slept all day. | I går sov jag hela dagen. | sova is irregular and the verb comes second | irregular, verb-second, my-mistake
