@@ -78,3 +78,33 @@ it('a seed revision reaches a device that already loaded the lessons, and lesson
   const rule = (await listNotes()).find((n) => n.tags.includes('var-vart') && n.kind === 'rule');
   expect(rule && topicFor({ tags: ['var-vart'], grammar: rule.grammar })).toBeNull();
 });
+
+it('the Lesson 1 and 2 starter decks get their lesson number stored, and nothing else changes', async () => {
+  await (await import('./seed')).ensureSeeded();
+  const decks = await listDecks();
+  const byName = (n: string) => decks.find((d) => d.name === n)!;
+  expect(byName('Lesson 01 – -ade verbs').lessonNumber).toBe(1);
+  expect(byName('Lesson 02 – -te and -de verbs').lessonNumber).toBe(2);
+  // Decks that are not a lesson keep none, and the lessons that had one keep theirs.
+  expect(byName('Spelling watch-list').lessonNumber).toBeNull();
+  expect(byName('Grammar – My mistakes').lessonNumber).toBeNull();
+  expect(byName('Lesson 05 – Modals, pronouns and review').lessonNumber).toBe(5);
+  // Still built-in rows: stamped inside the seed window, so they never upload.
+  const { SEED_TIME, setStarterDeckLessons } = await import('./repo');
+  expect(byName('Lesson 01 – -ade verbs').updatedAt).toBeLessThan(SEED_TIME + 1_000_000);
+  // My current lesson is still the newest one, not changed by this.
+  const { currentLesson } = await import('../lib/plan');
+  expect(currentLesson(decks, { currentLesson: null })).toBe(5);
+
+  // A device from before: the number missing, the flag not set. It is filled in on the next start, once.
+  await db.decks.update(byName('Lesson 02 – -te and -de verbs').id, { lessonNumber: null });
+  await db.kv.delete('starterDeckLessons');
+  const cards = await db.cards.toArray();
+  const notes = await db.notes.toArray();
+  vi.resetModules();
+  await (await import('./seed')).ensureSeeded();
+  expect((await listDecks()).find((d) => d.name === 'Lesson 02 – -te and -de verbs')!.lessonNumber).toBe(2);
+  expect(await db.cards.toArray()).toEqual(cards);
+  expect(await db.notes.toArray()).toEqual(notes);
+  expect(await setStarterDeckLessons()).toBe(0);
+});

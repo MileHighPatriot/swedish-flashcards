@@ -1,6 +1,6 @@
 import { db } from './db';
 import mistakesText from '../../seed/my-mistakes.txt?raw';
-import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, saveCheckpoint, seedMistakeItems, setKV, type NoteInput } from './repo';
+import { SEED_TIME, createDeck, createNotes, emptyNoteInput, ensureGrammarPages, getKV, saveCheckpoint, seedMistakeItems, setKV, setStarterDeckLessons, type NoteInput } from './repo';
 import { OLD_PLAN_SCORES } from '../lib/checkpoint';
 import { parseMistakeSeed } from '../lib/mistakeItems';
 import type { PartOfSpeech } from './types';
@@ -106,6 +106,11 @@ export function ensureSeeded(): Promise<void> {
     if (((await getKV<number>('builtInRevision')) ?? 0) < BUILT_IN_REVISION) {
       await refreshBuiltIn();
       await setKV('builtInRevision', BUILT_IN_REVISION);
+    }
+    // The Lesson 1 and Lesson 2 starter decks get their lesson number stored, once.
+    if (!(await getKV<boolean>('starterDeckLessons'))) {
+      await setStarterDeckLessons();
+      await setKV('starterDeckLessons', true);
     }
     // Lesson 3 onwards: each seed/lesson-NN-*.txt file is loaded once per device.
     const loaded = (await getKV<string[]>('builtInLessons')) ?? [];

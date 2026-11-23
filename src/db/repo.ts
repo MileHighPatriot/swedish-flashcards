@@ -126,6 +126,27 @@ export async function deleteDeck(id: ID): Promise<void> {
   });
 }
 
+/**
+ * The two starter decks ("Lesson 01 – …", "Lesson 02 – …") were made without a
+ * lesson number. Store the number that stands in their name. Only built-in
+ * decks that still have none are touched; a deck I never edited keeps a seed
+ * stamp, so every device ends up identical and nothing uploads.
+ */
+export async function setStarterDeckLessons(): Promise<number> {
+  let changed = 0;
+  await db.decks
+    .where('id')
+    .startsWith('seed:deck:')
+    .modify((d) => {
+      const m = /^Lesson\s+(\d+)\b/i.exec(d.name);
+      if (!m || d.lessonNumber != null || d.deletedAt != null) return;
+      d.lessonNumber = Number(m[1]);
+      if (d.updatedAt < SEED_TIME + 1_000_000) d.updatedAt = SEED_TIME + 1_000_000 - 1;
+      changed++;
+    });
+  return changed;
+}
+
 /** Unlock a "coming soon" deck: its suspended cards become ordinary new cards. */
 export async function unlockDeck(id: ID): Promise<void> {
   const now = Date.now();
